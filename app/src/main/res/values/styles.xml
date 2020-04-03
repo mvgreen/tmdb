@@ -1,67 +1,73 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/bg_black</item>
-        <item name="colorPrimaryDark">@color/bg_black</item>
-        <item name="colorAccent">@color/purple</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="background">@android:color/transparent</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryDark">@color/yellow</item>
+        <item name="colorAccent">@color/green</item>
     </style>
+
+    <!-- Элементы интерфейса -->
+    <style name="text_input_layout_style" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/purple</item>
+        <item name="hintTextAppearance">@style/caption2</item>
+        <item name="boxStrokeColor">@color/input_layout_outline_color</item>
+        <item name="hintTextColor">@color/gray</item>
+    </style>
+
+    <style name="text_input_style">
+        <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/light</item>
+        <item name="android:textSelectHandle">@drawable/cursor</item>
+        <item name="android:textSelectHandleLeft">@drawable/cursor_left</item>
+        <item name="android:textSelectHandleRight">@drawable/cursor_right</item>
+    </style>
+
 
     <!-- Шрифты -->
     <style name="H1">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="H2">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="H3">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="content1">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="content2">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="caption1">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="caption2">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="button_text">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
     <style name="link_text">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/light</item>
     </style>
 
 </resources>
