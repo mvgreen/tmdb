@@ -8,6 +8,7 @@ class MainActivity : AppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.elevation = 0.0f
         val router = DI.appComponent.router()
         if (savedInstanceState == null) {
 //            updateStatusBar(R.color.silver)
