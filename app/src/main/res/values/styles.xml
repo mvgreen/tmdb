@@ -9,10 +9,10 @@
 
     <!-- Элементы интерфейса -->
     <style name="text_input_layout_style" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:textColorHint">@color/purple</item>
+        <item name="android:textColorHint">@color/gray</item>
+        <item name="hintTextColor">@color/gray</item>
         <item name="hintTextAppearance">@style/caption2</item>
         <item name="boxStrokeColor">@color/input_layout_outline_color</item>
-        <item name="hintTextColor">@color/gray</item>
     </style>
 
     <style name="text_input_style">
