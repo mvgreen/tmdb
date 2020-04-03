@@ -6,6 +6,7 @@ import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
+import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 
 @Component(modules = [AppModule::class])
@@ -13,6 +14,10 @@ import ru.terrakok.cicerone.Router
 internal interface ApplicationComponent {
 
     fun cicerone(): Cicerone<Router>
+
+    fun navigatorHolder(): NavigatorHolder
+
+    fun router(): Router
 
     @Component.Builder
     interface Builder {
