@@ -39,7 +39,7 @@ abstract class AppActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.test_layout)
         navigatorHolder = DI.appComponent.navigatorHolder()
     }
 

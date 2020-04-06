@@ -1,18 +1,33 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryDark">@color/yellow</item>
-        <item name="colorAccent">@color/green</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/bg_black</item>
+        <item name="colorPrimaryDark">@color/bg_black</item>
+        <item name="colorAccent">@color/dark_blue</item>
+        <item name="android:windowBackground">@color/bg_black</item>
+        <item name="background">@color/bg_black</item>
     </style>
 
     <!-- Элементы интерфейса -->
-    <style name="text_input_layout_style" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="text_input_layout_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textColorHint">@color/gray</item>
         <item name="hintTextColor">@color/gray</item>
         <item name="hintTextAppearance">@style/caption2</item>
+
         <item name="boxStrokeColor">@color/input_layout_outline_color</item>
+        <item name="boxStrokeWidth">2dp</item>
+
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+    </style>
+
+    <style name="text_input_layout_style.password">
+        <item name="passwordToggleEnabled">true</item>
+        <item name="passwordToggleDrawable">@drawable/visibility_selector</item>
+        <item name="passwordToggleTint">@color/gray</item>
     </style>
 
     <style name="text_input_style">
@@ -23,6 +38,25 @@
         <item name="android:textSelectHandleRight">@drawable/cursor_right</item>
     </style>
 
+    <style name="orange_button">
+        <item name="android:background">@drawable/btn_selector</item>
+        <item name="android:stateListAnimator">@null</item>
+
+        <item name="android:textAppearance">@style/button_text</item>
+        <item name="android:textColor">@color/button_text_color_selector</item>
+    </style>
+
+    <!-- Стили текста -->
+
+    <style name="h1_light">
+        <item name="android:textAppearance">@style/H1</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="content1_light">
+        <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
 
     <!-- Шрифты -->
     <style name="H1">

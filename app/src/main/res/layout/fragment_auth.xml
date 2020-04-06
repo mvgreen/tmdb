@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:background="@color/bg_black">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Добро пожаловать!"
+        style="@style/h1_light"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginHorizontal="16dp"/>
+
+    <TextView
+        android:id="@+id/subtitile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Укажите логин и пароль, которые вы использовали для входа"
+        style="@style/content1_light"
+
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="25dp"/>
+
+
+    <FrameLayout
+        android:id="@+id/login_theme_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+
+        app:layout_constraintTop_toBottomOf="@id/subtitile"
+
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="16dp"
+
+        android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/text_input_layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/text_input_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Логин" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/password_theme_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+
+        app:layout_constraintTop_toBottomOf="@id/login_theme_container"
+
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+
+        android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/text_input_layout_style.password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/text_input_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"
+                android:hint="Пароль" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+
+        style="@style/orange_button"
+        android:text="Войти" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
