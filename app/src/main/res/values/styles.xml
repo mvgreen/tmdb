@@ -58,6 +58,11 @@
         <item name="android:textColor">@color/light</item>
     </style>
 
+    <style name="content1_red">
+        <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
     <!-- Шрифты -->
     <style name="H1">
         <item name="android:fontFamily">@font/roboto_medium</item>

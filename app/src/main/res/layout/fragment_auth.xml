@@ -30,18 +30,8 @@
             style="@style/content1_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Укажите логин и пароль, которые вы использовали для входа" />
-
-        <Space
-            android:id="@+id/animated_margin"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp" />
+            android:text="Укажите логин и пароль, которые вы использовали для входа"
+            android:layout_marginBottom="32dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/text_input_layout_style"
@@ -49,6 +39,7 @@
             android:layout_height="56dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_email"
                 style="@style/text_input_style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -62,12 +53,22 @@
             android:layout_height="56dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_password"
                 style="@style/text_input_style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Пароль"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/error_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/content1_red"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:text="Что-то пошло не так,\nпопробуйте войти позже"/>
 
     </LinearLayout>
 
