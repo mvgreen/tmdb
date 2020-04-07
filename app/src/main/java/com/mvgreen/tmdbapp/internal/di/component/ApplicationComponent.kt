@@ -1,7 +1,7 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
 import android.content.Context
-import com.mvgreen.data.network.api.TMDbApi
+import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.fragment.AuthViewModel

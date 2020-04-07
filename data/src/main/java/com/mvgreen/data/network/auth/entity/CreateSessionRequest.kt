@@ -1,4 +1,4 @@
-package com.mvgreen.data.network.entity.auth
+package com.mvgreen.data.network.auth.entity
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

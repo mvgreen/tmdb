@@ -1,8 +1,8 @@
-package com.mvgreen.data.network.api
+package com.mvgreen.data.network.auth.api
 
-import com.mvgreen.data.network.entity.auth.CreateSessionRequest
-import com.mvgreen.data.network.entity.auth.GeneralAuthResponse
-import com.mvgreen.data.network.entity.auth.ValidateTokenRequest
+import com.mvgreen.data.network.auth.entity.CreateSessionRequest
+import com.mvgreen.data.network.auth.entity.GeneralAuthResponse
+import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET

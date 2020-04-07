@@ -2,9 +2,9 @@ package com.mvgreen.tmdbapp
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.mvgreen.data.network.entity.auth.CreateSessionRequest
-import com.mvgreen.data.network.entity.auth.GeneralAuthResponse
-import com.mvgreen.data.network.entity.auth.ValidateTokenRequest
+import com.mvgreen.data.network.auth.entity.CreateSessionRequest
+import com.mvgreen.data.network.auth.entity.GeneralAuthResponse
+import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
 import com.mvgreen.tmdbapp.internal.di.DI
 import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -71,7 +71,11 @@ class ApiTest {
 
         var sessionToken: String? = null
         api
-            .createSession(CreateSessionRequest(requestToken))
+            .createSession(
+                CreateSessionRequest(
+                    requestToken
+                )
+            )
             .subscribe { res, _ ->
                 sessionToken = res.sessionId
             }

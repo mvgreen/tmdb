@@ -1,6 +1,6 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
-import com.mvgreen.data.network.api.TMDbApi
+import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
