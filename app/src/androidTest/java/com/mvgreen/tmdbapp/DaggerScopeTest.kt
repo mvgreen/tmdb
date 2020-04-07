@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class CiceroneScopeTest {
+class DaggerScopeTest {
 
     lateinit var appContext: Context
 
@@ -48,6 +48,23 @@ class CiceroneScopeTest {
         assertTrue(favoritesCicerone1 !== profileCicerone1)
 
         assertTrue(filmsCicerone1 !== profileCicerone1)
+    }
+
+    @Test
+    fun apiInstancesAreUnique() {
+        // given
+        DI.init(appContext)
+
+        // when
+        val moshi1 = DI.appComponent.moshi()
+        val moshi2 = DI.appComponent.moshi()
+
+        val api1 = DI.appComponent.api()
+        val api2 = DI.appComponent.api()
+
+        // then
+        assertTrue(moshi1 === moshi2)
+        assertTrue(api1 === api2)
     }
 
 }

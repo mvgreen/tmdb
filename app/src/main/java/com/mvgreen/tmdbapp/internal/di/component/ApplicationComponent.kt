@@ -1,9 +1,11 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
 import android.content.Context
+import com.mvgreen.data.network.api.TMDbApi
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.fragment.AuthViewModel
+import com.squareup.moshi.Moshi
 import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
@@ -21,6 +23,10 @@ internal interface ApplicationComponent {
     fun router(): Router
 
     fun authViewModel(): AuthViewModel
+
+    fun moshi(): Moshi
+
+    fun api(): TMDbApi
 
     @Component.Builder
     interface Builder {
