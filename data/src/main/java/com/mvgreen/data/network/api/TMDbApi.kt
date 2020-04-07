@@ -15,21 +15,21 @@ interface TMDbApi {
         const val API_KEY = "24721d9f11f943e33acba3cc602e8789"
     }
 
-    @GET("authentication/token/new/")
+    @GET("authentication/token/new")
     fun getRequestToken(
         @Query("api_key") apiKey: String = API_KEY
     ): Single<GeneralAuthResponse>
 
-    @POST("authentication/token/validate_with_login/")
+    @POST("authentication/token/validate_with_login")
     fun validateRequestToken(
-        @Query("api_key") apiKey: String = API_KEY,
-        @Body requestBody: ValidateTokenRequest
+        @Body requestBody: ValidateTokenRequest,
+        @Query("api_key") apiKey: String = API_KEY
     ): Single<GeneralAuthResponse>
 
-    @POST("authentication/session/new/")
+    @POST("authentication/session/new")
     fun createSession(
-        @Query("api_key") apiKey: String = API_KEY,
-        @Body requestBody: CreateSessionRequest
+        @Body requestBody: CreateSessionRequest,
+        @Query("api_key") apiKey: String = API_KEY
     ): Single<GeneralAuthResponse>
 
 }
