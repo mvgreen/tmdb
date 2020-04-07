@@ -13,13 +13,14 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.Disposable
 import io.reactivex.internal.schedulers.ExecutorScheduler
 import io.reactivex.plugins.RxJavaPlugins
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
-class ApiTest {
+class AuthUseCaseTest {
 
     lateinit var appContext: Context
 
@@ -45,35 +46,34 @@ class ApiTest {
     }
 
     @Test
-    fun whenRequestSuccessfulResponseIsParsed() {
+    fun whenLoginSuccessfullyDataIsSavedInPrefs() {
         // given
-        val repository = DI.appComponent.authRepository()
+        val useCase = DI.appComponent.authUseCase()
+        val tokenString = DI.appComponent.tokenStorage()
 
         // when
-        repository
+        useCase
             .login(VALID_LOGIN, VALID_PASSWORD)
-            .subscribe { result, err ->
-                // then
-                assertTrue(err == null)
-                assertTrue(!result.isNullOrEmpty())
-            }
+            .subscribe({}, { throw AssertionError() })
+
+        // then
+        val savedToken = tokenString.getSessionToken()
+        assertNotNull(savedToken)
     }
 
     @Test
-    fun whenRequestFailsNetworkExceptionIsThrown() {
+    fun whenLoginFailedNetworkexceptionIsThrown() {
         // given
-        val repository = DI.appComponent.authRepository()
+        val useCase = DI.appComponent.authUseCase()
 
         // when
-        var exception: Throwable? = null
-        repository
+        var error : Throwable? = null
+        useCase
             .login(BAD_LOGIN, BAD_PASSWORD)
-            .subscribe { _, err ->
-                exception = err
-            }
+            .subscribe({ throw AssertionError() }, { error = it })
 
         // then
-        assertTrue(exception != null && exception is NetworkException)
+        assertNotNull(error)
+        assertTrue(error is NetworkException)
     }
-
 }

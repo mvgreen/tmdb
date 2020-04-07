@@ -1,10 +1,15 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
+import android.content.Context
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
+import com.mvgreen.data.storage.TokenStorageImpl
+import com.mvgreen.data.usecase.AuthUseCaseImpl
 import com.mvgreen.domain.repository.AuthRepository
+import com.mvgreen.domain.repository.TokenStorage
+import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -50,8 +55,20 @@ internal class AppModule {
     }
 
     /** Репозитории */
+
+    @Provides
+    @ApplicationScope
+    fun tokenStorage(context: Context): TokenStorage = TokenStorageImpl(context)
+
     @Provides
     @ApplicationScope
     fun authRepository(api: TMDbApi): AuthRepository = AuthRepositoryImpl(api)
+
+    /** UseCase-ы */
+
+    @Provides
+    @ApplicationScope
+    fun authUseCase(authRepository: AuthRepository, tokenStorage: TokenStorage): AuthUseCase =
+        AuthUseCaseImpl(authRepository, tokenStorage)
 
 }

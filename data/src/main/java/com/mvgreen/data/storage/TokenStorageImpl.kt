@@ -12,6 +12,7 @@ class TokenStorageImpl @Inject constructor(private val context: Context) : Token
     override fun saveSessionToken(sessionToken: String) {
         with(writePrefs(TOKEN_PREFERENCES)) {
             putString(KEY_SESSION_TOKEN, sessionToken)
+            commit()
         }
     }
 
