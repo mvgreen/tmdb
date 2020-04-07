@@ -12,23 +12,17 @@ class AuthRepository @Inject constructor(
 ) {
 
     fun login(email: String, password: String): Single<String> {
-        return Single.fromCallable {
-            val requestToken = api
-                .getRequestToken()
-                .execute()
-                .body()
-                ?.requestToken
-                ?: throw UnexpectedResponseException()
-
-            api.validateRequestToken(ValidateTokenRequest(email, password, requestToken)).execute()
-
-            return@fromCallable api
-                .createSession(CreateSessionRequest(requestToken))
-                .execute()
-                .body()
-                ?.sessionId
-                ?: throw UnexpectedResponseException()
-        }
+        return api
+            .getRequestToken()
+            .flatMap { result ->
+                val token = result.requestToken ?: throw UnexpectedResponseException()
+                return@flatMap api.validateRequestToken(ValidateTokenRequest(email, password, token))
+            }
+            .flatMap { result ->
+                val token = result.requestToken ?: throw UnexpectedResponseException()
+                return@flatMap api.createSession(CreateSessionRequest(token))
+            }
+            .map { result -> result.sessionId ?: throw UnexpectedResponseException() }
     }
 
 }

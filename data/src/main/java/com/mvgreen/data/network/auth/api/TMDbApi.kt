@@ -19,18 +19,18 @@ interface TMDbApi {
     @GET("authentication/token/new")
     fun getRequestToken(
         @Query("api_key") apiKey: String = API_KEY
-    ): Call<GeneralAuthResponse>
+    ): Single<GeneralAuthResponse>
 
     @POST("authentication/token/validate_with_login")
     fun validateRequestToken(
         @Body requestBody: ValidateTokenRequest,
         @Query("api_key") apiKey: String = API_KEY
-    ): Call<GeneralAuthResponse>
+    ): Single<GeneralAuthResponse>
 
     @POST("authentication/session/new")
     fun createSession(
         @Body requestBody: CreateSessionRequest,
         @Query("api_key") apiKey: String = API_KEY
-    ): Call<GeneralAuthResponse>
+    ): Single<GeneralAuthResponse>
 
 }
