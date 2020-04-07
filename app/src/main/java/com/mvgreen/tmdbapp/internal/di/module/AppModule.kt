@@ -1,9 +1,10 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
-import com.mvgreen.data.network.auth.AuthRepository
+import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
+import com.mvgreen.domain.repository.AuthRepository
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -51,6 +52,6 @@ internal class AppModule {
     /** Репозитории */
     @Provides
     @ApplicationScope
-    fun authRepository(api: TMDbApi): AuthRepository = AuthRepository(api)
+    fun authRepository(api: TMDbApi): AuthRepository = AuthRepositoryImpl(api)
 
 }

@@ -4,19 +4,26 @@ import com.mvgreen.data.exception.UnexpectedResponseException
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.auth.entity.CreateSessionRequest
 import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
+import com.mvgreen.domain.repository.AuthRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     private val api: TMDbApi
-) {
+) : AuthRepository {
 
-    fun login(email: String, password: String): Single<String> {
+    override fun login(email: String, password: String): Single<String> {
         return api
             .getRequestToken()
             .flatMap { result ->
                 val token = result.requestToken ?: throw UnexpectedResponseException()
-                return@flatMap api.validateRequestToken(ValidateTokenRequest(email, password, token))
+                return@flatMap api.validateRequestToken(
+                    ValidateTokenRequest(
+                        email,
+                        password,
+                        token
+                    )
+                )
             }
             .flatMap { result ->
                 val token = result.requestToken ?: throw UnexpectedResponseException()
