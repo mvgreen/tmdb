@@ -13,12 +13,20 @@ class AuthRepository @Inject constructor(
 
     fun login(email: String, password: String): Single<String> {
         return Single.fromCallable {
-            val requestToken = api.getRequestToken().requestToken
+            val requestToken = api
+                .getRequestToken()
+                .execute()
+                .body()
+                ?.requestToken
                 ?: throw UnexpectedResponseException()
 
-            api.validateRequestToken(ValidateTokenRequest(email, password, requestToken))
+            api.validateRequestToken(ValidateTokenRequest(email, password, requestToken)).execute()
 
-            return@fromCallable api.createSession(CreateSessionRequest(requestToken)).sessionId
+            return@fromCallable api
+                .createSession(CreateSessionRequest(requestToken))
+                .execute()
+                .body()
+                ?.sessionId
                 ?: throw UnexpectedResponseException()
         }
     }

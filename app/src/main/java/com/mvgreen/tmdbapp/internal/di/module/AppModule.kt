@@ -1,7 +1,9 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
+import com.mvgreen.data.network.auth.AuthRepository
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.factory.TMDbApiFactory
+import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -41,7 +43,14 @@ internal class AppModule {
         moshiInstance: Moshi
     ): TMDbApi {
         return TMDbApiFactory(
+            HttpErrorInterceptor(moshiInstance),
             MoshiConverterFactory.create(moshiInstance)
         ).create(TMDbApi::class.java)
     }
+
+    /** Репозитории */
+    @Provides
+    @ApplicationScope
+    fun authRepository(api: TMDbApi): AuthRepository = AuthRepository(api)
+
 }

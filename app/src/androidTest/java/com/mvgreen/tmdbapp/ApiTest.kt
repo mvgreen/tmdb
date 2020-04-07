@@ -2,9 +2,7 @@ package com.mvgreen.tmdbapp
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.mvgreen.data.network.auth.entity.CreateSessionRequest
-import com.mvgreen.data.network.auth.entity.GeneralAuthResponse
-import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
+import com.mvgreen.data.exception.NetworkException
 import com.mvgreen.tmdbapp.internal.di.DI
 import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -14,7 +12,6 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import retrofit2.HttpException
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -44,67 +41,35 @@ class ApiTest {
     }
 
     @Test
-    fun whenRequestIsSentResponseIsParsed() {
+    fun whenRequestSuccessfulResponseIsParsed() {
         // given
-        val api = DI.appComponent.api()
+        val repository = DI.appComponent.authRepository()
 
         // when
-        lateinit var requestToken: String
-        api
-            .getRequestToken()
-            .subscribe { res, err ->
+        repository
+            .login("mvgreen_test", "Fe6txkBX6kBWWN5")
+            .subscribe { result, err ->
+                // then
                 assertTrue(err == null)
-                requestToken = res.requestToken!!
+                assertTrue(!result.isNullOrEmpty())
             }
-
-        api
-            .validateRequestToken(
-                ValidateTokenRequest(
-                    "mvgreen_test",
-                    "Fe6txkBX6kBWWN5",
-                    requestToken
-                )
-            )
-            .subscribe { _, err ->
-                assertTrue(err == null)
-            }
-
-        var sessionToken: String? = null
-        api
-            .createSession(
-                CreateSessionRequest(
-                    requestToken
-                )
-            )
-            .subscribe { res, _ ->
-                sessionToken = res.sessionId
-            }
-
-        // then
-        assertTrue(!sessionToken.isNullOrEmpty())
     }
 
     @Test
-    fun whenResponseIs400ItIsConvertable() {
+    fun whenRequestFailsNetworkExceptionIsThrown() {
         // given
-        val api = DI.appComponent.api()
-        val moshi = DI.appComponent.moshi()
+        val repository = DI.appComponent.authRepository()
 
         // when
-        lateinit var exception: HttpException
-        api
-            .getRequestToken(apiKey = "BAD_KEY")
+        var exception: Throwable? = null
+        repository
+            .login("badmail@redmadrobot.com", "bad_password")
             .subscribe { _, err ->
-                exception = err as HttpException
+                exception = err
             }
 
         // then
-        val response = moshi
-            .adapter(GeneralAuthResponse::class.java)
-            .fromJson(exception.response()!!.errorBody()!!.source())
-
-        assertTrue(response != null)
-        assertTrue(response!!.statusMessage != null)
-        assertTrue(response.statusCode != null)
+        assertTrue(exception != null && exception is NetworkException)
     }
+
 }

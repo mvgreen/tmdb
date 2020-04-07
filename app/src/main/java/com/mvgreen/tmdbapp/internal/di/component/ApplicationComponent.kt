@@ -1,6 +1,7 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
 import android.content.Context
+import com.mvgreen.data.network.auth.AuthRepository
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
@@ -27,6 +28,8 @@ internal interface ApplicationComponent {
     fun moshi(): Moshi
 
     fun api(): TMDbApi
+
+    fun authRepository(): AuthRepository
 
     @Component.Builder
     interface Builder {
