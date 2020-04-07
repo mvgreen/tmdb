@@ -3,6 +3,7 @@ package com.mvgreen.tmdbapp
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mvgreen.data.network.entity.auth.CreateSessionRequest
+import com.mvgreen.data.network.entity.auth.GeneralAuthResponse
 import com.mvgreen.data.network.entity.auth.ValidateTokenRequest
 import com.mvgreen.tmdbapp.internal.di.DI
 import io.reactivex.Scheduler
@@ -13,6 +14,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import retrofit2.HttpException
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -78,4 +80,27 @@ class ApiTest {
         assertTrue(!sessionToken.isNullOrEmpty())
     }
 
+    @Test
+    fun whenResponseIs400ItIsConvertable() {
+        // given
+        val api = DI.appComponent.api()
+        val moshi = DI.appComponent.moshi()
+
+        // when
+        lateinit var exception: HttpException
+        api
+            .getRequestToken(apiKey = "BAD_KEY")
+            .subscribe { _, err ->
+                exception = err as HttpException
+            }
+
+        // then
+        val response = moshi
+            .adapter(GeneralAuthResponse::class.java)
+            .fromJson(exception.response()!!.errorBody()!!.source())
+
+        assertTrue(response != null)
+        assertTrue(response!!.statusMessage != null)
+        assertTrue(response.statusCode != null)
+    }
 }
