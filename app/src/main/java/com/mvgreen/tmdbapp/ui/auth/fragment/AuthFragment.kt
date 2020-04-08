@@ -18,7 +18,7 @@ import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.base.event.Event
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
-import com.mvgreen.tmdbapp.ui.delegator.CollapseOnEnterExpandOnExitStrategy
+import com.mvgreen.tmdbapp.ui.delegator.DisappearOnEnterExpandOnExitStrategy
 import com.mvgreen.tmdbapp.ui.delegator.ShowFirstInitialState
 import com.mvgreen.tmdbapp.ui.delegator.Visibility
 import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
@@ -120,7 +120,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
             State(
                 Visibility.VISIBLE,
                 listOf(title, subtitile),
-                CollapseOnEnterExpandOnExitStrategy(requireContext())
+                DisappearOnEnterExpandOnExitStrategy(requireContext())
             ),
             initialState = ShowFirstInitialState
         )

@@ -10,41 +10,26 @@ import com.redmadrobot.lib.sd.base.State
 import com.redmadrobot.lib.sd.base.StateChangeStrategy
 import java.lang.ref.WeakReference
 
-class CollapseOnEnterExpandOnExitStrategy(private val context: Context) :
+class DisappearOnEnterExpandOnExitStrategy(private val context: Context) :
     StateChangeStrategy<Visibility> {
 
     override fun onStateEnter(state: State<Visibility>, prevState: State<Visibility>?) {
         for (view in state.viewsGroup) {
-//            AnimatorInflater.loadAnimator(context, R.animator.collapse_view).apply {
-//                setTarget(view)
-//                addListener(CollapseListener(WeakReference(view)))
-//                start()
-//            }
             view.visibility = View.GONE
+            view.scaleY = 0.0f
         }
     }
 
     override fun onStateExit(state: State<Visibility>, nextState: State<Visibility>?) {
         for (view in state.viewsGroup) {
-//            AnimatorInflater.loadAnimator(context, R.animator.expand_view).apply {
-//                setTarget(view)
-//                addListener(ExpandListener(WeakReference(view)))
-//                start()
-//            }
-            view.visibility = View.VISIBLE
+            AnimatorInflater.loadAnimator(context, R.animator.expand_view).apply {
+                setTarget(view)
+                addListener(ExpandListener(WeakReference(view)))
+                start()
+            }
         }
     }
-}
 
-private class CollapseListener(private val target: WeakReference<View>) :
-    Animator.AnimatorListener {
-    override fun onAnimationEnd(animation: Animator?) {
-        target.get()?.visibility = View.GONE
-    }
-
-    override fun onAnimationStart(animation: Animator?) {}
-    override fun onAnimationCancel(animation: Animator?) {}
-    override fun onAnimationRepeat(animation: Animator?) {}
 }
 
 private class ExpandListener(private val target: WeakReference<View>) :
