@@ -8,5 +8,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         style="@style/h1_light"
-        android:text="Главный экран" />
+        android:text="@string/main_screen_stub" />
 </FrameLayout>

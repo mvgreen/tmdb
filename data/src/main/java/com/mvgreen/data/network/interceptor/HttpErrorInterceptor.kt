@@ -36,30 +36,9 @@ class HttpErrorInterceptor @Inject constructor(private val moshi: Moshi) : Inter
         if (body == null)
             throw UnexpectedResponseException()
         when (code) {
-            //400 -> inputError(body)
             401 -> throw CredentialsException()
             else -> throw UnexpectedResponseException()
         }
     }
-
-//    private fun inputError(body: ResponseBody): Nothing {
-//        val map = parseErrorResponse(body)
-//
-//        throw InvalidInputException(map)
-//    }
-//
-//    private fun parseErrorResponse(body: ResponseBody): MapResponse {
-//        try {
-//            val field = getOrDie(
-//                moshi
-//                    .adapter(ErrorResponseBody::class.java)
-//                    .fromJson(body.source()),
-//                "body.source()"
-//            )
-//            return field.error.description
-//        } catch (e: Exception) {
-//            throw UnexpectedResponseException()
-//        }
-//    }
 
 }

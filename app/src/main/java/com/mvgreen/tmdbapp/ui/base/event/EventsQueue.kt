@@ -14,4 +14,5 @@ class EventsQueue : MutableLiveData<Queue<Event>>() {
 
         value = queue
     }
+
 }

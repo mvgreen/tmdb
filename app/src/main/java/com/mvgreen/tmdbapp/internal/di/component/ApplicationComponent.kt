@@ -44,6 +44,7 @@ internal interface ApplicationComponent {
         fun context(appContext: Context): Builder
 
         fun build(): ApplicationComponent
+
     }
 
 }

@@ -55,4 +55,5 @@ abstract class BaseFragment : Fragment {
         }
         this.clear()
     }
+
 }

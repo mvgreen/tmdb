@@ -14,7 +14,6 @@ import com.mvgreen.data.exception.InvalidInputException
 import com.mvgreen.data.exception.ServerException
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
-import com.mvgreen.tmdbapp.ui.MainActivity
 import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.base.event.Event
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
@@ -76,7 +75,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val activity = requireActivity() as MainActivity
+        val activity = requireActivity() as AppActivity
 
         activity.supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -154,4 +153,5 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
         )
         label_error.visibility = View.VISIBLE
     }
+
 }

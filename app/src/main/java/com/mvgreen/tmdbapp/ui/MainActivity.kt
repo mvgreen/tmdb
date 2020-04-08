@@ -17,4 +17,5 @@ class MainActivity : AppActivity() {
             router.newRootScreen(AuthScreen)
         }
     }
+
 }

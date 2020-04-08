@@ -2,6 +2,18 @@
     <string name="app_name">TMDB App</string>
     <string name="error_not_implemented">Не удалось обработать событие</string>
 
+    <!-- Интерфейс -->
+    <string name="welcome_title">Добро пожаловать!</string>
+    <string name="welcome_subtitle">Укажите логин и пароль, которые вы использовали для входа</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="login_button_text">Войти</string>
+    <string name="main_screen_stub">Главный экран</string>
+
+    <!-- Логин -->
+    <string name="valid_login">mvgreen_test</string>
+    <string name="valid_password">Fe6txkBX6kBWWN5</string>
+
     <!-- Ошибки сети -->
     <string name="error_unknown">Что-то пошло не так</string>
     <string name="error_server">Ошибка на стороне сервера</string>

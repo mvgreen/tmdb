@@ -53,6 +53,7 @@ class ApiTest {
         repository
             .login(VALID_LOGIN, VALID_PASSWORD)
             .subscribe { result, err ->
+
                 // then
                 assertTrue(err == null)
                 assertTrue(!result.isNullOrEmpty())

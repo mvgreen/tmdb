@@ -2,10 +2,6 @@ package com.mvgreen.tmdbapp.internal.di
 
 import android.content.Context
 import com.mvgreen.tmdbapp.internal.di.component.*
-import com.mvgreen.tmdbapp.internal.di.component.ApplicationComponent
-import com.mvgreen.tmdbapp.internal.di.component.FavoritesTabComponent
-import com.mvgreen.tmdbapp.internal.di.component.FilmsTabComponent
-import com.mvgreen.tmdbapp.internal.di.component.ProfileTabComponent
 
 internal object DI {
 
