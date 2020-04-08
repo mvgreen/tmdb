@@ -13,4 +13,5 @@ class App : Application() {
     private fun initDI() {
         DI.init(this)
     }
+
 }

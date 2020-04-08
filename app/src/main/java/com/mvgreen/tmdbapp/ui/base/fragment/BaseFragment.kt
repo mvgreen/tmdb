@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment {
         (requireActivity() as AppActivity).updateStatusBar(color)
     }
 
-    protected fun addGlobalListener(listener: ViewTreeObserver.OnGlobalLayoutListener) {
+    protected fun bindToFragmentLifecycle(listener: ViewTreeObserver.OnGlobalLayoutListener) {
         globalListeners.add(listener)
         view?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
     }
@@ -55,4 +55,5 @@ abstract class BaseFragment : Fragment {
         }
         this.clear()
     }
+
 }

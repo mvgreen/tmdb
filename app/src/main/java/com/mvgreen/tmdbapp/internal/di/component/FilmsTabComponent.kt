@@ -21,6 +21,7 @@ internal interface FilmsTabComponent {
         fun context(appContext: Context): Builder
 
         fun build(): FilmsTabComponent
+
     }
 
 }

@@ -21,6 +21,7 @@ internal interface ProfileTabComponent {
         fun context(appContext: Context): Builder
 
         fun build(): ProfileTabComponent
+
     }
 
 }

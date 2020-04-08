@@ -21,6 +21,7 @@ internal interface FavoritesTabComponent {
         fun context(appContext: Context): Builder
 
         fun build(): FavoritesTabComponent
+
     }
 
 }
