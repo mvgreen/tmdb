@@ -1,4 +1,4 @@
-package com.mvgreen.tmdbapp.ui.viewmodel
+package com.mvgreen.tmdbapp.ui.auth.viewmodel
 
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
