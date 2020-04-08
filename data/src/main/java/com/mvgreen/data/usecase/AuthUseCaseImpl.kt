@@ -12,10 +12,12 @@ class AuthUseCaseImpl @Inject constructor(
     private val tokenStorage: TokenStorage
 ) : AuthUseCase {
 
-    override fun login(email: String, password: String) : Completable {
+    override fun login(email: String, password: String): Completable {
         return repository
             .login(email, password)
-            .map { token -> tokenStorage.saveSessionToken(token) }
+            .map { token ->
+                tokenStorage.saveAuthData(token, email, password)
+            }
             .ignoreElement()
             .subscribeOn(Schedulers.io())
     }
