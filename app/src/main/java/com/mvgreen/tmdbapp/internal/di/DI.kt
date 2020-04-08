@@ -17,12 +17,16 @@ internal object DI {
     lateinit var profileTabComponent: ProfileTabComponent
         private set
 
+    lateinit var navigationRootComponent: NavigationRootComponent
+        private set
+
 
     fun init(appContext: Context) {
         appComponent = DaggerApplicationComponent.builder().context(appContext).build()
         filmTabComponent = DaggerFilmsTabComponent.builder().context(appContext).build()
         favoritesTabComponent = DaggerFavoritesTabComponent.builder().context(appContext).build()
         profileTabComponent = DaggerProfileTabComponent.builder().context(appContext).build()
+        navigationRootComponent = DaggerNavigationRootComponent.builder().context(appContext).build()
     }
 
 }

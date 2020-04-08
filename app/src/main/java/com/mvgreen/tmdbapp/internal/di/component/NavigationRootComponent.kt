@@ -1,17 +1,17 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
 import android.content.Context
-import com.mvgreen.tmdbapp.internal.di.module.FavoritesModule
-import com.mvgreen.tmdbapp.internal.di.scope.FavoritesTabScope
+import com.mvgreen.tmdbapp.internal.di.module.NavigationRootModule
+import com.mvgreen.tmdbapp.internal.di.scope.NavigationRootScope
 import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 
-@Component(modules = [FavoritesModule::class])
-@FavoritesTabScope
-internal interface FavoritesTabComponent {
+@Component(modules = [NavigationRootModule::class])
+@NavigationRootScope
+internal interface NavigationRootComponent {
 
     fun cicerone(): Cicerone<Router>
 
@@ -25,7 +25,7 @@ internal interface FavoritesTabComponent {
         @BindsInstance
         fun context(appContext: Context): Builder
 
-        fun build(): FavoritesTabComponent
+        fun build(): NavigationRootComponent
 
     }
 

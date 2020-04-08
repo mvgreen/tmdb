@@ -13,3 +13,6 @@ internal annotation class FavoritesTabScope
 
 @Scope
 internal annotation class ProfileTabScope
+
+@Scope
+internal annotation class NavigationRootScope
