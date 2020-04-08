@@ -1,13 +1,21 @@
 package com.mvgreen.tmdbapp.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.textChanges
+import com.mvgreen.data.exception.ConnectionException
+import com.mvgreen.data.exception.CredentialsException
+import com.mvgreen.data.exception.InvalidInputException
+import com.mvgreen.data.exception.ServerException
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.MainActivity
+import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.base.event.Event
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
@@ -15,7 +23,6 @@ import com.mvgreen.tmdbapp.ui.delegator.CollapseOnEnterExpandOnExitStrategy
 import com.mvgreen.tmdbapp.ui.delegator.ShowFirstInitialState
 import com.mvgreen.tmdbapp.ui.delegator.Visibility
 import com.mvgreen.tmdbapp.ui.viewmodel.AuthViewModel
-import com.mvgreen.tmdbapp.utils.emailValid
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.observe
 import com.mvgreen.tmdbapp.utils.viewModelFactory
@@ -23,6 +30,8 @@ import com.redmadrobot.lib.sd.base.State
 import com.redmadrobot.lib.sd.base.StateDelegate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_auth.*
+import java.util.concurrent.TimeoutException
+
 
 class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
@@ -49,10 +58,19 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
     }
 
     private val onLoginListener = View.OnClickListener {
-        val email = input_email.text.toString()
+        val email = input_login.text.toString()
         val password = input_password.text.toString()
         btn_login.isEnabled = false
-        error_label.visibility = View.GONE
+        label_error.visibility = View.GONE
+
+        with(requireActivity() as AppActivity) {
+            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                currentFocus?.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+
         viewModel.onLogin(email, password)
     }
 
@@ -74,6 +92,10 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
     private fun setupView() {
         btn_login.setOnClickListener(onLoginListener)
+        input_password.setOnEditorActionListener { _, _, _ ->
+            btn_login.requestFocus()
+            btn_login.performClick()
+        }
     }
 
     private fun setupViewModel() {
@@ -82,15 +104,13 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
         })
 
         observe(viewModel.events, this::onEvent)
-        input_email
+        input_login
             .textChanges()
             .map { it.toString() }
             .retry()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { email ->
-                    btn_login.isEnabled = emailValid(email) && !viewModel.loginInProgress
-                },
+                { btn_login.isEnabled = true },
                 { e -> Log.e(TAG, e.message, e) }
             )
             .disposeOnViewModelDestroy()
@@ -113,9 +133,25 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
     private fun onEvent(event: Event) {
         if (event is LoginFailedEvent) {
-            btn_login.isEnabled =
-                emailValid(input_email.text?.toString() ?: "") && !viewModel.loginInProgress
-            error_label.visibility = View.VISIBLE
+            onLoginError(event.e)
+            btn_login.isEnabled = true
+        } else {
+            Log.e(TAG, "Unexpected event: ${event::class.java}")
+            Snackbar.make(requireView(), R.string.error_not_implemented, Snackbar.LENGTH_SHORT)
         }
+    }
+
+    private fun onLoginError(exception: Throwable?) {
+        label_error.text = getString(
+            when (exception) {
+                is ConnectionException -> R.string.error_no_connection
+                is CredentialsException -> R.string.error_bad_credentials
+                is InvalidInputException -> R.string.error_bad_credentials
+                is ServerException -> R.string.error_server
+                is TimeoutException -> R.string.error_bad_connection
+                else -> R.string.error_unknown
+            }
+        )
+        label_error.visibility = View.VISIBLE
     }
 }

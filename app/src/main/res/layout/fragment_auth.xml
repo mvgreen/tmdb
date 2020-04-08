@@ -39,11 +39,13 @@
             android:layout_height="56dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_email"
+                android:id="@+id/input_login"
                 style="@style/text_input_style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Логин" />
+                android:inputType="textEmailAddress"
+                android:hint="Логин"
+                android:text="mvgreen_test"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -58,11 +60,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Пароль"
+                android:text="Fe6txkBX6kBWWN5"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/error_label"
+            android:id="@+id/label_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/content1_red"

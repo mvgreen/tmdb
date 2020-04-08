@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">TMDB App</string>
+    <string name="error_not_implemented">Не удалось обработать событие</string>
+
+    <!-- Ошибки сети -->
+    <string name="error_unknown">Что-то пошло не так</string>
+    <string name="error_server">Ошибка на стороне сервера</string>
+    <string name="error_bad_connection">Плохое соединение с интернетом</string>
+    <string name="error_no_connection">Нет соединения с интернетом</string>
+    <string name="error_no_response">Не удалось получить ответ от сервера</string>
+    <string name="error_bad_credentials">Неверный логин или пароль</string>
+    <string name="error_loading_items">Не удалось загрузить данные</string>
+    <string name="error_bad_request">Действие не выполнено</string>
+
 </resources>

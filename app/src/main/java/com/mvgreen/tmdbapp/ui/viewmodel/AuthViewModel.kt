@@ -1,28 +1,34 @@
 package com.mvgreen.tmdbapp.ui.viewmodel
 
+import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
+import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
 import com.mvgreen.tmdbapp.utils.onNext
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor() : BaseViewModel() {
+class AuthViewModel @Inject constructor(
+    private val useCase: AuthUseCase,
+    private val router: Router
+) : BaseViewModel() {
 
     var loginInProgress: Boolean = false
 
     fun onLogin(email: String, password: String) {
         loginInProgress = true
-        Single
-            .timer(3, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
+        useCase
+            .login(email, password)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { _, _ ->
-                loginInProgress = false
-                events.onNext(LoginFailedEvent)
-            }
+            .subscribe(
+                {
+                    router.newRootScreen(MainScreen)
+                },
+                { e ->
+                    events.onNext(LoginFailedEvent(e))
+                }
+            )
             .disposeOnViewModelDestroy()
     }
 }
