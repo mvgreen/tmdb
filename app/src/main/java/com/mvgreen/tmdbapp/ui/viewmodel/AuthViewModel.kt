@@ -1,4 +1,4 @@
-package com.mvgreen.tmdbapp.ui.fragment
+package com.mvgreen.tmdbapp.ui.viewmodel
 
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel

@@ -14,6 +14,7 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.delegator.CollapseOnEnterExpandOnExitStrategy
 import com.mvgreen.tmdbapp.ui.delegator.ShowFirstInitialState
 import com.mvgreen.tmdbapp.ui.delegator.Visibility
+import com.mvgreen.tmdbapp.ui.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.utils.emailValid
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.observe
