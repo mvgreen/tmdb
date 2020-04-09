@@ -24,5 +24,8 @@
     <string name="error_loading_items">Не удалось загрузить данные</string>
     <string name="error_bad_request">Действие не выполнено</string>
     <string name="logout_button_text">Выйти</string>
+    <string name="favorite">Избранное</string>
+    <string name="films">Фильмы</string>
+    <string name="profile">Профиль</string>
 
 </resources>

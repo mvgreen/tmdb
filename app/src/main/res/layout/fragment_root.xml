@@ -20,6 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/child_container"
         app:itemTextAppearanceActive="@style/content1_red"
-        app:itemTextAppearanceInactive="@style/content1_light" />
+        app:itemTextAppearanceInactive="@style/content1_light"
+        app:itemIconTint="@color/selectable_red" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@ package com.mvgreen.tmdbapp.internal.di.component
 import android.content.Context
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.domain.repository.AuthRepository
-import com.mvgreen.domain.repository.CredentialsStorage
+import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
@@ -37,7 +37,7 @@ internal interface ApplicationComponent {
 
     fun authRepository(): AuthRepository
 
-    fun credentialsStorage(): CredentialsStorage
+    fun userDataStorage(): UserDataStorage
 
     fun authUseCase(): AuthUseCase
 

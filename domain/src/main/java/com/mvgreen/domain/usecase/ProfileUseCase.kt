@@ -1,10 +1,12 @@
 package com.mvgreen.domain.usecase
 
 import com.mvgreen.domain.bean.ImageLoader
-import io.reactivex.Single
+import com.mvgreen.domain.entity.ProfileData
 
 interface ProfileUseCase {
 
-    fun getAvatarLoader(imageLoader: ImageLoader): Single<ImageLoader>
+    fun initAvatarLoader(imageLoader: ImageLoader)
+
+    fun getProfileData(): ProfileData
 
 }
