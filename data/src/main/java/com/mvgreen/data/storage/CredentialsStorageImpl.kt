@@ -6,10 +6,10 @@ import com.mvgreen.data.storage.StorageKeys.KEY_LOGIN
 import com.mvgreen.data.storage.StorageKeys.KEY_PASSWORD
 import com.mvgreen.data.storage.StorageKeys.KEY_SESSION_TOKEN
 import com.mvgreen.data.utils.getPrefs
-import com.mvgreen.domain.repository.TokenStorage
+import com.mvgreen.domain.repository.CredentialsStorage
 import javax.inject.Inject
 
-class TokenStorageImpl @Inject constructor(private val context: Context) : TokenStorage {
+class CredentialsStorageImpl @Inject constructor(private val context: Context) : CredentialsStorage {
 
     override fun saveAuthData(sessionToken: String, email: String, password: String) {
         with(writePrefs(AUTH_PREFERENCES)) {

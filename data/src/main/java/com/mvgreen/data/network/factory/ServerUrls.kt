@@ -4,4 +4,6 @@ object ServerUrls {
     open class ServerUrl(val url: String)
 
     class TMDb : ServerUrl("https://api.themoviedb.org/3/")
+
+    object Gravatar: ServerUrl("https://secure.gravatar.com/avatar/")
 }

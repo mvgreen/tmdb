@@ -5,10 +5,10 @@ import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.api.TMDbApi
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
-import com.mvgreen.data.storage.TokenStorageImpl
+import com.mvgreen.data.storage.CredentialsStorageImpl
 import com.mvgreen.data.usecase.AuthUseCaseImpl
 import com.mvgreen.domain.repository.AuthRepository
-import com.mvgreen.domain.repository.TokenStorage
+import com.mvgreen.domain.repository.CredentialsStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
@@ -58,7 +58,7 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun tokenStorage(context: Context): TokenStorage = TokenStorageImpl(context)
+    fun credentialsStorage(context: Context): CredentialsStorage = CredentialsStorageImpl(context)
 
     @Provides
     @ApplicationScope
@@ -68,7 +68,7 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun authUseCase(authRepository: AuthRepository, tokenStorage: TokenStorage): AuthUseCase =
-        AuthUseCaseImpl(authRepository, tokenStorage)
+    fun authUseCase(authRepository: AuthRepository, credentialsStorage: CredentialsStorage): AuthUseCase =
+        AuthUseCaseImpl(authRepository, credentialsStorage)
 
 }

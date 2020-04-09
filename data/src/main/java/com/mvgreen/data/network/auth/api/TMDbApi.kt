@@ -2,9 +2,9 @@ package com.mvgreen.data.network.auth.api
 
 import com.mvgreen.data.network.auth.entity.CreateSessionRequest
 import com.mvgreen.data.network.auth.entity.GeneralAuthResponse
+import com.mvgreen.data.network.auth.entity.GetProfileResponse
 import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -32,5 +32,11 @@ interface TMDbApi {
         @Body requestBody: CreateSessionRequest,
         @Query("api_key") apiKey: String = API_KEY
     ): Single<GeneralAuthResponse>
+
+    @GET("account")
+    fun getAccountData(
+        @Query("session_id") sessionId : String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Single<GetProfileResponse>
 
 }

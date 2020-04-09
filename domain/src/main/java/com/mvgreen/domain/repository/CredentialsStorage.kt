@@ -1,6 +1,6 @@
 package com.mvgreen.domain.repository
 
-interface TokenStorage {
+interface CredentialsStorage {
 
     fun saveAuthData(sessionToken: String, email: String, password: String)
 
