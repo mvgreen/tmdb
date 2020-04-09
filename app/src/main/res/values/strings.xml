@@ -23,5 +23,6 @@
     <string name="error_bad_credentials">Неверный логин или пароль</string>
     <string name="error_loading_items">Не удалось загрузить данные</string>
     <string name="error_bad_request">Действие не выполнено</string>
+    <string name="logout_button_text">Выйти</string>
 
 </resources>
