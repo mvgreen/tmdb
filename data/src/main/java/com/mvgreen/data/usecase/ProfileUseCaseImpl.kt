@@ -24,4 +24,8 @@ class ProfileUseCaseImpl @Inject constructor(
     override fun getProfileData() : ProfileData {
         return userDataStorage.getProfileData()
     }
+
+    override fun logout() {
+        userDataStorage.clearData()
+    }
 }

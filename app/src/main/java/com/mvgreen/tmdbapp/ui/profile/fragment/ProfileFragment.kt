@@ -6,6 +6,7 @@ import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
+import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -29,6 +30,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         val profile = profileUseCase.getProfileData()
         name.text = profile.name
         login.text = profile.login
+
+        btn_logout.setOnClickListener {
+            profileUseCase.logout()
+            DI.appComponent.router().newRootScreen(AuthScreen)
+        }
     }
 
 }

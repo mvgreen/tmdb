@@ -9,4 +9,6 @@ interface ProfileUseCase {
 
     fun getProfileData(): ProfileData
 
+    fun logout()
+
 }

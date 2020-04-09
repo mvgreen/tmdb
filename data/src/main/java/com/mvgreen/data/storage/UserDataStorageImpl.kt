@@ -49,6 +49,13 @@ class UserDataStorageImpl @Inject constructor(private val context: Context) : Us
         }
     }
 
+    override fun clearData() {
+        with(writePrefs(PROFILE_PREFERENCES)) {
+            clear()
+            commit()
+        }
+    }
+
     override fun saveProfileData(profileData: ProfileData) {
         with(writePrefs(PROFILE_PREFERENCES)) {
             putString(KEY_AVATAR_HASH, profileData.avatarHash)
