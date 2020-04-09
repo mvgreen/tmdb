@@ -49,6 +49,13 @@ class UserDataStorageImpl @Inject constructor(private val context: Context) : Us
         }
     }
 
+    override fun hasUserData(): Boolean {
+        return with(readPrefs(PROFILE_PREFERENCES)) {
+            contains(KEY_LOGIN) && contains(KEY_PASSWORD) &&
+                    contains(KEY_SESSION_TOKEN) && contains(KEY_AVATAR_HASH) && contains(KEY_NAME)
+        }
+    }
+
     override fun clearData() {
         with(writePrefs(PROFILE_PREFERENCES)) {
             clear()

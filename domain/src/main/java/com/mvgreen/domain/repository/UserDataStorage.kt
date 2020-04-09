@@ -14,6 +14,8 @@ interface UserDataStorage {
 
     fun getProfileData(): ProfileData
 
+    fun hasUserData(): Boolean
+
     fun clearData()
 
 }
