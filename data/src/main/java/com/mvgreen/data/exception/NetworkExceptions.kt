@@ -12,3 +12,4 @@ class InvalidInputException(cause: Throwable) : NetworkException(cause)
 
 class CredentialsException : NetworkException()
 
+class NotFoundException : NetworkException()

@@ -7,9 +7,11 @@ import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
 import com.mvgreen.data.storage.CredentialsStorageImpl
 import com.mvgreen.data.usecase.AuthUseCaseImpl
+import com.mvgreen.data.usecase.ProfileUseCaseImpl
 import com.mvgreen.domain.repository.AuthRepository
 import com.mvgreen.domain.repository.CredentialsStorage
 import com.mvgreen.domain.usecase.AuthUseCase
+import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -70,5 +72,10 @@ internal class AppModule {
     @ApplicationScope
     fun authUseCase(authRepository: AuthRepository, credentialsStorage: CredentialsStorage): AuthUseCase =
         AuthUseCaseImpl(authRepository, credentialsStorage)
+
+    @Provides
+    @ApplicationScope
+    fun profileUseCase(authRepository: AuthRepository, credentialsStorage: CredentialsStorage): ProfileUseCase =
+        ProfileUseCaseImpl(authRepository, credentialsStorage)
 
 }

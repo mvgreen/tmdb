@@ -5,5 +5,7 @@ object ServerUrls {
 
     class TMDb : ServerUrl("https://api.themoviedb.org/3/")
 
-    object Gravatar: ServerUrl("https://secure.gravatar.com/avatar/")
+    object Gravatar: ServerUrl("https://secure.gravatar.com/avatar/") {
+        const val sizeModifier = "?size="
+    }
 }

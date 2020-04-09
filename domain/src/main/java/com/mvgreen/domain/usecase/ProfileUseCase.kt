@@ -5,6 +5,6 @@ import io.reactivex.Single
 
 interface ProfileUseCase {
 
-    fun getAvatarLoader(): Single<ImageLoader>
+    fun getAvatarLoader(imageLoader: ImageLoader): Single<ImageLoader>
 
 }

@@ -37,7 +37,11 @@ class AuthRepositoryImpl @Inject constructor(
         return api
             .getAccountData(sessionToken)
             .map { response ->
-                ProfileData(response.avatar?.gravatar?.hash)
+                ProfileData(
+                    response.avatar?.gravatar?.hash ?: throw UnexpectedResponseException(),
+                    response.name ?: throw UnexpectedResponseException(),
+                    response.username ?: throw UnexpectedResponseException()
+                )
             }
     }
 

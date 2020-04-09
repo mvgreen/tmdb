@@ -1,6 +1,7 @@
 package com.mvgreen.tmdbapp.ui.profile.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mvgreen.tmdbapp.R
