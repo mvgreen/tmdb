@@ -60,7 +60,6 @@ internal class AppModule {
         userDataStorage: UserDataStorage
     ): Authenticator = TokenAuthenticator(refreshRepository, userDataStorage)
 
-
     @Provides
     @ApplicationScope
     fun refreshRepository(apiHolder: ApiHolder) : RefreshRepository = RefreshRepository(apiHolder)
@@ -73,7 +72,7 @@ internal class AppModule {
         apiHolder: ApiHolder
     ): TMDbApi {
         apiHolder.api = TMDbApiFactory(
-            HttpErrorInterceptor(moshiInstance),
+            HttpErrorInterceptor(),
             authenticator,
             MoshiConverterFactory.create(moshiInstance)
         ).create(TMDbApi::class.java)
