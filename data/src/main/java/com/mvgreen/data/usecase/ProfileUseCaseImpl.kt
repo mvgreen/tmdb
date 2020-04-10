@@ -13,7 +13,6 @@ class ProfileUseCaseImpl @Inject constructor(
     private val userDataStorage: UserDataStorage
 ) : ProfileUseCase {
 
-    // TODO обработка случая отсутствия данных
     override fun initAvatarLoader(imageLoader: ImageLoader) {
         val profileData = userDataStorage.getProfileData()
 
