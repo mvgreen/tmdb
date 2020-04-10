@@ -39,11 +39,19 @@
     </style>
 
     <style name="orange_button">
-        <item name="android:background">@drawable/btn_selector</item>
+        <item name="android:background">@drawable/btn_selector_orange</item>
         <item name="android:stateListAnimator">@null</item>
 
         <item name="android:textAppearance">@style/button_text</item>
-        <item name="android:textColor">@color/button_text_color_selector</item>
+        <item name="android:textColor">@color/button_text_color_selector_light</item>
+    </style>
+
+    <style name="dark_button">
+        <item name="android:background">@drawable/btn_selector_dark</item>
+        <item name="android:stateListAnimator">@null</item>
+
+        <item name="android:textAppearance">@style/button_text</item>
+        <item name="android:textColor">@color/button_text_color_selector_purple</item>
     </style>
 
     <!-- Стили текста -->
@@ -61,6 +69,11 @@
     <style name="content1_red">
         <item name="android:textAppearance">@style/content1</item>
         <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="content1_gray">
+        <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <!-- Шрифты -->

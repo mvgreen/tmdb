@@ -49,7 +49,7 @@ class AuthUseCaseTest {
     fun whenLoginSuccessfullyDataIsSavedInPrefs() {
         // given
         val useCase = DI.appComponent.authUseCase()
-        val tokenString = DI.appComponent.tokenStorage()
+        val tokenStorage = DI.appComponent.userDataStorage()
 
         // when
         useCase
@@ -57,8 +57,11 @@ class AuthUseCaseTest {
             .subscribe({}, { throw AssertionError() })
 
         // then
-        val savedToken = tokenString.getSessionToken()
+        val savedToken = tokenStorage.getSessionToken()
+        val (login, password) = tokenStorage.getCredentials()
         assertNotNull(savedToken)
+        assertNotNull(login)
+        assertNotNull(password)
     }
 
     @Test

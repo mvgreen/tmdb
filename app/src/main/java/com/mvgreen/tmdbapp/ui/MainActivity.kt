@@ -5,6 +5,7 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
+import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
 
 class MainActivity : AppActivity() {
 
@@ -14,7 +15,11 @@ class MainActivity : AppActivity() {
         supportActionBar?.elevation = 0.0f
         val router = DI.appComponent.router()
         if (savedInstanceState == null) {
-            router.newRootScreen(AuthScreen)
+            if (DI.appComponent.userDataStorage().hasUserData()) {
+                router.newRootScreen(MainScreen)
+            } else {
+                router.newRootScreen(AuthScreen)
+            }
         }
     }
 

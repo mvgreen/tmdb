@@ -9,12 +9,17 @@
     <string name="password">Пароль</string>
     <string name="login_button_text">Войти</string>
     <string name="main_screen_stub">Главный экран</string>
+    <string name="logout_button_text">Выйти</string>
+    <string name="favorite">Избранное</string>
+    <string name="films">Фильмы</string>
+    <string name="profile">Профиль</string>
+    <string name="glide_error_message">Не удалось загрузить изображение.\nПроверьте подключение к интернету.</string>
 
     <!-- Логин -->
     <string name="valid_login">mvgreen_test</string>
     <string name="valid_password">Fe6txkBX6kBWWN5</string>
 
-    <!-- Ошибки сети -->
+    <!-- Ошибки -->
     <string name="error_unknown">Что-то пошло не так</string>
     <string name="error_server">Ошибка на стороне сервера</string>
     <string name="error_bad_connection">Плохое соединение с интернетом</string>

@@ -14,6 +14,7 @@ import com.mvgreen.data.exception.InvalidInputException
 import com.mvgreen.data.exception.ServerException
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
+import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.base.event.Event
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
@@ -21,7 +22,6 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.delegator.DisappearOnEnterExpandOnExitStrategy
 import com.mvgreen.tmdbapp.ui.delegator.ShowFirstInitialState
 import com.mvgreen.tmdbapp.ui.delegator.Visibility
-import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.observe
 import com.mvgreen.tmdbapp.utils.viewModelFactory

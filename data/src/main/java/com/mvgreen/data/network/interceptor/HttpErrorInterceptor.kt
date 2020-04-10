@@ -1,14 +1,13 @@
 package com.mvgreen.data.network.interceptor
 
 import com.mvgreen.data.exception.*
-import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
-class HttpErrorInterceptor @Inject constructor(private val moshi: Moshi) : Interceptor {
+class HttpErrorInterceptor @Inject constructor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -17,6 +16,8 @@ class HttpErrorInterceptor @Inject constructor(private val moshi: Moshi) : Inter
             response = chain.proceed(chain.request())
         } catch (timeout: TimeoutException) {
             throw TimeoutException()
+        } catch (e : NetworkException) {
+            throw e
         } catch (e: Throwable) {
             throw ConnectionException(e)
         }
