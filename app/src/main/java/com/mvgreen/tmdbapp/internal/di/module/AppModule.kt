@@ -2,7 +2,10 @@ package com.mvgreen.tmdbapp.internal.di.module
 
 import android.content.Context
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
+import com.mvgreen.data.network.auth.RefreshRepository
+import com.mvgreen.data.network.auth.api.ApiHolder
 import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.authenticator.TokenAuthenticator
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
 import com.mvgreen.data.storage.UserDataStorageImpl
@@ -16,6 +19,7 @@ import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import okhttp3.Authenticator
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
@@ -47,13 +51,34 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
+    fun apiHolder(): ApiHolder = ApiHolder()
+
+    @Provides
+    @ApplicationScope
+    fun authenticator(
+        refreshRepository: RefreshRepository,
+        userDataStorage: UserDataStorage
+    ): Authenticator = TokenAuthenticator(refreshRepository, userDataStorage)
+
+
+    @Provides
+    @ApplicationScope
+    fun refreshRepository(apiHolder: ApiHolder) : RefreshRepository = RefreshRepository(apiHolder)
+
+    @Provides
+    @ApplicationScope
     fun provideApi(
-        moshiInstance: Moshi
+        moshiInstance: Moshi,
+        authenticator: Authenticator,
+        apiHolder: ApiHolder
     ): TMDbApi {
-        return TMDbApiFactory(
+        apiHolder.api = TMDbApiFactory(
             HttpErrorInterceptor(moshiInstance),
+            authenticator,
             MoshiConverterFactory.create(moshiInstance)
         ).create(TMDbApi::class.java)
+
+        return apiHolder.api
     }
 
     /** Репозитории */

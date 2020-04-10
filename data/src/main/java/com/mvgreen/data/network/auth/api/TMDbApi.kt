@@ -14,6 +14,7 @@ interface TMDbApi {
 
     companion object {
         const val API_KEY = "24721d9f11f943e33acba3cc602e8789"
+        const val SESSION_ID = "session_id"
     }
 
     @GET("authentication/token/new")
@@ -35,7 +36,7 @@ interface TMDbApi {
 
     @GET("account")
     fun getAccountData(
-        @Query("session_id") sessionId : String,
+        @Query(SESSION_ID) sessionId : String,
         @Query("api_key") apiKey: String = API_KEY
     ): Single<GetProfileResponse>
 

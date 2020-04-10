@@ -39,7 +39,7 @@ class UserDataStorageImpl @Inject constructor(private val context: Context) : Us
         }
     }
 
-    override fun getProfileData(): ProfileData {
+    override fun getProfileDataOrDie(): ProfileData {
         with(readPrefs(PROFILE_PREFERENCES)) {
             return ProfileData(
                 getString(KEY_AVATAR_HASH, null) ?: throw StorageException(),

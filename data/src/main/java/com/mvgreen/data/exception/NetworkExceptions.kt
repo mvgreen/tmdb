@@ -6,7 +6,7 @@ class ConnectionException(cause: Throwable) : NetworkException(cause)
 
 class ServerException : NetworkException()
 
-class UnexpectedResponseException : NetworkException()
+class UnexpectedResponseException(cause: Throwable? = null) : NetworkException()
 
 class InvalidInputException(cause: Throwable) : NetworkException(cause)
 

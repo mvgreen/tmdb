@@ -12,7 +12,7 @@ interface UserDataStorage {
 
     fun getCredentials(): Pair<String?, String?>
 
-    fun getProfileData(): ProfileData
+    fun getProfileDataOrDie(): ProfileData
 
     fun hasUserData(): Boolean
 

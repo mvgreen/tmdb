@@ -13,14 +13,14 @@ class AuthRepositoryImpl @Inject constructor(
     private val api: TMDbApi
 ) : AuthRepository {
 
-    override fun login(email: String, password: String): Single<String> {
+    override fun login(login: String, password: String): Single<String> {
         return api
             .getRequestToken()
             .flatMap { result ->
                 val token = result.requestToken ?: throw UnexpectedResponseException()
                 return@flatMap api.validateRequestToken(
                     ValidateTokenRequest(
-                        email,
+                        login,
                         password,
                         token
                     )

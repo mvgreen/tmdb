@@ -17,6 +17,8 @@ class HttpErrorInterceptor @Inject constructor(private val moshi: Moshi) : Inter
             response = chain.proceed(chain.request())
         } catch (timeout: TimeoutException) {
             throw TimeoutException()
+        } catch (e : NetworkException) {
+            throw e
         } catch (e: Throwable) {
             throw ConnectionException(e)
         }
