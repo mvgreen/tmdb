@@ -4,4 +4,7 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 
 class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
+
+
+
 }
