@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
-import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.FavoritesBranchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.FilmsBranchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.ProfileBranchScreen
@@ -16,7 +15,6 @@ import com.mvgreen.tmdbapp.utils.viewModelFactory
 import kotlinx.android.synthetic.main.fragment_root.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
 import javax.inject.Inject
 
@@ -59,6 +57,10 @@ class RootFragment @Inject constructor() : BaseFragment(R.layout.fragment_root) 
             }
 
             true
+        }
+        if (viewModel.currentBranch == null) {
+            viewModel.currentBranch = FilmsBranchScreen
+            childRouter.newRootScreen(viewModel.currentBranch!!)
         }
     }
 

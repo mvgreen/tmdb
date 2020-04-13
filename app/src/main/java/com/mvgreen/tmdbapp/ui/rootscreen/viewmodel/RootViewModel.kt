@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class RootViewModel @Inject constructor() : BaseViewModel() {
 
-    var currentBranch: SupportAppScreen = FilmsBranchScreen
+    var currentBranch: SupportAppScreen? = null
 
 }
