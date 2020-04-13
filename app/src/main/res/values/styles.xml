@@ -1,12 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/bg_black</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/dark_blue</item>
         <item name="android:windowBackground">@color/bg_black</item>
         <item name="background">@color/bg_black</item>
+        <item name="android:navigationBarColor">@color/bg_black</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="ActionBarStyle">
+        <item name="titleTextColor">@color/light</item>
+        <item name="titleTextAppearance">@style/H1</item>
     </style>
 
     <!-- Элементы интерфейса -->

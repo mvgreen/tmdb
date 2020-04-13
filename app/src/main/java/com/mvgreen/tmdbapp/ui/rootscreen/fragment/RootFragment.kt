@@ -64,6 +64,7 @@ class RootFragment @Inject constructor() : BaseFragment(R.layout.fragment_root) 
 
     override fun onResume() {
         super.onResume()
+        changeSystemColors(R.color.bg_black, R.color.bottom_bar)
         childNavigatorHolder.setNavigator(childNavigator)
     }
 

@@ -11,5 +11,6 @@
     <color name="red">#E1172F</color>
     <color name="purple">#6C63FF</color>
 
+    <color name="bottom_bar">#282C3F</color>
     <color name="disabled">#E5232636</color>
 </resources>

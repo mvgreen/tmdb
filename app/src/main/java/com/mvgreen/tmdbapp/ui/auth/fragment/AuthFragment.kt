@@ -86,6 +86,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
     override fun onResume() {
         super.onResume()
+        changeSystemColors(R.color.bg_black, R.color.bg_black)
         bindToFragmentLifecycle(onKeyboardEventListener)
     }
 

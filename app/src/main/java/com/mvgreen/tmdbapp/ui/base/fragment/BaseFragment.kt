@@ -33,8 +33,15 @@ abstract class BaseFragment : Fragment {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    protected fun changeStatusColor(@ColorRes color: Int) {
-        (requireActivity() as AppActivity).updateStatusBar(color)
+    protected fun changeSystemColors(
+        @ColorRes statusBarColor: Int? = null,
+        @ColorRes navigationBarColor: Int? = null,
+        @ColorRes navigationBarDividerColor: Int? = null
+        ) {
+        val activity = requireActivity() as AppActivity
+        if (statusBarColor != null) activity.updateStatusBar(statusBarColor)
+        if (navigationBarColor != null) activity.updateNavigationBar(navigationBarColor)
+        if (navigationBarDividerColor != null) activity.updateDividerColor(navigationBarDividerColor)
     }
 
     protected fun bindToFragmentLifecycle(listener: ViewTreeObserver.OnGlobalLayoutListener) {
