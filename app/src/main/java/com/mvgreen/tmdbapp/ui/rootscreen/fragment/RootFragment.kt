@@ -1,6 +1,10 @@
 package com.mvgreen.tmdbapp.ui.rootscreen.fragment
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.WindowManager
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mvgreen.tmdbapp.R
@@ -68,6 +72,7 @@ class RootFragment @Inject constructor() : BaseFragment(R.layout.fragment_root) 
         super.onResume()
         changeSystemColors(R.color.bg_black, R.color.bottom_bar)
         childNavigatorHolder.setNavigator(childNavigator)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 
     override fun onPause() {

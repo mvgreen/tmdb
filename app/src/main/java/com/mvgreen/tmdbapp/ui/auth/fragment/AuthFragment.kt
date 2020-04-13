@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -88,6 +89,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
         super.onResume()
         changeSystemColors(R.color.bg_black, R.color.bg_black)
         bindToFragmentLifecycle(onKeyboardEventListener)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     private fun setupView() {
