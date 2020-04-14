@@ -75,6 +75,11 @@
         <item name="android:textColor">@color/light</item>
     </style>
 
+    <style name="h3_light">
+        <item name="android:textAppearance">@style/H3</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
     <style name="content1_light">
         <item name="android:textAppearance">@style/content1</item>
         <item name="android:textColor">@color/light</item>
@@ -87,6 +92,32 @@
 
     <style name="content1_gray">
         <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+
+    <style name="caption2_light">
+        <item name="android:textAppearance">@style/caption2</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="caption2_gray">
+        <item name="android:textAppearance">@style/caption2</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="sfpro_light_big">
+        <item name="android:textAppearance">@style/sfpro</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="sfpro_light_small">
+        <item name="android:textAppearance">@style/sfpro_small</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="sfpro_gray_small">
+        <item name="android:textAppearance">@style/sfpro_small</item>
         <item name="android:textColor">@color/gray</item>
     </style>
 
@@ -134,6 +165,16 @@
     <style name="link_text">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="sfpro">
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="sfpro_small">
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
