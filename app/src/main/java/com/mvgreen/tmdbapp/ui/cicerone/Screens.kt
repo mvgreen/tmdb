@@ -1,11 +1,13 @@
 package com.mvgreen.tmdbapp.ui.cicerone
 
+import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.auth.fragment.AuthFragment
 import com.mvgreen.tmdbapp.ui.favorites.fragment.FavoritesBranchFragment
-import com.mvgreen.tmdbapp.ui.films.fragment.FilmsBranchFragment
-import com.mvgreen.tmdbapp.ui.profile.fragment.ProfileBranchFragment
+import com.mvgreen.tmdbapp.ui.films.fragment.FilmsWelcomeFragment
 import com.mvgreen.tmdbapp.ui.profile.fragment.ProfileFragment
+import com.mvgreen.tmdbapp.ui.rootscreen.fragment.BranchFragment
 import com.mvgreen.tmdbapp.ui.rootscreen.fragment.RootFragment
+import com.mvgreen.tmdbapp.ui.search.SearchFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 object AuthScreen : SupportAppScreen() {
@@ -17,17 +19,29 @@ object MainScreen : SupportAppScreen() {
 }
 
 object FilmsBranchScreen : SupportAppScreen() {
-    override fun getFragment() = FilmsBranchFragment()
+    override fun getFragment() = BranchFragment(DI.filmsTabComponent, FilmsScreen)
 }
 
 object FavoritesBranchScreen : SupportAppScreen() {
-    override fun getFragment() = FavoritesBranchFragment()
+    override fun getFragment() = BranchFragment(DI.favoritesTabComponent, FavoritesScreen)
 }
 
 object ProfileBranchScreen : SupportAppScreen() {
-    override fun getFragment() = ProfileBranchFragment()
+    override fun getFragment() = BranchFragment(DI.profileTabComponent, ProfileScreen)
 }
 
 object ProfileScreen : SupportAppScreen() {
     override fun getFragment() = ProfileFragment()
+}
+
+object FilmsScreen : SupportAppScreen() {
+    override fun getFragment() = FilmsWelcomeFragment()
+}
+
+object FavoritesScreen : SupportAppScreen() {
+    override fun getFragment() = FavoritesBranchFragment()
+}
+
+object SearchScreen : SupportAppScreen() {
+    override fun getFragment() = SearchFragment()
 }

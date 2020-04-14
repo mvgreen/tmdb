@@ -19,13 +19,13 @@ import ru.terrakok.cicerone.Router
 
 @Component(modules = [AppModule::class])
 @ApplicationScope
-internal interface ApplicationComponent {
+internal interface ApplicationComponent : CiceroneOwner {
 
     fun cicerone(): Cicerone<Router>
 
-    fun navigatorHolder(): NavigatorHolder
+    override fun navigatorHolder(): NavigatorHolder
 
-    fun router(): Router
+    override fun router(): Router
 
     fun authViewModel(): AuthViewModel
 

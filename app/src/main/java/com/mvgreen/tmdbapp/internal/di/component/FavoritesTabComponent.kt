@@ -11,13 +11,13 @@ import ru.terrakok.cicerone.Router
 
 @Component(modules = [FavoritesModule::class])
 @FavoritesTabScope
-internal interface FavoritesTabComponent {
+internal interface FavoritesTabComponent: CiceroneOwner {
 
     fun cicerone(): Cicerone<Router>
 
-    fun router(): Router
+    override fun router(): Router
 
-    fun navigatorHolder(): NavigatorHolder
+    override fun navigatorHolder(): NavigatorHolder
 
     @Component.Builder
     interface Builder {

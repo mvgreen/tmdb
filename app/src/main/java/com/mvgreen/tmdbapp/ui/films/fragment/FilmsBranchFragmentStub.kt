@@ -8,6 +8,7 @@ import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
@@ -15,29 +16,36 @@ import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.branch_stub_films.*
+import kotlinx.android.synthetic.main.fragment_films_welcome.*
 import kotlinx.android.synthetic.main.simple_item.view.*
 import java.util.concurrent.TimeUnit
 
 
-class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
+class FilmsBranchFragment : BaseFragment(R.layout.fragment_films_welcome) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = MockAdapter()
-        recycler.adapter = adapter
-        recycler.layoutManager = LinearLayoutManager(requireContext())
-
-        search_box.textChanges()
-            .filter { it.length > 2 }
-            .debounce(100, TimeUnit.MILLISECONDS)
-            .switchMap { apiCall() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                adapter.submitList(list)
-            }
-            .disposeOnViewModelDestroy()
+        search_button.setOnClickListener {
+            Snackbar.make(requireView(), "Clicked", Snackbar.LENGTH_SHORT).show()
+        }
     }
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        val adapter = MockAdapter()
+//        recycler.adapter = adapter
+//        recycler.layoutManager = LinearLayoutManager(requireContext())
+//
+//        search_box.textChanges()
+//            .filter { it.length > 2 }
+//            .debounce(100, TimeUnit.MILLISECONDS)
+//            .switchMap { apiCall() }
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { list ->
+//                adapter.submitList(list)
+//            }
+//            .disposeOnViewModelDestroy()
+//    }
 
     private fun apiCall(): ObservableSource<PagedList<String>>? {
         return RxPagedListBuilder(

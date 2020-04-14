@@ -30,6 +30,7 @@ import com.redmadrobot.lib.sd.base.State
 import com.redmadrobot.lib.sd.base.StateDelegate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_auth.*
+import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.concurrent.TimeoutException
 
 
@@ -89,7 +90,13 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
         super.onResume()
         changeSystemColors(R.color.bg_black, R.color.bg_black)
         bindToFragmentLifecycle(onKeyboardEventListener)
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        input_login.requestFocus()
+        input_login.performClick()
+
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(input_login, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun setupView() {

@@ -8,7 +8,7 @@ internal object DI {
     lateinit var appComponent: ApplicationComponent
         private set
 
-    lateinit var filmTabComponent: FilmsTabComponent
+    lateinit var filmsTabComponent: FilmsTabComponent
         private set
 
     lateinit var favoritesTabComponent: FavoritesTabComponent
@@ -23,7 +23,7 @@ internal object DI {
 
     fun init(appContext: Context) {
         appComponent = DaggerApplicationComponent.builder().context(appContext).build()
-        filmTabComponent = DaggerFilmsTabComponent.builder().context(appContext).build()
+        filmsTabComponent = DaggerFilmsTabComponent.builder().context(appContext).build()
         favoritesTabComponent = DaggerFavoritesTabComponent.builder().context(appContext).build()
         profileTabComponent = DaggerProfileTabComponent.builder().context(appContext).build()
         navigationRootComponent = DaggerNavigationRootComponent.builder().context(appContext).build()
