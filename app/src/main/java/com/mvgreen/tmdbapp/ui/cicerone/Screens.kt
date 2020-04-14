@@ -1,6 +1,5 @@
 package com.mvgreen.tmdbapp.ui.cicerone
 
-import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.auth.fragment.AuthFragment
 import com.mvgreen.tmdbapp.ui.favorites.fragment.FavoritesBranchFragment
 import com.mvgreen.tmdbapp.ui.films.fragment.FilmsWelcomeFragment
@@ -19,15 +18,15 @@ object MainScreen : SupportAppScreen() {
 }
 
 object FilmsBranchScreen : SupportAppScreen() {
-    override fun getFragment() = BranchFragment(DI.filmsTabComponent, FilmsScreen)
+    override fun getFragment() = BranchFragment(BranchFragment.BRANCH_FILMS)
 }
 
 object FavoritesBranchScreen : SupportAppScreen() {
-    override fun getFragment() = BranchFragment(DI.favoritesTabComponent, FavoritesScreen)
+    override fun getFragment() = BranchFragment(BranchFragment.BRANCH_FAVORITES)
 }
 
 object ProfileBranchScreen : SupportAppScreen() {
-    override fun getFragment() = BranchFragment(DI.profileTabComponent, ProfileScreen)
+    override fun getFragment() = BranchFragment(BranchFragment.BRANCH_PROFILE)
 }
 
 object ProfileScreen : SupportAppScreen() {

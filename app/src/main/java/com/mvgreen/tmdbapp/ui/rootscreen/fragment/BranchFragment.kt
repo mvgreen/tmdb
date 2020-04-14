@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mvgreen.tmdbapp.R
+import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.internal.di.component.CiceroneOwner
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
+import com.mvgreen.tmdbapp.ui.cicerone.FavoritesScreen
+import com.mvgreen.tmdbapp.ui.cicerone.FilmsScreen
+import com.mvgreen.tmdbapp.ui.cicerone.ProfileScreen
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -13,13 +17,22 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
 
-class BranchFragment(
-    ciceroneOwner: CiceroneOwner,
-    private val rootScreen: SupportAppScreen
-) : BaseFragment(R.layout.branch_container) {
+class BranchFragment constructor(private var branchId: Int) :
+    BaseFragment(R.layout.branch_container) {
 
-    private val branchNavigatorHolder: NavigatorHolder = ciceroneOwner.navigatorHolder()
-    private val branchRouter: Router = ciceroneOwner.router()
+    constructor() : this(BRANCH_NONE)
+
+    companion object {
+        const val BRANCH_ID = "BRANCH_ID"
+
+        const val BRANCH_NONE = -1
+        const val BRANCH_FILMS = 0
+        const val BRANCH_FAVORITES = 1
+        const val BRANCH_PROFILE = 2
+    }
+
+    private lateinit var branchNavigatorHolder: NavigatorHolder
+    private lateinit var branchRouter: Router
 
     private val branchNavigator: Navigator by lazy {
         object : SupportAppNavigator(
@@ -40,6 +53,13 @@ class BranchFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState)
+        }
+        val (ciceroneOwner, rootScreen) = getCiceroneInstances()
+        branchNavigatorHolder = ciceroneOwner.navigatorHolder()
+        branchRouter = ciceroneOwner.router()
+
         branchRouter.newRootScreen(rootScreen)
     }
 
@@ -53,4 +73,21 @@ class BranchFragment(
         super.onPause()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(BRANCH_ID, branchId)
+    }
+
+    private fun restoreInstanceState(savedInstanceState: Bundle) {
+        branchId = savedInstanceState.getInt(BRANCH_ID, BRANCH_NONE)
+    }
+
+    private fun getCiceroneInstances(): Pair<CiceroneOwner, SupportAppScreen> {
+        return when (branchId) {
+            BRANCH_FAVORITES -> Pair(DI.favoritesTabComponent, FavoritesScreen)
+            BRANCH_FILMS -> Pair(DI.filmsTabComponent, FilmsScreen)
+            BRANCH_PROFILE -> Pair(DI.profileTabComponent, ProfileScreen)
+            else -> throw IllegalStateException("Branch ID not found")
+        }
+    }
 }
