@@ -64,6 +64,10 @@
         <item name="android:textColor">@color/button_text_color_selector_purple</item>
     </style>
 
+    <style name="dark_input_box">
+        <item name="android:background">@drawable/cornered_widget_transp</item>
+        <item name="tint">@color/widget_blue_transp</item>
+    </style>
     <!-- Стили текста -->
 
     <style name="h1_light">
