@@ -4,6 +4,7 @@ import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.tmdbapp.ui.base.event.LoginFailedEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.mvgreen.tmdbapp.utils.onNext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.terrakok.cicerone.Router
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
     private val useCase: AuthUseCase,
-    private val router: Router
+    private val router: SelfRestoringRouter
 ) : BaseViewModel() {
 
     var loginInProgress: Boolean = false

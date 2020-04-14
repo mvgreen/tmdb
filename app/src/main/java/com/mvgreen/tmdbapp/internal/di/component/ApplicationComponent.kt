@@ -9,6 +9,7 @@ import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.RootViewModel
 import com.squareup.moshi.Moshi
 import dagger.BindsInstance
@@ -19,13 +20,13 @@ import ru.terrakok.cicerone.Router
 
 @Component(modules = [AppModule::class])
 @ApplicationScope
-internal interface ApplicationComponent : CiceroneOwner {
+internal interface ApplicationComponent {
 
-    fun cicerone(): Cicerone<Router>
+    fun cicerone(): Cicerone<SelfRestoringRouter>
 
-    override fun navigatorHolder(): NavigatorHolder
+    fun navigatorHolder(): NavigatorHolder
 
-    override fun router(): Router
+    fun router(): SelfRestoringRouter
 
     fun authViewModel(): AuthViewModel
 

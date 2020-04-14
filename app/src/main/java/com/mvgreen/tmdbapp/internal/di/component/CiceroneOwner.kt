@@ -1,12 +1,15 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
+import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.BranchViewModel
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 interface CiceroneOwner {
 
     fun navigatorHolder(): NavigatorHolder
 
-    fun router(): Router
+    fun router(): SelfRestoringRouter
+
+    fun branchViewModel(): BranchViewModel
 
 }

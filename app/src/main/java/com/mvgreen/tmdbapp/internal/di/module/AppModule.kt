@@ -16,6 +16,7 @@ import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -23,7 +24,6 @@ import okhttp3.Authenticator
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 @Module
 internal class AppModule {
@@ -32,15 +32,17 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun cicerone(): Cicerone<Router> = Cicerone.create()
+    fun cicerone(): Cicerone<SelfRestoringRouter> = Cicerone.create(SelfRestoringRouter())
 
     @Provides
     @ApplicationScope
-    fun navigatorHolder(cicerone: Cicerone<Router>): NavigatorHolder = cicerone.navigatorHolder
+    fun navigatorHolder(cicerone: Cicerone<SelfRestoringRouter>): NavigatorHolder =
+        cicerone.navigatorHolder
 
     @Provides
     @ApplicationScope
-    fun router(cicerone: Cicerone<Router>): Router = cicerone.router
+    fun router(cicerone: Cicerone<SelfRestoringRouter>): SelfRestoringRouter =
+        cicerone.router
 
     /** API */
 
@@ -62,7 +64,7 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun refreshRepository(apiHolder: ApiHolder) : RefreshRepository = RefreshRepository(apiHolder)
+    fun refreshRepository(apiHolder: ApiHolder): RefreshRepository = RefreshRepository(apiHolder)
 
     @Provides
     @ApplicationScope

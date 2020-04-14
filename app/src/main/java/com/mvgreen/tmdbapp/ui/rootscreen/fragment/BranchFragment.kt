@@ -10,9 +10,10 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.cicerone.FavoritesScreen
 import com.mvgreen.tmdbapp.ui.cicerone.FilmsScreen
 import com.mvgreen.tmdbapp.ui.cicerone.ProfileScreen
+import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.BranchViewModel
+import com.mvgreen.tmdbapp.utils.getViewModel
+import com.mvgreen.tmdbapp.utils.viewModelFactory
 import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
@@ -31,8 +32,7 @@ class BranchFragment constructor(private var branchId: Int) :
         const val BRANCH_PROFILE = 2
     }
 
-    private lateinit var branchNavigatorHolder: NavigatorHolder
-    private lateinit var branchRouter: Router
+    private lateinit var viewModel: BranchViewModel
 
     private val branchNavigator: Navigator by lazy {
         object : SupportAppNavigator(
@@ -57,25 +57,32 @@ class BranchFragment constructor(private var branchId: Int) :
             restoreInstanceState(savedInstanceState)
         }
         val (ciceroneOwner, rootScreen) = getCiceroneInstances()
-        branchNavigatorHolder = ciceroneOwner.navigatorHolder()
-        branchRouter = ciceroneOwner.router()
-
-        branchRouter.newRootScreen(rootScreen)
+        setupViewModel(ciceroneOwner, rootScreen)
     }
 
     override fun onResume() {
         super.onResume()
-        branchNavigatorHolder.setNavigator(branchNavigator)
+        viewModel.setNavigator(branchNavigator)
     }
 
     override fun onPause() {
-        branchNavigatorHolder.removeNavigator()
+        viewModel.removeNavigator()
         super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(BRANCH_ID, branchId)
+    }
+
+    private fun setupViewModel(
+        ciceroneOwner: CiceroneOwner,
+        rootScreen: SupportAppScreen
+    ) {
+        viewModel = getViewModel(viewModelFactory {
+            ciceroneOwner.branchViewModel()
+        })
+        viewModel.init(ciceroneOwner.navigatorHolder(), ciceroneOwner.router(), rootScreen)
     }
 
     private fun restoreInstanceState(savedInstanceState: Bundle) {
