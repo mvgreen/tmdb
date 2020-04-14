@@ -1,17 +1,70 @@
 package com.mvgreen.tmdbapp.ui.cicerone
 
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.support.SupportAppScreen
+import ru.terrakok.cicerone.Screen
+import java.util.*
 
 class SelfRestoringRouter : Router() {
 
-    private var currentScreen: SupportAppScreen? = null
+    private var stack = LinkedList<Screen>()
 
-    fun restore(startScreen: SupportAppScreen) {
-        if (currentScreen == null) {
-            currentScreen = startScreen
-            newRootScreen(startScreen)
+    @Suppress("UNCHECKED_CAST")
+    fun restore(startScreen: Screen) {
+        if (stack.isEmpty()) {
+            stack.push(startScreen)
         }
+        super.newRootChain(*stack.reversed().toTypedArray())
     }
 
+    override fun newChain(vararg screens: Screen?) {
+        for (screen in screens) {
+            stack.push(screen)
+        }
+        super.newChain(*screens)
+    }
+
+    override fun exit() {
+        stack.pop()
+        super.exit()
+    }
+
+    override fun navigateTo(screen: Screen) {
+        stack.push(screen)
+        super.navigateTo(screen)
+    }
+
+    override fun finishChain() {
+        stack.clear()
+        super.finishChain()
+    }
+
+    override fun backTo(screen: Screen?) {
+        do {
+            val s = stack.pop()
+        } while (s != screen)
+        // Возвращаем удаленный на место
+        screen?.let { stack.push(it) }
+
+        super.backTo(screen)
+    }
+
+    override fun newRootChain(vararg screens: Screen?) {
+        stack.clear()
+        for (screen in screens) {
+            stack.push(screen)
+        }
+        super.newRootChain(*screens)
+    }
+
+    override fun replaceScreen(screen: Screen) {
+        stack.pop()
+        stack.push(screen)
+        super.replaceScreen(screen)
+    }
+
+    override fun newRootScreen(screen: Screen) {
+        stack.clear()
+        stack.push(screen)
+        super.newRootScreen(screen)
+    }
 }

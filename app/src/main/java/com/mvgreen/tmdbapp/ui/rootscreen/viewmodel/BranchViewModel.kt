@@ -9,8 +9,9 @@ import javax.inject.Inject
 
 class BranchViewModel @Inject constructor() : BaseViewModel() {
 
-    private lateinit var branchNavigatorHolder: NavigatorHolder
-    private lateinit var branchRouter: SelfRestoringRouter
+    lateinit var branchNavigatorHolder: NavigatorHolder
+    lateinit var branchRouter: SelfRestoringRouter
+    private var currentScreen: SupportAppScreen? = null
 
     fun init(
         navigatorHolder: NavigatorHolder,
@@ -19,7 +20,6 @@ class BranchViewModel @Inject constructor() : BaseViewModel() {
     ) {
         branchNavigatorHolder = navigatorHolder
         branchRouter = router
-
         branchRouter.restore(rootScreen)
     }
 

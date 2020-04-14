@@ -78,6 +78,19 @@ class RootFragment @Inject constructor() : BaseFragment(R.layout.fragment_root) 
         super.onPause()
     }
 
+    override fun onBackPressed(): Boolean {
+        val fragment = childFragmentManager.fragments.lastOrNull()
+
+        if (fragment != null && fragment is BaseFragment) {
+            if (!fragment.onBackPressed()) {
+                return false
+            }
+        } else {
+            return false
+        }
+        return true
+    }
+
     private fun setupViewModel() {
         viewModel = getViewModel(viewModelFactory {
             DI.appComponent.rootViewModel()

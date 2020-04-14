@@ -70,6 +70,11 @@ class BranchFragment constructor(private var branchId: Int) :
         super.onPause()
     }
 
+    override fun onBackPressed(): Boolean {
+        viewModel.branchRouter.exit()
+        return true
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(BRANCH_ID, branchId)
