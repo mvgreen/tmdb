@@ -3,6 +3,7 @@ package com.mvgreen.tmdbapp
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mvgreen.data.network.search.entity.GenreResponse
+import com.mvgreen.data.network.search.entity.MovieObject
 import com.mvgreen.data.network.search.entity.SearchResponse
 import com.mvgreen.tmdbapp.internal.di.DI
 import io.reactivex.Scheduler
@@ -77,6 +78,25 @@ class SearchApiTest {
                     throw AssertionError()
                 })
         assertTrue(!result?.genres.isNullOrEmpty() && result?.statusMessage == null)
+    }
+
+    @Test
+    fun whenDetailsRequestedResponseContainsRuntime() {
+        // given
+        val api = DI.appComponent.searchApi()
+
+        var result: MovieObject? = null
+        // when
+        api.getMovieDetails(550)
+            .subscribe(
+                { response ->
+                    // then
+                    result = response
+                },
+                {
+                    throw AssertionError()
+                })
+        assertTrue(result?.statusMessage == null && result?.runtime != null)
     }
 
 }

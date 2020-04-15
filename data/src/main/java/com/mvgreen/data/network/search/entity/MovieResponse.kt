@@ -49,5 +49,13 @@ data class MovieObject(
     @Json(name = "video")
     val video: Boolean?,
     @Json(name = "vote_average")
-    val voteAverage: Float?
+    val voteAverage: Float?,
+
+    // Для запроса деталей фильма
+    @Json(name = "runtime")
+    val runtime: Int?,
+    @Json(name = "status_message")
+    val statusMessage: String?,
+    @Json(name = "status_code")
+    val statusCode: Int?
 )
