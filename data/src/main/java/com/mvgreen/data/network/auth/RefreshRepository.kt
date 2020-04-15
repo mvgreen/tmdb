@@ -3,7 +3,7 @@ package com.mvgreen.data.network.auth
 import com.mvgreen.data.exception.NetworkException
 import com.mvgreen.data.exception.UnexpectedResponseException
 import com.mvgreen.data.network.auth.api.ApiHolder
-import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.auth.entity.CreateSessionRequest
 import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
 import com.mvgreen.domain.entity.ProfileData
@@ -13,7 +13,7 @@ class RefreshRepository @Inject constructor(
     private val apiHolder: ApiHolder
 ) {
 
-    private val api : TMDbApi by lazy { apiHolder.api }
+    private val api : AuthApi by lazy { apiHolder.api }
 
     fun loginSync(login: String, password: String): String {
         try {

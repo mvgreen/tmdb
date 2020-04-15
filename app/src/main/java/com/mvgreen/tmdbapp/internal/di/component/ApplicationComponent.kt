@@ -1,7 +1,8 @@
 package com.mvgreen.tmdbapp.internal.di.component
 
 import android.content.Context
-import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.auth.api.AuthApi
+import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.domain.repository.AuthRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
@@ -16,7 +17,6 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 @Component(modules = [AppModule::class])
 @ApplicationScope
@@ -34,7 +34,9 @@ internal interface ApplicationComponent {
 
     fun moshi(): Moshi
 
-    fun api(): TMDbApi
+    fun authApi(): AuthApi
+
+    fun searchApi(): SearchApi
 
     fun authRepository(): AuthRepository
 

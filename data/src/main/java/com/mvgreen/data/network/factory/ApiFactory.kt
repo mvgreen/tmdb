@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 abstract class ApiFactory(
-    private val serverUrl: ServerUrls.ServerUrl,
+    private val serverUrl: NetworkConstants.ServerUrl,
     private val httpClient: OkHttpClient,
     private vararg val converterFactories: Converter.Factory
 ) {

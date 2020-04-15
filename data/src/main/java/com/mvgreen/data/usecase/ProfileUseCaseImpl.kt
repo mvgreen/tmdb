@@ -1,6 +1,6 @@
 package com.mvgreen.data.usecase
 
-import com.mvgreen.data.network.factory.ServerUrls
+import com.mvgreen.data.network.factory.NetworkConstants
 import com.mvgreen.domain.bean.ImageLoader
 import com.mvgreen.domain.entity.ProfileData
 import com.mvgreen.domain.repository.UserDataStorage
@@ -14,8 +14,8 @@ class ProfileUseCaseImpl @Inject constructor(
     override fun initAvatarLoader(imageLoader: ImageLoader) {
         val profileData = userDataStorage.getProfileDataOrDie()
 
-        imageLoader.url = ServerUrls.Gravatar.url + profileData.avatarHash
-        imageLoader.sizeParam = ServerUrls.Gravatar.sizeModifier
+        imageLoader.url = NetworkConstants.Gravatar.url + profileData.avatarHash
+        imageLoader.sizeParam = NetworkConstants.Gravatar.sizeModifier
     }
 
     override fun getProfileData() : ProfileData {

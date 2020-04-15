@@ -1,7 +1,7 @@
 package com.mvgreen.data.network.auth
 
 import com.mvgreen.data.exception.UnexpectedResponseException
-import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.auth.entity.CreateSessionRequest
 import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
 import com.mvgreen.domain.entity.ProfileData
@@ -10,7 +10,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val api: TMDbApi
+    private val api: AuthApi
 ) : AuthRepository {
 
     override fun login(login: String, password: String): Single<String> {

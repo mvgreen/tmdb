@@ -4,18 +4,15 @@ import com.mvgreen.data.network.auth.entity.CreateSessionRequest
 import com.mvgreen.data.network.auth.entity.GeneralAuthResponse
 import com.mvgreen.data.network.auth.entity.GetProfileResponse
 import com.mvgreen.data.network.auth.entity.ValidateTokenRequest
+import com.mvgreen.data.network.factory.NetworkConstants.API_KEY
+import com.mvgreen.data.network.factory.NetworkConstants.SESSION_ID
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface TMDbApi {
-
-    companion object {
-        const val API_KEY = "24721d9f11f943e33acba3cc602e8789"
-        const val SESSION_ID = "session_id"
-    }
+interface AuthApi {
 
     @GET("authentication/token/new")
     fun getRequestToken(

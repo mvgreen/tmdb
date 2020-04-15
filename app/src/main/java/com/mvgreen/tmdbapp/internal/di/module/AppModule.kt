@@ -4,10 +4,12 @@ import android.content.Context
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.RefreshRepository
 import com.mvgreen.data.network.auth.api.ApiHolder
-import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.authenticator.TokenAuthenticator
+import com.mvgreen.data.network.factory.SearchApiFactory
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
+import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.data.storage.UserDataStorageImpl
 import com.mvgreen.data.usecase.AuthUseCaseImpl
 import com.mvgreen.data.usecase.ProfileUseCaseImpl
@@ -68,18 +70,29 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun provideApi(
+    fun provideAuthApi(
         moshiInstance: Moshi,
         authenticator: Authenticator,
         apiHolder: ApiHolder
-    ): TMDbApi {
+    ): AuthApi {
         apiHolder.api = TMDbApiFactory(
             HttpErrorInterceptor(),
             authenticator,
             MoshiConverterFactory.create(moshiInstance)
-        ).create(TMDbApi::class.java)
+        ).create(AuthApi::class.java)
 
         return apiHolder.api
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideSearchApi(
+        moshiInstance: Moshi
+    ): SearchApi {
+        return SearchApiFactory(
+            HttpErrorInterceptor(),
+            MoshiConverterFactory.create(moshiInstance)
+        ).create(SearchApi::class.java)
     }
 
     /** Репозитории */
@@ -90,7 +103,7 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun authRepository(api: TMDbApi): AuthRepository = AuthRepositoryImpl(api)
+    fun authRepository(api: AuthApi): AuthRepository = AuthRepositoryImpl(api)
 
     /** UseCase-ы */
 
