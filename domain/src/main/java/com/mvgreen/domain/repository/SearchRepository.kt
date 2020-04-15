@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 interface SearchRepository {
 
-    fun loadGenres(): Single<HashMap<Int, GenreData>>
+    fun loadGenres(): Single<Map<Int, GenreData>>
 
     fun search(query: String, page: Int): Single<List<MovieData>>
 

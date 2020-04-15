@@ -57,5 +57,8 @@ data class MovieObject(
     @Json(name = "status_message")
     val statusMessage: String?,
     @Json(name = "status_code")
-    val statusCode: Int?
+    val statusCode: Int?,
+
+    // Вспомогательный элемент для сортировки
+    var itemIndex: Int? = null
 )

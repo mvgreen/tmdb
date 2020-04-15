@@ -4,6 +4,6 @@ interface GenresStorage {
 
     fun saveGenresMap()
 
-    fun getGenre(id: Int)
+    fun getGenre(id: Int): String
 
 }

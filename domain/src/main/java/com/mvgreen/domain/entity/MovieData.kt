@@ -1,12 +1,15 @@
 package com.mvgreen.domain.entity
 
+import org.joda.time.DateTime
+
 data class MovieData(
-    val posterLink: String,
+    val id: Int,
+    val posterLink: String?,
     val title: String,
     val originalTitle: String,
-    val year: String,
+    val releaseDate: DateTime?,
     val genres: List<GenreData>,
-    val averageVote: Float,
-    val voteCount: Int,
+    val averageVote: Float?,
+    val voteCount: Int?,
     val runtime: Int
 )
