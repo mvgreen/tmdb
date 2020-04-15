@@ -1,6 +1,7 @@
 package com.mvgreen.data.network.search.api
 
 import com.mvgreen.data.network.factory.NetworkConstants
+import com.mvgreen.data.network.search.entity.GenreResponse
 import com.mvgreen.data.network.search.entity.SearchResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -15,5 +16,11 @@ interface SearchApi {
         @Query("language") language: String = "ru-RU",
         @Query("api_key") apiKey: String = NetworkConstants.API_KEY
     ): Single<SearchResponse>
+
+    @GET("genre/movie/list")
+    fun getGenreList(
+        @Query("language") language: String = "ru-RU",
+        @Query("api_key") apiKey: String = NetworkConstants.API_KEY
+    ): Single<GenreResponse>
 
 }

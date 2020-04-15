@@ -2,6 +2,7 @@ package com.mvgreen.tmdbapp
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
+import com.mvgreen.data.network.search.entity.GenreResponse
 import com.mvgreen.data.network.search.entity.SearchResponse
 import com.mvgreen.tmdbapp.internal.di.DI
 import io.reactivex.Scheduler
@@ -12,7 +13,6 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.lang.AssertionError
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -46,7 +46,7 @@ class SearchApiTest {
         // given
         val api = DI.appComponent.searchApi()
 
-        var result : SearchResponse? = null
+        var result: SearchResponse? = null
         // when
         api.search("приключения", 1)
             .subscribe(
@@ -58,6 +58,25 @@ class SearchApiTest {
                     throw AssertionError()
                 })
         assertTrue(result?.results != null && result?.statusMessage == null)
+    }
+
+    @Test
+    fun whenGenresRequestedResponseIsParsed() {
+        // given
+        val api = DI.appComponent.searchApi()
+
+        var result: GenreResponse? = null
+        // when
+        api.getGenreList()
+            .subscribe(
+                { response ->
+                    // then
+                    result = response
+                },
+                {
+                    throw AssertionError()
+                })
+        assertTrue(!result?.genres.isNullOrEmpty() && result?.statusMessage == null)
     }
 
 }
