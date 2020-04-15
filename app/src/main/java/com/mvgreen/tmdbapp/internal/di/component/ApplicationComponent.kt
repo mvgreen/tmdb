@@ -4,6 +4,8 @@ import android.content.Context
 import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.domain.repository.AuthRepository
+import com.mvgreen.domain.repository.GenreStorage
+import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
@@ -41,6 +43,10 @@ internal interface ApplicationComponent {
     fun authRepository(): AuthRepository
 
     fun userDataStorage(): UserDataStorage
+
+    fun searchRepository(): SearchRepository
+
+    fun genreStorage(): GenreStorage
 
     fun authUseCase(): AuthUseCase
 

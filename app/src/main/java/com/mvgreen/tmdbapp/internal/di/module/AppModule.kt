@@ -1,6 +1,7 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
 import android.content.Context
+import androidx.room.Room
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.RefreshRepository
 import com.mvgreen.data.network.auth.api.ApiHolder
@@ -9,11 +10,17 @@ import com.mvgreen.data.network.authenticator.TokenAuthenticator
 import com.mvgreen.data.network.factory.SearchApiFactory
 import com.mvgreen.data.network.factory.TMDbApiFactory
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
+import com.mvgreen.data.network.search.SearchRepositoryImpl
 import com.mvgreen.data.network.search.api.SearchApi
+import com.mvgreen.data.storage.GenreStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
+import com.mvgreen.data.storage.db.GenreDao
+import com.mvgreen.data.storage.db.GenreDb
 import com.mvgreen.data.usecase.AuthUseCaseImpl
 import com.mvgreen.data.usecase.ProfileUseCaseImpl
 import com.mvgreen.domain.repository.AuthRepository
+import com.mvgreen.domain.repository.GenreStorage
+import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
@@ -95,6 +102,19 @@ internal class AppModule {
         ).create(SearchApi::class.java)
     }
 
+    /** БД */
+
+    @Provides
+    @ApplicationScope
+    fun provideDatabase(context: Context): GenreDb =
+        Room
+            .databaseBuilder(context, GenreDb::class.java, "tasks")
+            .build()
+
+    @Provides
+    @ApplicationScope
+    fun provideDao(db: GenreDb): GenreDao = db.genreDao()
+
     /** Репозитории */
 
     @Provides
@@ -104,6 +124,16 @@ internal class AppModule {
     @Provides
     @ApplicationScope
     fun authRepository(api: AuthApi): AuthRepository = AuthRepositoryImpl(api)
+
+    @Provides
+    @ApplicationScope
+    fun genreStorage(genreDao: GenreDao): GenreStorage = GenreStorageImpl(genreDao)
+
+    @Provides
+    @ApplicationScope
+    fun searchRepository(api: SearchApi, genreStorage: GenreStorage): SearchRepository =
+        SearchRepositoryImpl(api, genreStorage)
+
 
     /** UseCase-ы */
 

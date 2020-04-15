@@ -2,7 +2,7 @@ package com.mvgreen.domain.repository
 
 import com.mvgreen.domain.entity.GenreData
 
-interface GenresStorage {
+interface GenreStorage {
 
     fun saveGenresMap(map: Map<Int, GenreData>)
 

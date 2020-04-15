@@ -9,5 +9,5 @@ import com.mvgreen.data.storage.db.entity.GenreEntity
     version = 1
 )
 abstract class GenreDb : RoomDatabase() {
-    abstract fun taskDao(): GenreDao
+    abstract fun genreDao(): GenreDao
 }

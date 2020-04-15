@@ -13,3 +13,9 @@ data class MovieData(
     val voteCount: Int?,
     val runtime: Int
 )
+
+data class MovieContainer(
+    val currentPage: Int,
+    val pagesTotal: Int,
+    val movies: MutableList<MovieData>
+)
