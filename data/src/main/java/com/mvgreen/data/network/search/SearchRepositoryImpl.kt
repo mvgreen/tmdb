@@ -85,7 +85,10 @@ class SearchRepositoryImpl @Inject constructor(
     }
 
     private fun parseGenres(list: List<Int>?): List<GenreData> {
-        return list?.map { GenreData(it, genresStorage.getGenre(it)) } ?: listOf()
+        return list?.mapNotNull { id ->
+            val genre = genresStorage.getGenre(id)
+            if (genre == null) null else GenreData(id, genre)
+        } ?: listOf()
     }
 
 }
