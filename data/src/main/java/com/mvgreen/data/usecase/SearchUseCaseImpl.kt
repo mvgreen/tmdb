@@ -50,4 +50,8 @@ class SearchUseCaseImpl @Inject constructor(
         return RxPagedListBuilder(factory, config)
     }
 
+    override fun initImageLoader(imageLoader: ImageLoader, movieData: MovieData) {
+//        imageLoader.url =
+    }
+
 }
