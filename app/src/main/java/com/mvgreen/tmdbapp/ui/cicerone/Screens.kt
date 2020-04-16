@@ -2,12 +2,11 @@ package com.mvgreen.tmdbapp.ui.cicerone
 
 import com.mvgreen.tmdbapp.ui.auth.fragment.AuthFragment
 import com.mvgreen.tmdbapp.ui.favorites.fragment.FavoritesBranchFragment
-import com.mvgreen.tmdbapp.ui.films.fragment.FilmsBranchFragment
 import com.mvgreen.tmdbapp.ui.films.fragment.FilmsWelcomeFragment
 import com.mvgreen.tmdbapp.ui.profile.fragment.ProfileFragment
 import com.mvgreen.tmdbapp.ui.rootscreen.fragment.BranchFragment
 import com.mvgreen.tmdbapp.ui.rootscreen.fragment.RootFragment
-import com.mvgreen.tmdbapp.ui.search.SearchFragment
+import com.mvgreen.tmdbapp.ui.search.fragment.SearchFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 object AuthScreen : SupportAppScreen() {
@@ -43,5 +42,6 @@ object FavoritesScreen : SupportAppScreen() {
 }
 
 object SearchScreen : SupportAppScreen() {
-    override fun getFragment() = SearchFragment()
+    override fun getFragment() =
+        SearchFragment()
 }

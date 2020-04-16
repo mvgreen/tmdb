@@ -14,6 +14,7 @@ import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.RootViewModel
+import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.squareup.moshi.Moshi
 import dagger.BindsInstance
 import dagger.Component
@@ -37,6 +38,8 @@ internal interface ApplicationComponent {
     fun authViewModel(): AuthViewModel
 
     fun rootViewModel(): RootViewModel
+
+    fun searchViewModel(): SearchViewModel
 
     /** API */
 

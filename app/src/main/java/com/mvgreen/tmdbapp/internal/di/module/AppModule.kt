@@ -163,8 +163,12 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun authUseCase(authRepository: AuthRepository, userDataStorage: UserDataStorage): AuthUseCase =
-        AuthUseCaseImpl(authRepository, userDataStorage)
+    fun authUseCase(
+        authRepository: AuthRepository,
+        userDataStorage: UserDataStorage,
+        searchUseCase: SearchUseCase
+    ): AuthUseCase =
+        AuthUseCaseImpl(authRepository, userDataStorage, searchUseCase)
 
     @Provides
     @ApplicationScope

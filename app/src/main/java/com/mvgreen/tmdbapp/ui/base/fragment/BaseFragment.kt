@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment {
         @ColorRes statusBarColor: Int? = null,
         @ColorRes navigationBarColor: Int? = null,
         @ColorRes navigationBarDividerColor: Int? = null
-        ) {
+    ) {
         val activity = requireActivity() as AppActivity
         if (statusBarColor != null) activity.updateStatusBar(statusBarColor)
         if (navigationBarColor != null) activity.updateNavigationBar(navigationBarColor)

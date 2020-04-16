@@ -14,7 +14,7 @@ abstract class BaseViewModel : ViewModel() {
      */
     val events = EventsQueue()
 
-    private val compositeDisposable by lazy { CompositeDisposable() }
+    protected val compositeDisposable by lazy { CompositeDisposable() }
 
     override fun onCleared() {
         compositeDisposable.clear()

@@ -51,6 +51,7 @@ class SearchUseCaseImpl @Inject constructor(
     }
 
     override fun initImageLoader(imageLoader: ImageLoader, movieData: MovieData) {
+        // TODO
 //        imageLoader.url =
     }
 
