@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.data.datasource.SearchDataSourceFactory
+import com.mvgreen.domain.bean.ImageLoader
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
@@ -21,6 +22,7 @@ class SearchUseCaseImpl @Inject constructor(
 
     companion object {
         const val TAG = "SearchUseCaseImpl"
+        const val PREFETCH_DISTANCE = 10
     }
 
     override fun initSearch(): Completable {
@@ -41,7 +43,10 @@ class SearchUseCaseImpl @Inject constructor(
             searchRepository,
             compositeDisposable
         ) { e -> Log.e(TAG, e.message, e) }
-        val config = PagedList.Config.Builder().setPrefetchDistance(5).build()
+        val config = PagedList.Config
+            .Builder()
+            .setPrefetchDistance(PREFETCH_DISTANCE)
+            .build()
         return RxPagedListBuilder(factory, config)
     }
 

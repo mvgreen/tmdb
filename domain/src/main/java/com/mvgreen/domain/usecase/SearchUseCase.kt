@@ -1,6 +1,7 @@
 package com.mvgreen.domain.usecase
 
 import androidx.paging.RxPagedListBuilder
+import com.mvgreen.domain.bean.ImageLoader
 import com.mvgreen.domain.entity.MovieData
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
