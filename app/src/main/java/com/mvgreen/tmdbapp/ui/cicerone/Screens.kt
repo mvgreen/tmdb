@@ -19,7 +19,7 @@ object MainScreen : SupportAppScreen() {
 }
 
 object FilmsBranchScreen : SupportAppScreen() {
-    override fun getFragment() = FilmsBranchFragment()
+    override fun getFragment() = BranchFragment(BranchFragment.BRANCH_FILMS)
 }
 
 object FavoritesBranchScreen : SupportAppScreen() {
