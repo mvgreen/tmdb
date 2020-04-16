@@ -1,6 +1,6 @@
 package com.mvgreen.domain.usecase
 
-import androidx.paging.DataSource
+import androidx.paging.RxPagedListBuilder
 import com.mvgreen.domain.entity.MovieData
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
@@ -13,6 +13,6 @@ interface SearchUseCase {
     fun search(
         query: String,
         compositeDisposable: CompositeDisposable
-    ): DataSource.Factory<Int, MovieData>
+    ): RxPagedListBuilder<Int, MovieData>
 
 }

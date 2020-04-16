@@ -15,7 +15,8 @@ class SearchDataSource(
     private val onErrorCallback: (e: Throwable) -> Unit
 ) : PageKeyedDataSource<Int, MovieData>() {
 
-    private var pagesTotal: Int = 0
+    var pagesTotal: Int = 0
+        private set
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,

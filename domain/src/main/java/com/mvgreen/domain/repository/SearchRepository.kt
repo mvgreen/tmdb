@@ -2,7 +2,6 @@ package com.mvgreen.domain.repository
 
 import com.mvgreen.domain.entity.GenreData
 import com.mvgreen.domain.entity.MovieContainer
-import com.mvgreen.domain.entity.MovieData
 import io.reactivex.Single
 
 interface SearchRepository {

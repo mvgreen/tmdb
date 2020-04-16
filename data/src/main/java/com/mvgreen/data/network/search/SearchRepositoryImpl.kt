@@ -57,6 +57,7 @@ class SearchRepositoryImpl @Inject constructor(
                     // TODO проверить тред в котором происходит ожидание запроса
                     searchApi
                         .getMovieDetails(getOrUnexpected(listItem.id))
+                        .onErrorReturnItem(listItem)
                         .map { item ->
                             item.itemIndex = listItem.itemIndex
                             item
@@ -94,7 +95,7 @@ class SearchRepositoryImpl @Inject constructor(
     )
 
     private fun parseNullableDate(str: String?): DateTime? {
-        return if (str == null) null else DateTime.parse(str)
+        return if (str.isNullOrEmpty()) null else DateTime.parse(str)
     }
 
     private fun parseGenres(list: List<Int>?): List<GenreData> {

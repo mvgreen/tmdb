@@ -3,7 +3,6 @@ package com.mvgreen.tmdbapp
 import android.content.Context
 import android.util.Log
 import androidx.paging.PagedList
-import androidx.paging.RxPagedListBuilder
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.tmdbapp.internal.di.DI
@@ -53,9 +52,7 @@ class SearchUseCaseTest {
 
         // when
         val compositeDisposable = CompositeDisposable()
-        val dataSourceFactory = useCase.search("adventures", compositeDisposable)
-        val config = PagedList.Config.Builder().setPrefetchDistance(5).build()
-        val pagedList = RxPagedListBuilder(dataSourceFactory, config)
+        val pagedList = useCase.search("adventures", compositeDisposable)
 
         val observable = pagedList.buildObservable()
 

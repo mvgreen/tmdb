@@ -4,54 +4,52 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.*
+import androidx.paging.DataSource
+import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.textChanges
+import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.tmdbapp.R
+import com.mvgreen.tmdbapp.internal.di.DI
+import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.branch_stub_films.*
-import kotlinx.android.synthetic.main.fragment_films_welcome.*
 import kotlinx.android.synthetic.main.simple_item.view.*
 import java.util.concurrent.TimeUnit
 
 
-class FilmsBranchFragment : BaseFragment(R.layout.fragment_films_welcome) {
+class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        search_button.setOnClickListener {
-            Snackbar.make(requireView(), "Clicked", Snackbar.LENGTH_SHORT).show()
-        }
-    }
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        val adapter = MockAdapter()
-//        recycler.adapter = adapter
-//        recycler.layoutManager = LinearLayoutManager(requireContext())
-//
-//        search_box.textChanges()
-//            .filter { it.length > 2 }
-//            .debounce(100, TimeUnit.MILLISECONDS)
-//            .switchMap { apiCall() }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { list ->
-//                adapter.submitList(list)
-//            }
-//            .disposeOnViewModelDestroy()
-//    }
+        val adapter = PagedMoviesAdapter()
+        recycler.adapter = adapter
+        recycler.layoutManager = LinearLayoutManager(requireContext())
 
-    private fun apiCall(): ObservableSource<PagedList<String>>? {
-        return RxPagedListBuilder(
-            MockDataSourceFactory(),
-            PagedList.Config.Builder().setPrefetchDistance(1).build()
-        ).buildObservable()
+        DI.appComponent.searchUseCase().initSearch().subscribe().disposeOnViewModelDestroy()
+        search_box.textChanges()
+            .filter { it.length > 2 }
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .switchMap { apiCall() }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list ->
+                adapter.submitList(list)
+            }
+            .disposeOnViewModelDestroy()
+    }
+
+    private fun apiCall(): ObservableSource<PagedList<MovieData>> {
+        return DI.appComponent.searchUseCase().search("adventures", CompositeDisposable())
+            .buildObservable()
     }
 }
 
