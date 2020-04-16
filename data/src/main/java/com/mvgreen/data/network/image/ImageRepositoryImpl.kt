@@ -1,14 +1,13 @@
 package com.mvgreen.data.network.image
 
 import com.mvgreen.data.exception.ServerException
-import com.mvgreen.data.network.image.api.ConfigurationApi
+import com.mvgreen.data.network.image.api.ImageConfigurationApi
 import com.mvgreen.domain.entity.ImageServiceConfiguration
 import com.mvgreen.domain.repository.ImageRepository
 import javax.inject.Inject
 
-// TODO добавить в даггер
 class ImageRepositoryImpl @Inject constructor(
-    private val configurationApi: ConfigurationApi
+    private val imageConfigurationApi: ImageConfigurationApi
 ) : ImageRepository {
 
     companion object {
@@ -16,7 +15,7 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override fun downloadConfiguration(): ImageServiceConfiguration {
-        val response = configurationApi.getConfiguration()
+        val response = imageConfigurationApi.getConfiguration()
 
         val logoSizes = response.images?.logoSizes
         if (logoSizes.isNullOrEmpty()) throw ServerException()

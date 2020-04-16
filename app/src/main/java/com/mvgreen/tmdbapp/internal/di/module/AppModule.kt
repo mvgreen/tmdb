@@ -7,23 +7,25 @@ import com.mvgreen.data.network.auth.RefreshRepository
 import com.mvgreen.data.network.auth.api.ApiHolder
 import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.authenticator.TokenAuthenticator
-import com.mvgreen.data.network.factory.SearchApiFactory
 import com.mvgreen.data.network.factory.TMDbApiFactory
+import com.mvgreen.data.network.factory.TMDbGuestApiFactory
+import com.mvgreen.data.network.image.ImageRepositoryImpl
+import com.mvgreen.data.network.image.api.ImageConfigurationApi
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
 import com.mvgreen.data.network.search.SearchRepositoryImpl
 import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.data.storage.GenreStorageImpl
+import com.mvgreen.data.storage.ImageConfigStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
 import com.mvgreen.data.storage.db.GenreDao
 import com.mvgreen.data.storage.db.GenreDb
 import com.mvgreen.data.usecase.AuthUseCaseImpl
+import com.mvgreen.data.usecase.LoadImageUseCaseImpl
 import com.mvgreen.data.usecase.ProfileUseCaseImpl
 import com.mvgreen.data.usecase.SearchUseCaseImpl
-import com.mvgreen.domain.repository.AuthRepository
-import com.mvgreen.domain.repository.GenreStorage
-import com.mvgreen.domain.repository.SearchRepository
-import com.mvgreen.domain.repository.UserDataStorage
+import com.mvgreen.domain.repository.*
 import com.mvgreen.domain.usecase.AuthUseCase
+import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
@@ -98,10 +100,21 @@ internal class AppModule {
     fun provideSearchApi(
         moshiInstance: Moshi
     ): SearchApi {
-        return SearchApiFactory(
+        return TMDbGuestApiFactory(
             HttpErrorInterceptor(),
             MoshiConverterFactory.create(moshiInstance)
         ).create(SearchApi::class.java)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideImageApi(
+        moshiInstance: Moshi
+    ): ImageConfigurationApi {
+        return TMDbGuestApiFactory(
+            HttpErrorInterceptor(),
+            MoshiConverterFactory.create(moshiInstance)
+        ).create(ImageConfigurationApi::class.java)
     }
 
     /** БД */
@@ -136,8 +149,17 @@ internal class AppModule {
     fun searchRepository(api: SearchApi, genreStorage: GenreStorage): SearchRepository =
         SearchRepositoryImpl(api, genreStorage)
 
+    @Provides
+    @ApplicationScope
+    fun imageRepository(imageConfigurationApi: ImageConfigurationApi): ImageRepository =
+        ImageRepositoryImpl(imageConfigurationApi)
 
-    /** UseCase-ы */
+    @Provides
+    @ApplicationScope
+    fun imageConfigStorage(context: Context): ImageConfigStorage = ImageConfigStorageImpl(context)
+
+
+    /** UseCase */
 
     @Provides
     @ApplicationScope
@@ -156,5 +178,15 @@ internal class AppModule {
         genreStorage: GenreStorage
     ): SearchUseCase =
         SearchUseCaseImpl(searchRepository, genreStorage)
+
+    @Provides
+    @ApplicationScope
+    fun loadImageUseCase(
+        imageRepository: ImageRepository,
+        imageConfigStorage: ImageConfigStorage,
+        userDataStorage: UserDataStorage
+    ): LoadImageUseCase =
+        LoadImageUseCaseImpl(imageRepository, imageConfigStorage, userDataStorage)
+
 
 }

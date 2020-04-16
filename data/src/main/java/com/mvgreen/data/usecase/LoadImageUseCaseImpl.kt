@@ -9,7 +9,6 @@ import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.LoadImageUseCase
 import javax.inject.Inject
 
-// TODO добавить в даггер и перенести инициализацию аватарки из другого юзкейса
 class LoadImageUseCaseImpl @Inject constructor(
     private val imageRepository: ImageRepository,
     private val imageConfigStorage: ImageConfigStorage,

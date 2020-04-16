@@ -5,8 +5,7 @@ import com.mvgreen.data.network.image.entity.ImageConfigurationResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// TODO сбилдить и добавить в даггер
-interface ConfigurationApi {
+interface ImageConfigurationApi {
 
     @GET("configuration")
     fun getConfiguration(

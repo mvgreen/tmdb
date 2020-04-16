@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Converter
 import javax.inject.Inject
 
-class SearchApiFactory @Inject constructor(
+class TMDbGuestApiFactory @Inject constructor(
     httpErrorInterceptor: HttpErrorInterceptor,
     vararg converters: Converter.Factory
 ) : ApiFactory(

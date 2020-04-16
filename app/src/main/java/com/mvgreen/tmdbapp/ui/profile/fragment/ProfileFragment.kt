@@ -3,6 +3,7 @@ package com.mvgreen.tmdbapp.ui.profile.fragment
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import com.mvgreen.data.exception.StorageException
+import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
@@ -19,11 +20,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private lateinit var profileUseCase: ProfileUseCase
+    private lateinit var loadImageUseCase: LoadImageUseCase
     private lateinit var mainRouter: Router
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         profileUseCase = DI.appComponent.profileUseCase()
+        loadImageUseCase = DI.appComponent.loadImageUseCase()
         mainRouter = DI.appComponent.router()
 
         setupView()
@@ -57,7 +60,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     )
                     .show()
             }
-            profileUseCase.initAvatarLoader(imageLoader)
+            loadImageUseCase.initAvatarLoader(imageLoader)
             imageLoader.loadImage()
         } catch (e: StorageException) {
             profileUseCase.logout()

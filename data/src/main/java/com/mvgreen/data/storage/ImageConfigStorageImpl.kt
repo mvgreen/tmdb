@@ -10,7 +10,6 @@ import com.mvgreen.domain.entity.ImageServiceConfiguration
 import com.mvgreen.domain.repository.ImageConfigStorage
 import javax.inject.Inject
 
-// TODO добавить в даггер
 class ImageConfigStorageImpl @Inject constructor(
     private val context: Context
 ) : ImageConfigStorage {
