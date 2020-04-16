@@ -18,12 +18,14 @@ import com.mvgreen.data.storage.db.GenreDao
 import com.mvgreen.data.storage.db.GenreDb
 import com.mvgreen.data.usecase.AuthUseCaseImpl
 import com.mvgreen.data.usecase.ProfileUseCaseImpl
+import com.mvgreen.data.usecase.SearchUseCaseImpl
 import com.mvgreen.domain.repository.AuthRepository
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
+import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.squareup.moshi.Moshi
@@ -146,5 +148,13 @@ internal class AppModule {
     @ApplicationScope
     fun profileUseCase(userDataStorage: UserDataStorage): ProfileUseCase =
         ProfileUseCaseImpl(userDataStorage)
+
+    @Provides
+    @ApplicationScope
+    fun searchUseCase(
+        searchRepository: SearchRepository,
+        genreStorage: GenreStorage
+    ): SearchUseCase =
+        SearchUseCaseImpl(searchRepository, genreStorage)
 
 }

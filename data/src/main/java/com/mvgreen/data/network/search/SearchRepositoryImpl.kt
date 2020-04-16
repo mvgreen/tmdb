@@ -25,11 +25,11 @@ class SearchRepositoryImpl @Inject constructor(
             .getGenreList()
             .map { result ->
                 val genreList = result.genres ?: throw UnexpectedResponseException()
-                genreList.associateBy { genre ->
-                    getOrUnexpected(genre.name)
-                    getOrUnexpected(genre.id)
+                genreList.associate { genre ->
+                    val id = getOrUnexpected(genre.id)
+                    val name = getOrUnexpected(genre.name)
+                    Pair(id, GenreData(id, name))
                 }
-                return@map
             }
     }
 
@@ -84,13 +84,13 @@ class SearchRepositoryImpl @Inject constructor(
     private fun toMovieData(response: MovieObject) = MovieData(
         getOrUnexpected(response.id),
         response.posterPath,
-        getOrUnexpected(response.title),
-        getOrUnexpected(response.originalTitle),
+        response.title,
+        response.originalTitle,
         parseNullableDate(response.releaseDate),
         parseGenres(response.genreIds),
         response.voteAverage,
         response.voteCount,
-        getOrUnexpected(response.runtime)
+        response.runtime
     )
 
     private fun parseNullableDate(str: String?): DateTime? {

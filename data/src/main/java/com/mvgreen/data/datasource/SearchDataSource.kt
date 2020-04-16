@@ -1,4 +1,4 @@
-package com.mvgreen.data.usecase
+package com.mvgreen.data.datasource
 
 import androidx.paging.PageKeyedDataSource
 import com.mvgreen.domain.entity.MovieContainer
@@ -11,14 +11,11 @@ import io.reactivex.schedulers.Schedulers
 class SearchDataSource(
     private val query: String,
     private val searchRepository: SearchRepository,
+    private var compositeDisposable: CompositeDisposable,
     private val onErrorCallback: (e: Throwable) -> Unit
-) : PageKeyedDataSource<Int, MovieData>(), Disposable {
+) : PageKeyedDataSource<Int, MovieData>() {
 
-    private var compositeDisposable: CompositeDisposable? = CompositeDisposable()
     private var pagesTotal: Int = 0
-
-    @Volatile
-    private var disposed: Boolean = false
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -62,39 +59,8 @@ class SearchDataSource(
         throw NotImplementedError()
     }
 
-
-    override fun isDisposed(): Boolean {
-        return disposed
-    }
-
-    override fun dispose() {
-        if (disposed) {
-            return
-        }
-        var disposable: CompositeDisposable
-        synchronized(this) {
-            if (disposed) {
-                return
-            }
-            disposed = true
-            disposable = compositeDisposable ?: return
-            compositeDisposable = null
-        }
-
-        disposable.clear()
-    }
-
     private fun Disposable.disposeOnDestroy() {
-        if (!disposed) {
-            synchronized(this) {
-                if (!disposed) {
-                    val container = compositeDisposable ?: CompositeDisposable()
-                    compositeDisposable = container
-                    container.add(this)
-                }
-            }
-        }
-        this.dispose()
+        compositeDisposable.add(this)
     }
 
     private inline fun callOnResult(

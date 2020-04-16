@@ -9,6 +9,7 @@ import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.ProfileUseCase
+import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
@@ -51,6 +52,8 @@ internal interface ApplicationComponent {
     fun authUseCase(): AuthUseCase
 
     fun profileUseCase(): ProfileUseCase
+
+    fun searchUseCase(): SearchUseCase
 
     @Component.Builder
     interface Builder {
