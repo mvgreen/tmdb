@@ -7,14 +7,10 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mvgreen.domain.entity.MovieData
-import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.R
 import kotlinx.android.synthetic.main.item_recycler_linear.view.*
 
-class PagedMoviesAdapter(
-//    private val searchUseCase: SearchUseCase
-) :
-    PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
+class PagedMoviesAdapter : PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
 
     companion object {
         const val TAG = "PagedMoviesAdapter"
@@ -39,7 +35,7 @@ class PagedMoviesAdapter(
         val movieData = getItem(position)
         val movieTitle = movieData?.title ?: "-"
         val movieOriginalTitle = movieData?.originalTitle ?: "-"
-        val year = movieData?.releaseDate?.year() ?: "-"
+        val year = movieData?.releaseDate?.year()?.get()?.toString() ?: "-"
         val genres = movieData?.genres?.joinToString()
         val movieScore = movieData?.averageVote?.toString() ?: "-"
         val voteCount = movieData?.voteCount?.toString() ?: "-"
@@ -52,14 +48,6 @@ class PagedMoviesAdapter(
             vote_count.text = voteCount
             length.text = runtime
         }
-    }
-
-    private fun loadImage(item: View, movie: MovieData) {
-//        val imageLoader = ImageLoaderImpl(item.poster) {
-//            Log.e(TAG, "Could not load poster image")
-//        }
-//        searchUseCase.initImageLoader(imageLoader)
-//        imageLoader.loadImage()
     }
 
 }
