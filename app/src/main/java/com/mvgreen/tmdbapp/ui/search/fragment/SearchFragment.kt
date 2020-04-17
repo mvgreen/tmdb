@@ -3,6 +3,7 @@ package com.mvgreen.tmdbapp.ui.search.fragment
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.paging.PagedListAdapter
@@ -17,6 +18,7 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
+import com.redmadrobot.lib.sd.LoadingStateDelegate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -24,6 +26,11 @@ import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
+    companion object {
+        const val TAG = "SearchFragment"
+    }
+
+    private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
 
     private val marginDecoration = object : RecyclerView.ItemDecoration() {
@@ -41,6 +48,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         super.onActivityCreated(savedInstanceState)
         setupViewModel()
         setupView()
+        setupDelegator()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -62,16 +70,23 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             .skipInitialValue()
             .debounce(200, TimeUnit.MILLISECONDS)
             .switchMap { query ->
+                onLoadingStarted()
                 val queryStr = query.toString()
                 viewModel.query = queryStr
                 viewModel.onSearch(queryStr)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                viewModel.list = list
-                (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
-            }
+            .subscribe(
+                { list ->
+                    onLoaded()
+                    viewModel.list = list
+                    (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
+                },
+                { e ->
+                    Log.e(TAG, e.message, e)
+                }
+            )
             .disposeOnDestroy()
     }
 
@@ -89,8 +104,28 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         recycler_results.addItemDecoration(marginDecoration)
     }
 
+    private fun setupDelegator() {
+        stateDelegate = LoadingStateDelegate(recycler_results, loading_screen, zero_screen)
+    }
+
     private fun restoreSearch() {
         input_search.setText(viewModel.query)
         (recycler_results.adapter as PagedMoviesAdapter).submitList(viewModel.list)
+    }
+
+    private fun onLoadingStarted() {
+        requireActivity().runOnUiThread {
+            stateDelegate.showLoading()
+        }
+    }
+
+    private fun onLoaded() {
+        requireActivity().runOnUiThread {
+            stateDelegate.showContent()
+        }
+    }
+
+    // TODO случай с отсутствием интернета
+    private fun onContentEmpty() {
     }
 }

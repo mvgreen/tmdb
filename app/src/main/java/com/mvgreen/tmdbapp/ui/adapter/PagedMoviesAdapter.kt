@@ -10,7 +10,8 @@ import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.tmdbapp.R
 import kotlinx.android.synthetic.main.item_recycler_linear.view.*
 
-class PagedMoviesAdapter : PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
+class PagedMoviesAdapter :
+    PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
 
     companion object {
         const val TAG = "PagedMoviesAdapter"

@@ -34,8 +34,8 @@ class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = PagedMoviesAdapter()
-        recycler.adapter = adapter
+//        val adapter = PagedMoviesAdapter()
+//        recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.addItemDecoration(marginDecoration)
 
@@ -47,7 +47,7 @@ class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
-                adapter.submitList(list)
+//                adapter.submitList(list)
             }
             .disposeOnDestroy()
     }
