@@ -7,6 +7,9 @@ import com.mvgreen.domain.repository.ImageConfigStorage
 import com.mvgreen.domain.repository.ImageRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.LoadImageUseCase
+import io.reactivex.Completable
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LoadImageUseCaseImpl @Inject constructor(
@@ -15,9 +18,13 @@ class LoadImageUseCaseImpl @Inject constructor(
     private val userDataStorage: UserDataStorage
 ) : LoadImageUseCase {
 
-    override fun downloadConfiguration() {
-        val config = imageRepository.downloadConfiguration()
-        imageConfigStorage.setConfiguration(config)
+    override fun downloadConfiguration(): Completable {
+        return imageRepository.downloadConfiguration()
+            .map { config ->
+                imageConfigStorage.setConfiguration(config)
+            }
+            .ignoreElement()
+            .subscribeOn(Schedulers.io())
     }
 
     override fun initAvatarLoader(imageLoader: ImageLoader) {
@@ -28,13 +35,13 @@ class LoadImageUseCaseImpl @Inject constructor(
         imageLoader.sizeParam = NetworkConstants.Gravatar.sizeModifier
     }
 
-    override fun initListImageLoader(imageLoader: ImageLoader, movieData: MovieData) {
-        if (movieData.posterLink == null) {
+    override fun initListImageLoader(imageLoader: ImageLoader, movieData: MovieData?) {
+        if (movieData?.posterLink == null) {
             return
         }
 
         imageLoader.url = imageConfigStorage.getUrl()
-        imageLoader.path = movieData.posterLink
+        imageLoader.path = imageConfigStorage.getPath() + movieData.posterLink
     }
 
 }

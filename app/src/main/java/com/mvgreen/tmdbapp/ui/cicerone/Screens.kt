@@ -42,6 +42,5 @@ object FavoritesScreen : SupportAppScreen() {
 }
 
 object SearchScreen : SupportAppScreen() {
-    override fun getFragment() =
-        SearchFragment()
+    override fun getFragment() = SearchFragment()
 }

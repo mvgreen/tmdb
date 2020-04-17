@@ -1,5 +1,6 @@
 package com.mvgreen.tmdbapp.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,12 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
+import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import kotlinx.android.synthetic.main.item_recycler_linear.view.*
 
-class PagedMoviesAdapter :
+class PagedMoviesAdapter (private val imageUseCase: LoadImageUseCase) :
     PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
 
     companion object {
@@ -48,7 +51,16 @@ class PagedMoviesAdapter :
             score.text = movieScore
             vote_count.text = voteCount
             length.text = runtime
+            loadImage(poster, movieData)
         }
+    }
+
+    private fun loadImage(item: View, movie: MovieData?) {
+        val imageLoader = ImageLoaderImpl(item.poster) {
+            Log.e(TAG, "Could not load poster image")
+        }
+        imageUseCase.initListImageLoader(imageLoader, movie)
+        imageLoader.loadImage()
     }
 
 }

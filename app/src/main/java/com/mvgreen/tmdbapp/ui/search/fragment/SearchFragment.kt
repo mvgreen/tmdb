@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
@@ -23,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
@@ -32,6 +34,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
+
+    private val loadImageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
 
     private val marginDecoration = object : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
@@ -97,7 +101,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun setupView() {
-        val adapter = PagedMoviesAdapter()
+        val adapter = PagedMoviesAdapter(loadImageUseCase)
         val layoutManager = LinearLayoutManager(requireContext())
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
