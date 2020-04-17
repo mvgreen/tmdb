@@ -120,7 +120,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
                 { btn_login.isEnabled = true },
                 { e -> Log.e(TAG, e.message, e) }
             )
-            .disposeOnViewModelDestroy()
+            .disposeOnDestroy()
     }
 
     private fun setupDelegator() {

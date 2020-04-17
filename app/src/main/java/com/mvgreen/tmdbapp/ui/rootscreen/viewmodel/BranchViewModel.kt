@@ -15,12 +15,10 @@ class BranchViewModel @Inject constructor() : BaseViewModel() {
 
     fun init(
         navigatorHolder: NavigatorHolder,
-        router: SelfRestoringRouter,
-        rootScreen: SupportAppScreen
+        router: SelfRestoringRouter
     ) {
         branchNavigatorHolder = navigatorHolder
         branchRouter = router
-        branchRouter.restore(rootScreen)
     }
 
     fun setNavigator(navigator: Navigator) {

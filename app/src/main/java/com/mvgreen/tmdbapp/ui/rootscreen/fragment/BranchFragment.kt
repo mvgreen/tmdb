@@ -57,7 +57,8 @@ class BranchFragment constructor(private var branchId: Int) :
             restoreInstanceState(savedInstanceState)
         }
         val (ciceroneOwner, rootScreen) = getCiceroneInstances()
-        setupViewModel(ciceroneOwner, rootScreen)
+        setupViewModel(ciceroneOwner)
+        viewModel.branchRouter.restore(rootScreen, savedInstanceState)
     }
 
     override fun onResume() {
@@ -81,13 +82,12 @@ class BranchFragment constructor(private var branchId: Int) :
     }
 
     private fun setupViewModel(
-        ciceroneOwner: CiceroneOwner,
-        rootScreen: SupportAppScreen
+        ciceroneOwner: CiceroneOwner
     ) {
         viewModel = getViewModel(viewModelFactory {
             ciceroneOwner.branchViewModel()
         })
-        viewModel.init(ciceroneOwner.navigatorHolder(), ciceroneOwner.router(), rootScreen)
+        viewModel.init(ciceroneOwner.navigatorHolder(), ciceroneOwner.router())
     }
 
     private fun restoreInstanceState(savedInstanceState: Bundle) {

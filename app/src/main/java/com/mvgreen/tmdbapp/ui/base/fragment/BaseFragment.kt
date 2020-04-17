@@ -9,7 +9,6 @@ import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-
 abstract class BaseFragment : Fragment {
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
@@ -49,7 +48,7 @@ abstract class BaseFragment : Fragment {
         view?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
     }
 
-    protected fun Disposable.disposeOnViewModelDestroy(): Disposable {
+    protected fun Disposable.disposeOnDestroy(): Disposable {
         compositeDisposable.add(this)
         return this
     }

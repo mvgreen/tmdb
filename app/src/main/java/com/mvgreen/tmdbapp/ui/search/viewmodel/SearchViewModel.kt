@@ -11,10 +11,13 @@ class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
 ) : BaseViewModel() {
 
+    var query = ""
+
+    var list : PagedList<MovieData>? = null
+
     fun onSearch(query: String) : Observable<PagedList<MovieData>> {
         return searchUseCase
             .search(query, compositeDisposable)
-            .buildObservable()
     }
 
 }

@@ -10,6 +10,7 @@ import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.usecase.SearchUseCase
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -37,7 +38,7 @@ class SearchUseCaseImpl @Inject constructor(
     override fun search(
         query: String,
         compositeDisposable: CompositeDisposable
-    ): RxPagedListBuilder<Int, MovieData> {
+    ): Observable<PagedList<MovieData>> {
         val factory = SearchDataSourceFactory(
             query,
             searchRepository,
@@ -47,7 +48,7 @@ class SearchUseCaseImpl @Inject constructor(
             .Builder()
             .setPrefetchDistance(PREFETCH_DISTANCE)
             .build()
-        return RxPagedListBuilder(factory, config)
+        return RxPagedListBuilder(factory, config).buildObservable()
     }
 
 }

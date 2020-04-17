@@ -39,7 +39,7 @@ class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.addItemDecoration(marginDecoration)
 
-        DI.appComponent.searchUseCase().initSearch().subscribe().disposeOnViewModelDestroy()
+        DI.appComponent.searchUseCase().initSearch().subscribe().disposeOnDestroy()
         search_box.textChanges()
             .filter { it.length > 2 }
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -49,11 +49,10 @@ class FilmsBranchFragment : BaseFragment(R.layout.branch_stub_films) {
             .subscribe { list ->
                 adapter.submitList(list)
             }
-            .disposeOnViewModelDestroy()
+            .disposeOnDestroy()
     }
 
     private fun apiCall(): ObservableSource<PagedList<MovieData>> {
         return DI.appComponent.searchUseCase().search("adventures", CompositeDisposable())
-            .buildObservable()
     }
 }
