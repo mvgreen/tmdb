@@ -16,6 +16,4 @@ interface SearchUseCase {
         compositeDisposable: CompositeDisposable
     ): RxPagedListBuilder<Int, MovieData>
 
-    fun initImageLoader(imageLoader: ImageLoader, movieData: MovieData)
-
 }
