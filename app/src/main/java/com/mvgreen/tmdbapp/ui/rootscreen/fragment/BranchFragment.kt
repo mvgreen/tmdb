@@ -58,7 +58,7 @@ class BranchFragment constructor(private var branchId: Int) :
         }
         val (ciceroneOwner, rootScreen) = getCiceroneInstances()
         setupViewModel(ciceroneOwner)
-        viewModel.branchRouter.restore(rootScreen, savedInstanceState)
+        viewModel.branchRouter.restore(rootScreen, savedInstanceState != null)
     }
 
     override fun onResume() {

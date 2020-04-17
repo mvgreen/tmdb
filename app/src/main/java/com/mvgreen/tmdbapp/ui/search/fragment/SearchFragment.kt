@@ -24,11 +24,6 @@ import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
-    companion object {
-        const val KEY_QUERY = "KEY_QUERY"
-        const val KEY_FIRST_ITEM = "KEY_FIRST_ITEM"
-    }
-
     private lateinit var viewModel: SearchViewModel
 
     private val marginDecoration = object : RecyclerView.ItemDecoration() {
@@ -44,18 +39,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupViewModel(savedInstanceState)
-        setupView(savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(KEY_QUERY, viewModel.query)
-        outState.putInt(
-            KEY_FIRST_ITEM,
-            (recycler_results.layoutManager as LinearLayoutManager)
-                .findFirstCompletelyVisibleItemPosition()
-        )
+        setupViewModel()
+        setupView()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -90,30 +75,18 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             .disposeOnDestroy()
     }
 
-    private fun setupViewModel(savedInstanceState: Bundle?) {
+    private fun setupViewModel() {
         viewModel = getViewModel(viewModelFactory {
             DI.appComponent.searchViewModel()
         })
-        if (savedInstanceState != null) {
-            val query = savedInstanceState.getString(KEY_QUERY)
-            if (query != null) {
-                viewModel.query = query
-            }
-        }
     }
 
-    private fun setupView(savedInstanceState: Bundle?) {
+    private fun setupView() {
         val adapter = PagedMoviesAdapter()
         val layoutManager = LinearLayoutManager(requireContext())
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
         recycler_results.addItemDecoration(marginDecoration)
-        if (savedInstanceState != null) {
-            val firstItem = savedInstanceState.getInt(KEY_FIRST_ITEM, -1)
-            if (firstItem != -1) {
-                layoutManager.scrollToPosition(firstItem)
-            }
-        }
     }
 
     private fun restoreSearch() {

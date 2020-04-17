@@ -1,6 +1,5 @@
 package com.mvgreen.tmdbapp.ui.cicerone
 
-import android.os.Bundle
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.Screen
 import java.util.*
@@ -10,13 +9,13 @@ class SelfRestoringRouter : Router() {
     private var stack = LinkedList<Screen>()
 
     @Suppress("UNCHECKED_CAST")
-    fun restore(startScreen: Screen, savedInstanceState: Bundle?) {
+    fun restore(startScreen: Screen, stateSaved: Boolean) {
         if (stack.isEmpty()) {
             stack.push(startScreen)
             super.newRootChain(*stack.toTypedArray())
         }
         // Пересоздание цепочки требуется только при создании фрагмента с нуля
-        if (savedInstanceState == null) {
+        if (!stateSaved) {
             super.newRootChain(*stack.reversed().toTypedArray())
         }
     }
