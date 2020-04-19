@@ -3,7 +3,6 @@ package com.mvgreen.data.usecase
 import com.mvgreen.domain.repository.AuthRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.AuthUseCase
-import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.domain.usecase.SearchUseCase
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -13,8 +12,7 @@ import javax.inject.Inject
 class AuthUseCaseImpl @Inject constructor(
     private val repository: AuthRepository,
     private val userDataStorage: UserDataStorage,
-    private val searchUseCase: SearchUseCase,
-    private val loadImageUseCase: LoadImageUseCase
+    private val searchUseCase: SearchUseCase
 ) : AuthUseCase {
 
     override fun login(email: String, password: String): Completable {
@@ -24,11 +22,8 @@ class AuthUseCaseImpl @Inject constructor(
                 userDataStorage.saveAuthData(token, email, password)
                 loadProfileData(token)
             }
-            .flatMap {
-                searchUseCase.initSearch().toSingle {  }
-            }
             .flatMapCompletable {
-                loadImageUseCase.downloadConfiguration()
+                searchUseCase.initSearch()
             }
             .subscribeOn(Schedulers.io())
     }

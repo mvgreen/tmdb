@@ -169,7 +169,7 @@ internal class AppModule {
         searchUseCase: SearchUseCase,
         loadImageUseCase: LoadImageUseCase
     ): AuthUseCase =
-        AuthUseCaseImpl(authRepository, userDataStorage, searchUseCase, loadImageUseCase)
+        AuthUseCaseImpl(authRepository, userDataStorage, searchUseCase)
 
     @Provides
     @ApplicationScope
