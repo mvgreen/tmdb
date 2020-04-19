@@ -106,6 +106,9 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
         recycler_results.addItemDecoration(marginDecoration)
+        button_cancel.setOnClickListener {
+            input_search.setText("")
+        }
     }
 
     private fun setupDelegator() {
