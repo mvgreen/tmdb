@@ -9,9 +9,13 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mvgreen.domain.bean.ImageLoader
-import com.mvgreen.tmdbapp.R
 
-class ImageLoaderImpl(private val view: ImageView, val loadCallback: () -> Unit) :
+class ImageLoaderImpl(
+    private val view: ImageView,
+    private val placeholder: Int,
+    private val cropCircle: Boolean,
+    val loadCallback: () -> Unit
+) :
     ImageLoader {
 
     override var url: String = ""
@@ -53,8 +57,12 @@ class ImageLoaderImpl(private val view: ImageView, val loadCallback: () -> Unit)
         Glide
             .with(view)
             .load(fullPath)
-            .placeholder(R.drawable.ic_profile_stub)
-            .apply(RequestOptions.circleCropTransform())
+            .placeholder(placeholder)
+            .apply {
+                if (cropCircle) {
+                    apply(RequestOptions.circleCropTransform())
+                }
+            }
             .listener(onFailListener)
             .into(view)
     }

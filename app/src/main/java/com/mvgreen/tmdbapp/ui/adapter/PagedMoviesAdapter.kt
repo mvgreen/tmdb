@@ -56,7 +56,10 @@ class PagedMoviesAdapter (private val imageUseCase: LoadImageUseCase) :
     }
 
     private fun loadImage(item: View, movie: MovieData?) {
-        val imageLoader = ImageLoaderImpl(item.poster) {
+        val imageLoader = ImageLoaderImpl(
+            item.poster,
+            R.drawable.cornered_orange,
+            false) {
             Log.e(TAG, "Could not load poster image")
         }
         imageUseCase.initListImageLoader(imageLoader, movie)

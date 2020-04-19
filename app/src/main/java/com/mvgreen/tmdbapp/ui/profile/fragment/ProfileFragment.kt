@@ -51,7 +51,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun loadImage() {
         try {
-            val imageLoader = ImageLoaderImpl(avatar) {
+            val imageLoader = ImageLoaderImpl(
+                avatar,
+                R.drawable.ic_profile_stub,
+                true) {
                 Snackbar
                     .make(
                         requireView(),

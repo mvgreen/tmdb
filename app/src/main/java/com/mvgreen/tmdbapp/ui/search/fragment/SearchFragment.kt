@@ -25,7 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
