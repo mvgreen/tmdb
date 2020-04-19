@@ -4,6 +4,7 @@ import androidx.paging.PagedList
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
+import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -14,6 +15,8 @@ class SearchViewModel @Inject constructor(
     var query = ""
 
     var list : PagedList<MovieData>? = null
+
+    var currentState = LoadingState.CONTENT
 
     fun onSearch(query: String) : Observable<PagedList<MovieData>> {
         return searchUseCase

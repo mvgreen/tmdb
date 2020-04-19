@@ -20,6 +20,7 @@ import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
 import com.redmadrobot.lib.sd.LoadingStateDelegate
+import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -110,6 +111,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     private fun setupDelegator() {
         stateDelegate = LoadingStateDelegate(recycler_results, loading_screen, zero_screen)
+        stateDelegate.currentState = viewModel.currentState
     }
 
     private fun restoreSearch() {
@@ -120,12 +122,14 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private fun onLoadingStarted() {
         requireActivity().runOnUiThread {
             stateDelegate.showLoading()
+            viewModel.currentState = LoadingState.LOADING
         }
     }
 
     private fun onLoaded() {
         requireActivity().runOnUiThread {
             stateDelegate.showContent()
+            viewModel.currentState = LoadingState.CONTENT
         }
     }
 
