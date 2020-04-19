@@ -20,6 +20,10 @@ class SelfRestoringRouter : Router() {
         }
     }
 
+    fun reset() {
+        stack.clear()
+    }
+
     override fun newChain(vararg screens: Screen?) {
         for (screen in screens) {
             stack.push(screen)

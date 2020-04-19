@@ -9,6 +9,8 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
+import com.mvgreen.tmdbapp.ui.cicerone.FilmsBranchScreen
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import kotlinx.android.synthetic.main.fragment_profile.*
 import ru.terrakok.cicerone.Router
@@ -21,6 +23,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private lateinit var profileUseCase: ProfileUseCase
     private lateinit var loadImageUseCase: LoadImageUseCase
+    private lateinit var filmsRouter: SelfRestoringRouter
     private lateinit var mainRouter: Router
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,6 +31,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         profileUseCase = DI.appComponent.profileUseCase()
         loadImageUseCase = DI.appComponent.loadImageUseCase()
         mainRouter = DI.appComponent.router()
+        filmsRouter = DI.filmsTabComponent.router()
 
         setupView()
         loadImage()
@@ -45,6 +49,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
         btn_logout.setOnClickListener {
             profileUseCase.logout()
+            filmsRouter.reset()
             mainRouter.newRootScreen(AuthScreen)
         }
     }
@@ -54,7 +59,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             val imageLoader = ImageLoaderImpl(
                 avatar,
                 R.drawable.ic_profile_stub,
-                true) {
+                true
+            ) {
                 Snackbar
                     .make(
                         requireView(),
