@@ -50,7 +50,7 @@ class PagedMoviesAdapter (private val imageUseCase: LoadImageUseCase) :
             genre.text = genres
             score.text = movieScore
             vote_count.text = voteCount
-            length.text = runtime
+            length.text = resources.getString(R.string.minutes, runtime)
             loadImage(poster, movieData)
         }
     }

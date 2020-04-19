@@ -32,5 +32,6 @@
     <!-- Шаблоны -->
     <string name="title_template">%1$s (%2$s)</string>
     <string name="error_download_config">Произошла ошибка при загрузке конфигурации сервиса, проверьте соединение</string>
+    <string name="minutes">%1$s минут</string>
 
 </resources>
