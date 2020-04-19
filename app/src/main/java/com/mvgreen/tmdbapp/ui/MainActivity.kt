@@ -9,6 +9,7 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
+import com.mvgreen.tmdbapp.ui.cicerone.LaunchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,31 +28,8 @@ class MainActivity constructor() : AppActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.elevation = 0.0f
         val router = DI.appComponent.router()
-        val loadImageUseCase = DI.appComponent.loadImageUseCase()
         if (savedInstanceState == null) {
-            loadImageUseCase
-                .downloadConfiguration()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        if (DI.appComponent.userDataStorage().hasUserData()) {
-                            router.newRootScreen(MainScreen)
-                        } else {
-                            router.newRootScreen(AuthScreen)
-                        }
-                    },
-                    { e ->
-                        // TODO обработка вылетов
-                        Log.e(TAG, e.message, e)
-                        Snackbar
-                            .make(
-                                container,
-                                getString(R.string.error_download_config),
-                                Snackbar.LENGTH_LONG
-                            )
-                            .show()
-                    }
-                )
+            router.newRootScreen(LaunchScreen)
         }
     }
 

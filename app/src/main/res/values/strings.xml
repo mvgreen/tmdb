@@ -33,5 +33,7 @@
     <string name="title_template">%1$s (%2$s)</string>
     <string name="error_download_config">Произошла ошибка при загрузке конфигурации сервиса, проверьте соединение</string>
     <string name="minutes">%1$s минут</string>
+    <string name="message_loading_config">Секундочку, загружаем файлы конфигурации...</string>
+    <string name="retry">Повторить попытку</string>
 
 </resources>
