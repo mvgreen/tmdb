@@ -11,7 +11,6 @@ class BranchViewModel @Inject constructor() : BaseViewModel() {
 
     lateinit var branchNavigatorHolder: NavigatorHolder
     lateinit var branchRouter: SelfRestoringRouter
-    private var currentScreen: SupportAppScreen? = null
 
     fun init(
         navigatorHolder: NavigatorHolder,

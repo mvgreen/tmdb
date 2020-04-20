@@ -5,6 +5,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Converter
 import javax.inject.Inject
 
+// Аналогичен TMDbApi, но не вызывает аутентикатор,
+// так как для его запросов не требуется токен
 class TMDbGuestApiFactory @Inject constructor(
     httpErrorInterceptor: HttpErrorInterceptor,
     vararg converters: Converter.Factory

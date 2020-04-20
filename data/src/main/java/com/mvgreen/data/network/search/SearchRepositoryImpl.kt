@@ -13,6 +13,7 @@ import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -55,7 +56,6 @@ class SearchRepositoryImpl @Inject constructor(
                 // Для каждого айтема посылаем запрос для получения длительности фильма.
                 // Дополнительно присваиваем каждому запросу индекс чтобы потом восстановить порядок.
                 .flatMapSingle { listItem ->
-                    // TODO проверить тред в котором происходит ожидание запроса
                     searchApi
                         .getMovieDetails(getOrUnexpected(listItem.id))
                         .onErrorReturnItem(listItem)
@@ -63,6 +63,8 @@ class SearchRepositoryImpl @Inject constructor(
                             item.itemIndex = listItem.itemIndex
                             item
                         }
+                        // Обеспечивает параллельность отправки запросов
+                        .subscribeOn(Schedulers.io())
                 }
                 // Собираем все запросы, восстанавливаем порядок списка
                 .toSortedList { item1, item2 ->

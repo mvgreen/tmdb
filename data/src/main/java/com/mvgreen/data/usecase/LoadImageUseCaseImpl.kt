@@ -8,7 +8,6 @@ import com.mvgreen.domain.repository.ImageRepository
 import com.mvgreen.domain.repository.UserDataStorage
 import com.mvgreen.domain.usecase.LoadImageUseCase
 import io.reactivex.Completable
-import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 

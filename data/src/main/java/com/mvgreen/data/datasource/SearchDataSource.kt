@@ -17,8 +17,7 @@ class SearchDataSource(
     private val searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
 ) : PageKeyedDataSource<Int, MovieData>() {
 
-    var pagesTotal: Int = 0
-        private set
+    private var pagesTotal: Int = 0
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
