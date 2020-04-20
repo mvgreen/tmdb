@@ -9,10 +9,10 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
-import com.mvgreen.tmdbapp.ui.rootscreen.fragment.BranchFragment
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
+import com.redmadrobot.lib.sd.LoadingStateDelegate
 import kotlinx.android.synthetic.main.fragment_details.*
 import ru.terrakok.cicerone.Router
 
@@ -29,6 +29,7 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
 
     private lateinit var viewModel: DetailsViewModel
     private lateinit var router: Router
+    private lateinit var loadingStateDelegate: LoadingStateDelegate
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -36,6 +37,7 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
         if (movieId == -1) {
             movieId = savedInstanceState?.getInt(MOVIE_ID, ID_NONE) ?: ID_NONE
         }
+        setupDelegate()
         setupViewModel()
         setupView()
     }
@@ -43,6 +45,11 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(MOVIE_ID, movieId)
+    }
+
+    private fun setupDelegate() {
+        loadingStateDelegate = LoadingStateDelegate(content_screen, stubView = error_screen)
+        loadingStateDelegate.showContent()
     }
 
     private fun setupViewModel() {
@@ -56,6 +63,13 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
         button_back.setOnClickListener {
             router.exit()
         }
+        button_retry.setOnClickListener {
+            loadMovieData()
+        }
+        loadMovieData()
+    }
+
+    private fun loadMovieData() {
         val movie = viewModel.movieData
         if (movie == null) {
             viewModel
@@ -63,16 +77,11 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
                 .subscribe(
                     { result ->
                         bindData(result)
+                        loadingStateDelegate.showContent()
                     },
                     { e ->
                         Log.e(TAG, e.message, e)
-                        Snackbar
-                            .make(
-                                requireView(),
-                                getString(R.string.check_connection),
-                                Snackbar.LENGTH_SHORT
-                            )
-                            .show()
+                        loadingStateDelegate.showStub()
                     }
                 )
                 .disposeOnDestroy()
