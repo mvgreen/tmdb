@@ -41,5 +41,6 @@
     <string name="time">Время</string>
     <string name="min">мин</string>
     <string name="rating">Рейтинг фильма</string>
+    <string name="empty_response">По вашему запросу ничего не найдено :(</string>
 
 </resources>

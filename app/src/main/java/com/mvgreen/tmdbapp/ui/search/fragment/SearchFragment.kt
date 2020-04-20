@@ -18,6 +18,7 @@ import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.delegator.EmptyResponseState
+import com.mvgreen.tmdbapp.ui.delegator.ErrorState
 import com.mvgreen.tmdbapp.ui.delegator.HideAllState
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
@@ -120,8 +121,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         button_cancel.setOnClickListener {
             input_search.setText("")
         }
-        zero_screen.targetState = EmptyResponseState
-        empty_screen.targetState = HideAllState
+        zero_screen.targetStates = listOf(EmptyResponseState, ErrorState)
+        empty_screen.targetStates = listOf(HideAllState)
 
         input_search.setOnEditorActionListener { _, _, _ ->
             // клавиатура может не успеть исчезнуть после закрытия активити
@@ -154,7 +155,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         }
         when (searchState) {
             SearchState.CONTENT_READY -> onLoaded()
-            SearchState.ERROR -> onContentEmpty()
+            SearchState.ERROR -> onNetworkError()
             SearchState.EMPTY_RESPONSE -> onContentEmpty()
         }
     }
@@ -173,7 +174,13 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         }
     }
 
-    // TODO случай с отсутствием интернета
+    private fun onNetworkError() {
+        requireActivity().runOnUiThread {
+            stateDelegate.showStub(ErrorState)
+            viewModel.currentState = LoadingState.STUB
+        }
+    }
+
     private fun onContentEmpty() {
         requireActivity().runOnUiThread {
             stateDelegate.showStub(EmptyResponseState)
