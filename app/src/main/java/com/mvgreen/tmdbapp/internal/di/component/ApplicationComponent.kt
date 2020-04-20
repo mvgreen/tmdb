@@ -13,6 +13,7 @@ import com.mvgreen.tmdbapp.internal.di.module.AppModule
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
+import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
 import com.mvgreen.tmdbapp.ui.launch.viewmodel.LaunchViewModel
 import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.RootViewModel
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
@@ -43,6 +44,8 @@ internal interface ApplicationComponent {
     fun searchViewModel(): SearchViewModel
 
     fun launchViewModel(): LaunchViewModel
+
+    fun detailsViewModel(): DetailsViewModel
 
     /** API */
 

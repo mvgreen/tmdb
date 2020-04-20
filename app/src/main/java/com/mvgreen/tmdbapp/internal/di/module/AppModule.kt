@@ -19,15 +19,9 @@ import com.mvgreen.data.storage.ImageConfigStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
 import com.mvgreen.data.storage.db.GenreDao
 import com.mvgreen.data.storage.db.GenreDb
-import com.mvgreen.data.usecase.AuthUseCaseImpl
-import com.mvgreen.data.usecase.LoadImageUseCaseImpl
-import com.mvgreen.data.usecase.ProfileUseCaseImpl
-import com.mvgreen.data.usecase.SearchUseCaseImpl
+import com.mvgreen.data.usecase.*
 import com.mvgreen.domain.repository.*
-import com.mvgreen.domain.usecase.AuthUseCase
-import com.mvgreen.domain.usecase.LoadImageUseCase
-import com.mvgreen.domain.usecase.ProfileUseCase
-import com.mvgreen.domain.usecase.SearchUseCase
+import com.mvgreen.domain.usecase.*
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.squareup.moshi.Moshi
@@ -193,5 +187,11 @@ internal class AppModule {
     ): LoadImageUseCase =
         LoadImageUseCaseImpl(imageRepository, imageConfigStorage, userDataStorage)
 
+    @Provides
+    @ApplicationScope
+    fun detailsUseCase(
+        searchRepository: SearchRepository
+    ): DetailsUseCase =
+        DetailsUseCaseImpl(searchRepository)
 
 }

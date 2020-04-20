@@ -82,6 +82,14 @@ class SearchRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getMovieDetails(id: Int): Single<MovieData> {
+        return searchApi
+            .getMovieDetails(id)
+            .map { response ->
+                toMovieData(response)
+            }
+    }
+
     private fun toMovieData(response: MovieObject) = MovieData(
         getOrUnexpected(response.id),
         response.posterPath,
@@ -91,7 +99,8 @@ class SearchRepositoryImpl @Inject constructor(
         parseGenres(response.genreIds),
         response.voteAverage,
         response.voteCount,
-        response.runtime
+        response.runtime,
+        response.overview
     )
 
     private fun parseNullableDate(str: String?): DateTime? {

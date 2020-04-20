@@ -11,7 +11,8 @@ data class MovieData(
     val genres: List<GenreData>,
     val averageVote: Float? = null,
     val voteCount: Int? = null,
-    val runtime: Int? = null
+    val runtime: Int? = null,
+    val overview: String? = null
 )
 
 data class MovieContainer(

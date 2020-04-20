@@ -1,6 +1,7 @@
 package com.mvgreen.tmdbapp.ui.cicerone
 
 import com.mvgreen.tmdbapp.ui.auth.fragment.AuthFragment
+import com.mvgreen.tmdbapp.ui.details.fragment.DetailsFragment
 import com.mvgreen.tmdbapp.ui.favorites.fragment.FavoritesBranchFragment
 import com.mvgreen.tmdbapp.ui.films.fragment.FilmsWelcomeFragment
 import com.mvgreen.tmdbapp.ui.launch.fragment.LaunchFragment
@@ -48,4 +49,8 @@ object SearchScreen : SupportAppScreen() {
 
 object LaunchScreen: SupportAppScreen() {
     override fun getFragment() = LaunchFragment()
+}
+
+class DetailsScreen(private val movieId: Int): SupportAppScreen() {
+    override fun getFragment() = DetailsFragment(movieId)
 }

@@ -27,6 +27,7 @@ import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
+import ru.terrakok.cicerone.Router
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
@@ -39,6 +40,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private lateinit var viewModel: SearchViewModel
 
     private val loadImageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
+    private val filmsRouter: Router = DI.filmsTabComponent.router()
 
     private val marginDecoration = object : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
@@ -110,7 +112,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun setupView() {
-        val adapter = PagedMoviesAdapter(loadImageUseCase)
+        val adapter = PagedMoviesAdapter(loadImageUseCase, filmsRouter)
         val layoutManager = LinearLayoutManager(requireContext())
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
