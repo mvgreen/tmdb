@@ -122,6 +122,16 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         }
         zero_screen.targetState = EmptyResponseState
         empty_screen.targetState = HideAllState
+
+        input_search.setOnEditorActionListener { _, _, _ ->
+            // клавиатура может не успеть исчезнуть после закрытия активити
+            activity?.let { activity ->
+                val imm =
+                    activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
+            }
+            true
+        }
     }
 
     private fun setupDelegator() {
