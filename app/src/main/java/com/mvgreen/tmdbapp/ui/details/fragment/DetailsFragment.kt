@@ -9,23 +9,40 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
+import com.mvgreen.tmdbapp.ui.rootscreen.fragment.BranchFragment
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
 import kotlinx.android.synthetic.main.fragment_details.*
+import ru.terrakok.cicerone.Router
 
-class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment_details) {
+class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment_details) {
+
+    constructor() : this(ID_NONE)
 
     companion object {
         const val TAG = "DetailsFragment"
+        const val MOVIE_ID = "MOVIE_ID"
+        const val ID_NONE = -1
+
     }
 
     private lateinit var viewModel: DetailsViewModel
+    private lateinit var router: Router
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        router = DI.filmsTabComponent.router()
+        if (movieId == -1) {
+            movieId = savedInstanceState?.getInt(MOVIE_ID, ID_NONE) ?: ID_NONE
+        }
         setupViewModel()
         setupView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(MOVIE_ID, movieId)
     }
 
     private fun setupViewModel() {
@@ -36,6 +53,9 @@ class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment
 
     private fun setupView() {
         description.movementMethod = ScrollingMovementMethod()
+        button_back.setOnClickListener {
+            router.exit()
+        }
         val movie = viewModel.movieData
         if (movie == null) {
             viewModel
