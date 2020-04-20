@@ -35,7 +35,7 @@ class LoadImageUseCaseImpl @Inject constructor(
         imageLoader.sizeParam = NetworkConstants.Gravatar.sizeModifier
     }
 
-    override fun initListImageLoader(imageLoader: ImageLoader, movieData: MovieData?) {
+    override fun initImageLoader(imageLoader: ImageLoader, movieData: MovieData?) {
         if (movieData?.posterLink == null) {
             return
         }

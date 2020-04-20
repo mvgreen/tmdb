@@ -2,6 +2,7 @@ package com.mvgreen.data.network.search
 
 import com.mvgreen.data.exception.UnexpectedResponseException
 import com.mvgreen.data.network.search.api.SearchApi
+import com.mvgreen.data.network.search.entity.Genre
 import com.mvgreen.data.network.search.entity.MovieObject
 import com.mvgreen.data.network.search.entity.SearchResponse
 import com.mvgreen.data.utils.getOrUnexpected
@@ -96,7 +97,7 @@ class SearchRepositoryImpl @Inject constructor(
         response.title,
         response.originalTitle,
         parseNullableDate(response.releaseDate),
-        parseGenres(response.genreIds),
+        parseGenres(response.genres),
         response.voteAverage,
         response.voteCount,
         response.runtime,
@@ -107,10 +108,11 @@ class SearchRepositoryImpl @Inject constructor(
         return if (str.isNullOrEmpty()) null else DateTime.parse(str)
     }
 
-    private fun parseGenres(list: List<Int>?): List<GenreData> {
-        return list?.mapNotNull { id ->
-            val genre = genreStorage.getGenre(id)
-            if (genre == null) null else GenreData(id, genre)
+    private fun parseGenres(list: List<Genre>?): List<GenreData> {
+        return list?.mapNotNull { item ->
+            if (item.id == null) return@mapNotNull null
+            val genre = genreStorage.getGenre(item.id)
+            if (genre == null) null else GenreData(item.id, genre)
         } ?: listOf()
     }
 

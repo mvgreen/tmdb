@@ -14,7 +14,7 @@ class ImageLoaderImpl(
     private val view: ImageView,
     private val placeholder: Int,
     private val cropCircle: Boolean,
-    val loadCallback: () -> Unit
+    val loadingErrorCallback: () -> Unit
 ) :
     ImageLoader {
 
@@ -31,7 +31,7 @@ class ImageLoaderImpl(
             target: Target<Drawable>?,
             isFirstResource: Boolean
         ): Boolean {
-            loadCallback.invoke()
+            loadingErrorCallback.invoke()
             return false
         }
 

@@ -3,6 +3,7 @@ package com.mvgreen.data.usecase
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.usecase.DetailsUseCase
+import com.mvgreen.domain.usecase.LoadImageUseCase
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

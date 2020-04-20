@@ -139,7 +139,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun onSearchStateChanged(searchState: SearchState, query: String) {
-        if (query != input_search.text.toString()) {
+        if (!isResumed || query != input_search?.text.toString()) {
             return
         }
         when (searchState) {

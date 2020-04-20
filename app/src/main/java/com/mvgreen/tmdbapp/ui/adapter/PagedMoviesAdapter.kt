@@ -44,7 +44,7 @@ class PagedMoviesAdapter(
         val movieTitle = movieData.title ?: "-"
         val movieOriginalTitle = movieData.originalTitle ?: "-"
         val year = movieData.releaseDate?.year()?.get()?.toString() ?: "-"
-        val genres = movieData.genres.joinToString()
+        val genres = movieData.genres.joinToString { item -> item.name }
         val movieScore = movieData.averageVote?.toString() ?: "-"
         val voteCount = movieData.voteCount?.toString() ?: "-"
         val runtime = movieData.runtime?.toString() ?: "-"
@@ -70,7 +70,7 @@ class PagedMoviesAdapter(
         ) {
             Log.e(TAG, "Could not load poster image")
         }
-        imageUseCase.initListImageLoader(imageLoader, movie)
+        imageUseCase.initImageLoader(imageLoader, movie)
         imageLoader.loadImage()
     }
 

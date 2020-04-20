@@ -9,9 +9,9 @@ import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
+import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment_details) {
@@ -47,7 +47,11 @@ class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment
                     { e ->
                         Log.e(TAG, e.message, e)
                         Snackbar
-                            .make(container, getString(R.string.check_connection), Snackbar.LENGTH_SHORT)
+                            .make(
+                                requireView(),
+                                getString(R.string.check_connection),
+                                Snackbar.LENGTH_SHORT
+                            )
                             .show()
                     }
                 )
@@ -61,7 +65,7 @@ class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment
         val movieTitle = movieData.title ?: "-"
         val movieOriginalTitle = movieData.originalTitle ?: "-"
         val year = movieData.releaseDate?.year()?.get()?.toString() ?: "-"
-        val genres = movieData.genres.joinToString()
+        val genres = movieData.genres.joinToString { item -> item.name }
         val movieScore = movieData.averageVote?.toString() ?: "-"
         val voteCount = movieData.voteCount?.toString() ?: "-"
         val runtime = movieData.runtime?.toString() ?: "-"
@@ -74,5 +78,8 @@ class DetailsFragment(private val movieId: Int) : BaseFragment(R.layout.fragment
         vote_count.text = voteCount
         length.text = runtime
         description.text = overview
+
+        val imageLoader = ImageLoaderImpl(poster, R.drawable.cornered_orange, false) {}
+        viewModel.onLoadImage(imageLoader)
     }
 }

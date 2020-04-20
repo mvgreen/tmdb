@@ -10,6 +10,6 @@ interface LoadImageUseCase {
 
     fun initAvatarLoader(imageLoader: ImageLoader)
 
-    fun initListImageLoader(imageLoader: ImageLoader, movieData: MovieData?)
+    fun initImageLoader(imageLoader: ImageLoader, movieData: MovieData?)
 
 }

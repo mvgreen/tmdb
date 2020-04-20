@@ -30,8 +30,8 @@ data class MovieObject(
     val overview: String?,
     @Json(name = "release_date")
     val releaseDate: String?,
-    @Json(name = "genre_ids")
-    val genreIds: List<Int>?,
+    @Json(name = "genres")
+    val genres: List<Genre>?,
     @Json(name = "id")
     val id: Int?,
     @Json(name = "original_title")
