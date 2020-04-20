@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
 import com.redmadrobot.lib.sd.LoadingStateDelegate
 import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -61,7 +63,6 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         setupDelegator()
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun onResume() {
         super.onResume()
         if (viewModel.list.isNullOrEmpty()) {
@@ -87,23 +88,9 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             }
             .filter { query -> query.isNotEmpty() }
             .switchMap { query ->
-                onLoadingStarted()
-                val queryStr = query.toString()
-                viewModel.query = queryStr
-                viewModel.onSearch(queryStr, ::onSearchStateChanged)
+                performSearch(query.toString())
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { list ->
-                    viewModel.list = list
-                    (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
-                },
-                { e ->
-                    Log.e(TAG, e.message, e)
-                }
-            )
-            .disposeOnDestroy()
+            .observeSearch()
     }
 
     private fun setupViewModel() {
@@ -125,6 +112,9 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         empty_screen.targetStates = listOf(HideAllState)
 
         input_search.setOnEditorActionListener { _, _, _ ->
+            performSearch(input_search.text.toString())
+                .observeSearch()
+
             // клавиатура может не успеть исчезнуть после закрытия активити
             activity?.let { activity ->
                 val imm =
@@ -147,6 +137,28 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private fun restoreSearch() {
         input_search.setText(viewModel.query)
         (recycler_results.adapter as PagedMoviesAdapter).submitList(viewModel.list)
+    }
+
+    private fun performSearch(query: String): Observable<PagedList<MovieData>> {
+        onLoadingStarted()
+        viewModel.query = query
+        return viewModel.onSearch(query, ::onSearchStateChanged)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun Observable<PagedList<MovieData>>.observeSearch() {
+        subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { list ->
+                    viewModel.list = list
+                    (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
+                },
+                { e ->
+                    Log.e(TAG, e.message, e)
+                }
+            )
+            .disposeOnDestroy()
     }
 
     private fun onSearchStateChanged(searchState: SearchState, query: String) {
