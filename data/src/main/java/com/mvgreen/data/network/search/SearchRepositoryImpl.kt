@@ -49,30 +49,6 @@ class SearchRepositoryImpl @Inject constructor(
 
             // Разбиваем полученные элементы и обрабатываем их по очереди
             Single.just(getOrUnexpected(response.results))
-                .flatMapObservable { list ->
-                    list.forEachIndexed { index, item -> item.itemIndex = index }
-                    Observable.fromIterable(list)
-                }
-                // Для каждого айтема посылаем запрос для получения длительности фильма.
-                // Дополнительно присваиваем каждому запросу индекс чтобы потом восстановить порядок.
-                .flatMapSingle { listItem ->
-                    searchApi
-                        .getMovieDetails(getOrUnexpected(listItem.id))
-                        .onErrorReturnItem(listItem)
-                        .map { item ->
-                            item.itemIndex = listItem.itemIndex
-                            item
-                        }
-                        // Обеспечивает параллельность отправки запросов
-                        .subscribeOn(Schedulers.io())
-                }
-                // Собираем все запросы, восстанавливаем порядок списка
-                .toSortedList { item1, item2 ->
-                    val index1 = getOrUnexpected(item1.itemIndex)
-                    val index2 = getOrUnexpected(item2.itemIndex)
-                    index1 - index2
-                }
-                // Конвертируем в сущности
                 .map { list ->
                     MovieContainer(
                         currentPage,

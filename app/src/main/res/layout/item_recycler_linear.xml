@@ -76,25 +76,4 @@
         app:layout_constraintBottom_toBottomOf="@id/score"
         app:layout_constraintLeft_toRightOf="@id/score" />
 
-    <ImageView
-        android:id="@+id/clock_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_clock"
-        app:layout_constraintLeft_toRightOf="@id/vote_count"
-        app:layout_constraintTop_toTopOf="@id/vote_count"
-        app:layout_constraintBottom_toBottomOf="@id/vote_count"
-        android:layout_marginLeft="16dp" />
-
-    <TextView
-        android:id="@+id/length"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/clock_icon"
-        app:layout_constraintTop_toTopOf="@id/clock_icon"
-        app:layout_constraintBottom_toBottomOf="@id/clock_icon"
-        android:text="91 мин"
-        style="@style/sfpro_light_small"
-        android:layout_marginLeft="5dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

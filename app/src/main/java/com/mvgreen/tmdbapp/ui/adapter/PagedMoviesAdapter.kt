@@ -47,14 +47,12 @@ class PagedMoviesAdapter(
         val genres = movieData.genres.joinToString { item -> item.name }
         val movieScore = movieData.averageVote?.toString() ?: "-"
         val voteCount = movieData.voteCount?.toString() ?: "-"
-        val runtime = movieData.runtime?.toString() ?: "-"
         with(holder.itemView) {
             title.text = movieTitle
             subtitle.text = resources.getString(R.string.title_template, movieOriginalTitle, year)
             genre.text = genres
             score.text = movieScore
             vote_count.text = voteCount
-            length.text = resources.getString(R.string.minutes, runtime)
             loadImage(poster, movieData)
         }
         holder.itemView.setOnClickListener {
