@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.data.datasource.SearchDataSourceFactory
-import com.mvgreen.domain.bean.ImageLoader
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.usecase.SearchUseCase
@@ -37,12 +37,14 @@ class SearchUseCaseImpl @Inject constructor(
 
     override fun search(
         query: String,
-        compositeDisposable: CompositeDisposable
+        compositeDisposable: CompositeDisposable,
+        searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
     ): Observable<PagedList<MovieData>> {
         val factory = SearchDataSourceFactory(
             query,
             searchRepository,
-            compositeDisposable
+            compositeDisposable,
+            searchStateCallback
         ) { e -> Log.e(TAG, e.message, e) }
         val config = PagedList.Config
             .Builder()

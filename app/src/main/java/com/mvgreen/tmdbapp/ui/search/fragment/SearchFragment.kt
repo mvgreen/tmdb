@@ -11,11 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
+import com.mvgreen.tmdbapp.ui.delegator.EmptyResponseState
+import com.mvgreen.tmdbapp.ui.delegator.HideAllState
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.viewModelFactory
@@ -73,17 +76,23 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             // В любом случае повторное обращение к серверу не нужно
             .skipInitialValue()
             .debounce(200, TimeUnit.MILLISECONDS)
+            .map { query ->
+                if (query.isEmpty()) {
+                    onHideContent()
+                }
+                query
+            }
+            .filter { query -> query.isNotEmpty() }
             .switchMap { query ->
                 onLoadingStarted()
                 val queryStr = query.toString()
                 viewModel.query = queryStr
-                viewModel.onSearch(queryStr)
+                viewModel.onSearch(queryStr, ::onSearchStateChanged)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { list ->
-                    onLoaded()
                     viewModel.list = list
                     (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
                 },
@@ -109,16 +118,33 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         button_cancel.setOnClickListener {
             input_search.setText("")
         }
+        zero_screen.targetState = EmptyResponseState
+        empty_screen.targetState = HideAllState
     }
 
     private fun setupDelegator() {
-        stateDelegate = LoadingStateDelegate(recycler_results, loading_screen, zero_screen)
+        stateDelegate = LoadingStateDelegate(
+            listOf(recycler_results),
+            listOf(loading_screen),
+            listOf(zero_screen, empty_screen)
+        )
         stateDelegate.currentState = viewModel.currentState
     }
 
     private fun restoreSearch() {
         input_search.setText(viewModel.query)
         (recycler_results.adapter as PagedMoviesAdapter).submitList(viewModel.list)
+    }
+
+    private fun onSearchStateChanged(searchState: SearchState, query: String) {
+        if (query != input_search.text.toString()) {
+            return
+        }
+        when (searchState) {
+            SearchState.CONTENT_READY -> onLoaded()
+            SearchState.ERROR -> onContentEmpty()
+            SearchState.EMPTY_RESPONSE -> onContentEmpty()
+        }
     }
 
     private fun onLoadingStarted() {
@@ -137,5 +163,16 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     // TODO случай с отсутствием интернета
     private fun onContentEmpty() {
+        requireActivity().runOnUiThread {
+            stateDelegate.showStub(EmptyResponseState)
+            viewModel.currentState = LoadingState.STUB
+        }
+    }
+
+    private fun onHideContent() {
+        requireActivity().runOnUiThread {
+            stateDelegate.showStub(HideAllState)
+            viewModel.currentState = null
+        }
     }
 }

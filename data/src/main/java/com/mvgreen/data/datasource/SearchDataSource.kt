@@ -3,6 +3,7 @@ package com.mvgreen.data.datasource
 import androidx.paging.PageKeyedDataSource
 import com.mvgreen.domain.entity.MovieContainer
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.repository.SearchRepository
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -12,7 +13,8 @@ class SearchDataSource(
     private val query: String,
     private val searchRepository: SearchRepository,
     private var compositeDisposable: CompositeDisposable,
-    private val onErrorCallback: (e: Throwable) -> Unit
+    private val onErrorCallback: (e: Throwable) -> Unit,
+    private val searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
 ) : PageKeyedDataSource<Int, MovieData>() {
 
     var pagesTotal: Int = 0
@@ -28,11 +30,18 @@ class SearchDataSource(
             .subscribe(
                 { result ->
                     pagesTotal = result.pagesTotal
+                    val searchState = if (pagesTotal == 0) {
+                        SearchState.EMPTY_RESPONSE
+                    } else {
+                        SearchState.CONTENT_READY
+                    }
+                    searchStateCallback.invoke(searchState, query)
                     callOnResult(result) { page, nextKey ->
                         callback.onResult(page, null, nextKey)
                     }
                 },
                 { e ->
+                    searchStateCallback.invoke(SearchState.ERROR, query)
                     onErrorCallback.invoke(e)
                 }
             )
@@ -50,6 +59,7 @@ class SearchDataSource(
                     }
                 },
                 { e ->
+                    searchStateCallback.invoke(SearchState.ERROR, query)
                     onErrorCallback.invoke(e)
                 }
             )
@@ -66,11 +76,11 @@ class SearchDataSource(
 
     private inline fun callOnResult(
         result: MovieContainer,
-        callback: (List<MovieData>, Int?) -> Unit
+        toCall: (List<MovieData>, Int?) -> Unit
     ) {
         val nextPage =
             if (pagesTotal == result.currentPage) null else result.currentPage + 1
-        callback.invoke(result.movies, nextPage)
+        toCall.invoke(result.movies, nextPage)
     }
 
 }

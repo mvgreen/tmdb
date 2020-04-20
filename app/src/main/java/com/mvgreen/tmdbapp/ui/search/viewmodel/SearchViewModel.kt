@@ -2,6 +2,7 @@ package com.mvgreen.tmdbapp.ui.search.viewmodel
 
 import androidx.paging.PagedList
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
@@ -14,13 +15,16 @@ class SearchViewModel @Inject constructor(
 
     var query = ""
 
-    var list : PagedList<MovieData>? = null
+    var list: PagedList<MovieData>? = null
 
-    var currentState = LoadingState.CONTENT
+    var currentState: LoadingState? = LoadingState.CONTENT
 
-    fun onSearch(query: String) : Observable<PagedList<MovieData>> {
+    fun onSearch(
+        query: String,
+        searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
+    ): Observable<PagedList<MovieData>> {
         return searchUseCase
-            .search(query, compositeDisposable)
+            .search(query, compositeDisposable, searchStateCallback)
     }
 
 }
