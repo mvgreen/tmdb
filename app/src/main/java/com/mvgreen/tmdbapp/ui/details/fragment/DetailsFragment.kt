@@ -3,14 +3,17 @@ package com.mvgreen.tmdbapp.ui.details.fragment
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
+import com.mvgreen.tmdbapp.ui.base.event.Event
+import com.mvgreen.tmdbapp.ui.base.event.LoadCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadErrorEvent
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import com.mvgreen.tmdbapp.utils.getViewModel
+import com.mvgreen.tmdbapp.utils.observe
 import com.mvgreen.tmdbapp.utils.viewModelFactory
 import com.redmadrobot.lib.sd.LoadingStateDelegate
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -49,13 +52,13 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
 
     private fun setupDelegate() {
         loadingStateDelegate = LoadingStateDelegate(content_screen, stubView = error_screen)
-        loadingStateDelegate.showContent()
     }
 
     private fun setupViewModel() {
         viewModel = getViewModel(viewModelFactory {
             DI.appComponent.detailsViewModel()
         })
+        observe(viewModel.events, ::onEvent)
     }
 
     private fun setupView() {
@@ -64,30 +67,10 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
             router.exit()
         }
         button_retry.setOnClickListener {
-            loadMovieData()
+            viewModel.onLoadMovieData(movieId)
         }
-        loadMovieData()
-    }
 
-    private fun loadMovieData() {
-        val movie = viewModel.movieData
-        if (movie == null) {
-            viewModel
-                .onLoadMovieData(movieId)
-                .subscribe(
-                    { result ->
-                        bindData(result)
-                        loadingStateDelegate.showContent()
-                    },
-                    { e ->
-                        Log.e(TAG, e.message, e)
-                        loadingStateDelegate.showStub()
-                    }
-                )
-                .disposeOnDestroy()
-        } else {
-            bindData(movie)
-        }
+        viewModel.onLoadMovieData(movieId)
     }
 
     private fun bindData(movieData: MovieData) {
@@ -98,7 +81,7 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
         val movieScore = movieData.averageVote?.toString() ?: "-"
         val voteCount = movieData.voteCount?.toString() ?: "-"
         val runtime = movieData.runtime?.toString() ?: "-"
-        val overview = movieData.overview?.toString() ?: getString(R.string.no_description)
+        val overview = movieData.overview ?: getString(R.string.no_description)
 
         title.text = movieTitle
         title_original.text = resources.getString(R.string.title_template, movieOriginalTitle, year)
@@ -110,5 +93,22 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
 
         val imageLoader = ImageLoaderImpl(poster, R.drawable.cornered_orange, false) {}
         viewModel.onLoadImage(imageLoader)
+    }
+
+    private fun onEvent(event: Event) {
+        when (event) {
+            is LoadCompletedEvent -> {
+                bindData(viewModel.movieData)
+                loadingStateDelegate.showContent()
+            }
+
+            is LoadErrorEvent -> {
+                loadingStateDelegate.showStub()
+            }
+
+            else -> {
+                Log.e(TAG, "Unexpected event $event")
+            }
+        }
     }
 }

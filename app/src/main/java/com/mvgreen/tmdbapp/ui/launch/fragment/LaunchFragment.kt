@@ -5,8 +5,8 @@ import android.util.Log
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.event.Event
-import com.mvgreen.tmdbapp.ui.base.event.LoadConfigCompletedEvent
-import com.mvgreen.tmdbapp.ui.base.event.LoadConfigErrorEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadErrorEvent
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
 import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
@@ -64,11 +64,11 @@ class LaunchFragment : BaseFragment(R.layout.fragment_launch) {
 
     private fun onEvent(event: Event) {
         when(event) {
-            is LoadConfigErrorEvent -> {
+            is LoadErrorEvent -> {
                 loadingDelegate.showStub()
             }
 
-            is LoadConfigCompletedEvent -> {
+            is LoadCompletedEvent -> {
                 if (viewModel.hasUserData()) {
                     mainRouter.newRootScreen(MainScreen)
                 } else {
