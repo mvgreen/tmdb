@@ -1,7 +1,6 @@
 package com.mvgreen.tmdbapp.internal.di.module
 
 import android.content.Context
-import androidx.room.Room
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.RefreshRepository
 import com.mvgreen.data.network.auth.api.ApiHolder
@@ -17,8 +16,6 @@ import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.data.storage.GenreStorageImpl
 import com.mvgreen.data.storage.ImageConfigStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
-import com.mvgreen.data.storage.db.GenreDao
-import com.mvgreen.data.storage.db.GenreDb
 import com.mvgreen.data.usecase.*
 import com.mvgreen.domain.repository.*
 import com.mvgreen.domain.usecase.*
@@ -111,19 +108,6 @@ internal class AppModule {
         ).create(ImageConfigurationApi::class.java)
     }
 
-    /** БД */
-
-    @Provides
-    @ApplicationScope
-    fun provideDatabase(context: Context): GenreDb =
-        Room
-            .databaseBuilder(context, GenreDb::class.java, "tasks")
-            .build()
-
-    @Provides
-    @ApplicationScope
-    fun provideDao(db: GenreDb): GenreDao = db.genreDao()
-
     /** Репозитории */
 
     @Provides
@@ -136,7 +120,7 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun genreStorage(genreDao: GenreDao): GenreStorage = GenreStorageImpl(genreDao)
+    fun genreStorage(): GenreStorage = GenreStorageImpl()
 
     @Provides
     @ApplicationScope
@@ -159,11 +143,9 @@ internal class AppModule {
     @ApplicationScope
     fun authUseCase(
         authRepository: AuthRepository,
-        userDataStorage: UserDataStorage,
-        searchUseCase: SearchUseCase,
-        loadImageUseCase: LoadImageUseCase
+        userDataStorage: UserDataStorage
     ): AuthUseCase =
-        AuthUseCaseImpl(authRepository, userDataStorage, searchUseCase)
+        AuthUseCaseImpl(authRepository, userDataStorage)
 
     @Provides
     @ApplicationScope

@@ -1,21 +1,19 @@
 package com.mvgreen.data.storage
 
-import com.mvgreen.data.storage.db.GenreDao
-import com.mvgreen.data.storage.db.entity.GenreEntity
 import com.mvgreen.domain.entity.GenreData
 import com.mvgreen.domain.repository.GenreStorage
 import javax.inject.Inject
 
-class GenreStorageImpl @Inject constructor(
-    private val genreDao: GenreDao
-) : GenreStorage {
+class GenreStorageImpl @Inject constructor() : GenreStorage {
+
+    private val genres = HashMap<Int, GenreData>()
 
     override fun saveGenresMap(map: Map<Int, GenreData>) {
-        genreDao.insertGenres(*map.values.map { GenreEntity(it.id, it.name) }.toTypedArray())
+        genres.putAll(map)
     }
 
     override fun getGenre(id: Int): String? {
-        return genreDao.getGenre(id)?.name
+        return genres[id]?.name
     }
 
 }

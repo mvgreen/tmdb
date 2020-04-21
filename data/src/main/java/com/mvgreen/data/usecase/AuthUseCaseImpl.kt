@@ -11,19 +11,15 @@ import javax.inject.Inject
 
 class AuthUseCaseImpl @Inject constructor(
     private val repository: AuthRepository,
-    private val userDataStorage: UserDataStorage,
-    private val searchUseCase: SearchUseCase
+    private val userDataStorage: UserDataStorage
 ) : AuthUseCase {
 
     override fun login(email: String, password: String): Completable {
         return repository
             .login(email, password)
-            .flatMap { token ->
+            .flatMapCompletable { token ->
                 userDataStorage.saveAuthData(token, email, password)
-                loadProfileData(token)
-            }
-            .flatMapCompletable {
-                searchUseCase.initSearch()
+                loadProfileData(token).ignoreElement()
             }
             .subscribeOn(Schedulers.io())
     }
