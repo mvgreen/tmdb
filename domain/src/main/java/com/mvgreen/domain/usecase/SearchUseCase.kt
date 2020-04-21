@@ -18,4 +18,9 @@ interface SearchUseCase {
         query: String,
         compositeDisposable: CompositeDisposable
     ): Observable<PagedList<MovieData>>
+
+    fun saveSearchState(pagedList: PagedList<MovieData>?, listPosition: Int, query: String)
+
+    fun restoreListState(): Triple<PagedList<MovieData>?, Int, String>
+
 }

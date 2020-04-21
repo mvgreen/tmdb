@@ -93,6 +93,13 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             .disposeOnDestroy()
     }
 
+    override fun onStop() {
+        viewModel.savedListPosition =
+            (recycler_results.layoutManager as LinearLayoutManager)
+                .findFirstCompletelyVisibleItemPosition()
+        super.onStop()
+    }
+
     private fun setupViewModel() {
         viewModel = getViewModel(viewModelFactory {
             DI.appComponent.searchViewModel()
@@ -103,6 +110,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private fun setupView() {
         val adapter = PagedMoviesAdapter(filmsRouter, ::onSearchStateChanged)
         val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.scrollToPosition(viewModel.savedListPosition)
+
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
         recycler_results.addItemDecoration(marginDecoration)

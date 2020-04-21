@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.mvgreen.domain.entity.MovieData
-import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.utils.onNext
@@ -25,7 +24,22 @@ class SearchViewModel @Inject constructor(
     var livePagedList: MutableLiveData<PagedList<MovieData>> =
         MutableLiveData<PagedList<MovieData>>()
 
+    var savedListPosition: Int = 0
+
     var currentState: LoadingState? = LoadingState.CONTENT
+
+    init {
+        val (savedList, savedPosition, savedQuery) = searchUseCase.restoreListState()
+        savedList?.let { livePagedList.onNext(it) }
+        savedListPosition = savedPosition
+        query = savedQuery
+    }
+
+    override fun onCleared() {
+        val savedList = livePagedList.value
+        searchUseCase.saveSearchState(savedList, savedListPosition, query)
+        super.onCleared()
+    }
 
     fun onSearch(
         query: String

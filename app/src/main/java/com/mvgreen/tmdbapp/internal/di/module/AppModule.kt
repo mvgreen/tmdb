@@ -15,6 +15,7 @@ import com.mvgreen.data.network.search.SearchRepositoryImpl
 import com.mvgreen.data.network.search.api.SearchApi
 import com.mvgreen.data.storage.GenreStorageImpl
 import com.mvgreen.data.storage.ImageConfigStorageImpl
+import com.mvgreen.data.storage.SearchStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
 import com.mvgreen.data.usecase.*
 import com.mvgreen.domain.repository.*
@@ -129,6 +130,10 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
+    fun searchStorage(): SearchStorage = SearchStorageImpl()
+
+    @Provides
+    @ApplicationScope
     fun imageRepository(imageConfigurationApi: ImageConfigurationApi): ImageRepository =
         ImageRepositoryImpl(imageConfigurationApi)
 
@@ -156,9 +161,10 @@ internal class AppModule {
     @ApplicationScope
     fun searchUseCase(
         searchRepository: SearchRepository,
-        genreStorage: GenreStorage
+        genreStorage: GenreStorage,
+        searchStorage: SearchStorage
     ): SearchUseCase =
-        SearchUseCaseImpl(searchRepository, genreStorage)
+        SearchUseCaseImpl(searchRepository, genreStorage, searchStorage)
 
     @Provides
     @ApplicationScope

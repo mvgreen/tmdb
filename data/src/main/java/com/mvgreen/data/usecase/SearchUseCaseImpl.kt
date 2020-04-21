@@ -5,9 +5,9 @@ import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.data.datasource.SearchDataSourceFactory
 import com.mvgreen.domain.entity.MovieData
-import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
+import com.mvgreen.domain.repository.SearchStorage
 import com.mvgreen.domain.usecase.SearchUseCase
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 class SearchUseCaseImpl @Inject constructor(
     private val searchRepository: SearchRepository,
-    private val genreStorage: GenreStorage
+    private val genreStorage: GenreStorage,
+    private val searchStorage: SearchStorage
 ) : SearchUseCase {
 
     companion object {
@@ -49,6 +50,24 @@ class SearchUseCaseImpl @Inject constructor(
             .setPrefetchDistance(PREFETCH_DISTANCE)
             .build()
         return RxPagedListBuilder(factory, config).buildObservable()
+    }
+
+    override fun saveSearchState(
+        pagedList: PagedList<MovieData>?,
+        listPosition: Int,
+        query: String
+    ) {
+        searchStorage.savedList = pagedList
+        searchStorage.savedListPosition = listPosition
+        searchStorage.savedQuery = query
+    }
+
+    override fun restoreListState(): Triple<PagedList<MovieData>?, Int, String> {
+        return Triple(
+            searchStorage.savedList,
+            searchStorage.savedListPosition,
+            searchStorage.savedQuery
+        )
     }
 
 }
