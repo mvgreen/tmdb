@@ -11,9 +11,7 @@ import com.mvgreen.domain.entity.MovieContainer
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -75,7 +73,7 @@ class SearchRepositoryImpl @Inject constructor(
         response.title,
         response.originalTitle,
         parseNullableDate(response.releaseDate),
-        parseGenres(response.genres),
+        parseGenres(response.genres, response.genreIds),
         response.voteAverage,
         response.voteCount,
         response.runtime,
@@ -86,11 +84,12 @@ class SearchRepositoryImpl @Inject constructor(
         return if (str.isNullOrEmpty()) null else DateTime.parse(str)
     }
 
-    private fun parseGenres(list: List<Genre>?): List<GenreData> {
-        return list?.mapNotNull { item ->
-            if (item.id == null) return@mapNotNull null
-            val genre = genreStorage.getGenre(item.id)
-            if (genre == null) null else GenreData(item.id, genre)
+    private fun parseGenres(genreList: List<Genre>?, genreIdList: List<Int>?): List<GenreData> {
+        val existingList = genreIdList ?: genreList?.map { item -> item.id }
+        return existingList?.mapNotNull { id ->
+            if (id == null) return@mapNotNull null
+            val genre = genreStorage.getGenre(id)
+            if (genre == null) null else GenreData(id, genre)
         } ?: listOf()
     }
 
