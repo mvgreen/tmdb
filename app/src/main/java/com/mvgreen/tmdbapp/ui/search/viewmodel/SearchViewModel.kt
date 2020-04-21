@@ -28,11 +28,10 @@ class SearchViewModel @Inject constructor(
     var currentState: LoadingState? = LoadingState.CONTENT
 
     fun onSearch(
-        query: String,
-        searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
+        query: String
     ) {
         searchUseCase
-            .search(query, compositeDisposable, searchStateCallback)
+            .search(query, compositeDisposable)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { newList ->

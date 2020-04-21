@@ -101,7 +101,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun setupView() {
-        val adapter = PagedMoviesAdapter(filmsRouter)
+        val adapter = PagedMoviesAdapter(filmsRouter, ::onSearchStateChanged)
         val layoutManager = LinearLayoutManager(requireContext())
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
@@ -141,11 +141,11 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private fun performSearch(query: String) {
         onLoadingStarted()
         viewModel.query = query
-        viewModel.onSearch(query, ::onSearchStateChanged)
+        viewModel.onSearch(query)
     }
 
-    private fun onSearchStateChanged(searchState: SearchState, query: String) {
-        if (!isResumed || query != input_search?.text.toString()) {
+    private fun onSearchStateChanged(searchState: SearchState) {
+        if (!isResumed) {
             return
         }
         when (searchState) {

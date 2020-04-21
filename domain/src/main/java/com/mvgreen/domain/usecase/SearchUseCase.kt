@@ -16,7 +16,6 @@ interface SearchUseCase {
 
     fun search(
         query: String,
-        compositeDisposable: CompositeDisposable,
-        searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
+        compositeDisposable: CompositeDisposable
     ): Observable<PagedList<MovieData>>
 }

@@ -37,14 +37,12 @@ class SearchUseCaseImpl @Inject constructor(
 
     override fun search(
         query: String,
-        compositeDisposable: CompositeDisposable,
-        searchStateCallback: (state: SearchState, currentQuery: String) -> Unit
+        compositeDisposable: CompositeDisposable
     ): Observable<PagedList<MovieData>> {
         val factory = SearchDataSourceFactory(
             query,
             searchRepository,
-            compositeDisposable,
-            searchStateCallback
+            compositeDisposable
         ) { e -> Log.e(TAG, e.message, e) }
         val config = PagedList.Config
             .Builder()

@@ -10,7 +10,6 @@ class SearchDataSourceFactory(
     private val query: String,
     private val searchRepository: SearchRepository,
     private var compositeDisposable: CompositeDisposable,
-    private val searchStateCallback: (state: SearchState, currentQuery: String) -> Unit,
     private val onErrorCallback: (e: Throwable) -> Unit
 ) : DataSource.Factory<Int, MovieData>() {
 
@@ -19,8 +18,7 @@ class SearchDataSourceFactory(
             query,
             searchRepository,
             compositeDisposable,
-            onErrorCallback,
-            searchStateCallback
+            onErrorCallback
         )
     }
 

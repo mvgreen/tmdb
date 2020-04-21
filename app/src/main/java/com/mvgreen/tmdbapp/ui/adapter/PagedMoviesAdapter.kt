@@ -4,10 +4,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.AsyncPagedListDiffer
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
@@ -17,32 +21,65 @@ import kotlinx.android.synthetic.main.item_recycler_linear.view.*
 import ru.terrakok.cicerone.Router
 
 class PagedMoviesAdapter(
-    private val router: Router
-) : PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
+    private val router: Router,
+    onSearchResultCallback: (searchState: SearchState) -> Unit
+) : RecyclerView.Adapter<Holder>() {
 
     companion object {
         const val TAG = "PagedMoviesAdapter"
-
-        val diffCallback = object : DiffUtil.ItemCallback<MovieData>() {
-            override fun areItemsTheSame(oldData: MovieData, newData: MovieData): Boolean {
-                return oldData == newData
-            }
-
-            override fun areContentsTheSame(oldData: MovieData, newData: MovieData): Boolean {
-                return oldData == newData
-            }
-        }
     }
 
     private val imageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    private val listUpdateCallback: ListUpdateCallback = object : ListUpdateCallback {
+
+        override fun onChanged(position: Int, count: Int, payload: Any?) {
+            notifyItemRangeChanged(position, count, payload)
+        }
+
+        override fun onMoved(fromPosition: Int, toPosition: Int) {
+            notifyItemMoved(fromPosition, toPosition)
+        }
+
+        override fun onInserted(position: Int, count: Int) {
+            notifyItemRangeInserted(position, count)
+            onSearchResultCallback.invoke(SearchState.CONTENT_READY)
+        }
+
+        override fun onRemoved(position: Int, count: Int) {
+            if (position == 0 && count == diffCallback.itemCount) {
+                onSearchResultCallback.invoke(SearchState.EMPTY_RESPONSE)
+            }
+            notifyItemRangeRemoved(position, count)
+        }
+    }
+
+    val diffCallback = object : AsyncPagedListDiffer<MovieData>(
+        listUpdateCallback,
+        AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<MovieData>() {
+            override fun areItemsTheSame(oldItem: MovieData, newItem: MovieData): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: MovieData, newItem: MovieData): Boolean {
+                return oldItem == newItem
+            }
+        }).build()
+    ) {}
+
+    fun submitList(newPagedList: PagedList<MovieData>?) {
+        diffCallback.submitList(newPagedList)
+        notifyDataSetChanged()
+    }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
         return Holder(inflater.inflate(R.layout.item_recycler_linear, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val movieData = getItem(position) ?: return
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        val movieData = diffCallback.getItem(position) ?: return
         val movieTitle = movieData.title ?: "-"
         val movieOriginalTitle = movieData.originalTitle ?: "-"
         val year = movieData.releaseDate?.year()?.get()?.toString() ?: "-"
@@ -60,6 +97,10 @@ class PagedMoviesAdapter(
         holder.itemView.setOnClickListener {
             router.navigateTo(DetailsScreen(movieData.id))
         }
+    }
+
+    override fun getItemCount(): Int {
+        return diffCallback.itemCount
     }
 
     private fun loadImage(item: View, movie: MovieData?) {
