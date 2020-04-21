@@ -29,7 +29,7 @@
 
         <EditText
             android:id="@+id/input_search"
-            style="@style/content1_light"
+            style="@style/text_input_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
