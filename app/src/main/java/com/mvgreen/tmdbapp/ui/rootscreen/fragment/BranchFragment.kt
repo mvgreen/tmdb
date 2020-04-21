@@ -51,10 +51,16 @@ class BranchFragment constructor(private var branchId: Int) :
         }
     }
 
+    init {
+        if (branchId != BRANCH_NONE) {
+            arguments = Bundle().apply { putInt(BRANCH_ID, branchId) }
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState)
+        if (branchId == BRANCH_NONE) {
+            branchId = arguments?.getInt(BRANCH_ID, BRANCH_NONE) ?: throw IllegalStateException()
         }
         val (ciceroneOwner, rootScreen) = getCiceroneInstances()
         setupViewModel(ciceroneOwner)
@@ -76,11 +82,6 @@ class BranchFragment constructor(private var branchId: Int) :
         return true
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(BRANCH_ID, branchId)
-    }
-
     private fun setupViewModel(
         ciceroneOwner: CiceroneOwner
     ) {
@@ -88,10 +89,6 @@ class BranchFragment constructor(private var branchId: Int) :
             ciceroneOwner.branchViewModel()
         })
         viewModel.init(ciceroneOwner.navigatorHolder(), ciceroneOwner.router())
-    }
-
-    private fun restoreInstanceState(savedInstanceState: Bundle) {
-        branchId = savedInstanceState.getInt(BRANCH_ID, BRANCH_NONE)
     }
 
     private fun getCiceroneInstances(): Pair<CiceroneOwner, SupportAppScreen> {

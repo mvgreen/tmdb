@@ -18,6 +18,7 @@ import com.mvgreen.tmdbapp.utils.viewModelFactory
 import com.redmadrobot.lib.sd.LoadingStateDelegate
 import kotlinx.android.synthetic.main.fragment_details.*
 import ru.terrakok.cicerone.Router
+import java.lang.IllegalStateException
 
 class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment_details) {
 
@@ -27,27 +28,27 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
         const val TAG = "DetailsFragment"
         const val MOVIE_ID = "MOVIE_ID"
         const val ID_NONE = -1
-
     }
 
     private lateinit var viewModel: DetailsViewModel
     private lateinit var router: Router
     private lateinit var loadingStateDelegate: LoadingStateDelegate
 
+    init {
+        if (movieId != ID_NONE) {
+            arguments = Bundle().apply { putInt(MOVIE_ID, movieId) }
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         router = DI.filmsTabComponent.router()
         if (movieId == -1) {
-            movieId = savedInstanceState?.getInt(MOVIE_ID, ID_NONE) ?: ID_NONE
+            movieId = arguments?.getInt(MOVIE_ID, ID_NONE) ?: throw IllegalStateException()
         }
         setupDelegate()
         setupViewModel()
         setupView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(MOVIE_ID, movieId)
     }
 
     private fun setupDelegate() {
