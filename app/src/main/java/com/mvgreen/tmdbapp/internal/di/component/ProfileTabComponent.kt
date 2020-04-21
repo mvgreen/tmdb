@@ -9,7 +9,6 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 @Component(modules = [ProfileModule::class])
 @ProfileTabScope

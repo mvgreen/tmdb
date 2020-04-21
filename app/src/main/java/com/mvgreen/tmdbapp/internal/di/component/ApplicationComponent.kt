@@ -15,6 +15,7 @@ import com.mvgreen.tmdbapp.ui.auth.viewmodel.AuthViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
 import com.mvgreen.tmdbapp.ui.launch.viewmodel.LaunchViewModel
+import com.mvgreen.tmdbapp.ui.profile.viewmodel.ProfileViewModel
 import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.RootViewModel
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.squareup.moshi.Moshi
@@ -46,6 +47,8 @@ internal interface ApplicationComponent {
     fun launchViewModel(): LaunchViewModel
 
     fun detailsViewModel(): DetailsViewModel
+
+    fun profileViewModel(): ProfileViewModel
 
     /** API */
 

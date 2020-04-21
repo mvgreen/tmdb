@@ -11,7 +11,10 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
 import com.mvgreen.tmdbapp.ui.cicerone.FilmsBranchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
+import com.mvgreen.tmdbapp.ui.profile.viewmodel.ProfileViewModel
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
+import com.mvgreen.tmdbapp.utils.getViewModel
+import com.mvgreen.tmdbapp.utils.viewModelFactory
 import kotlinx.android.synthetic.main.fragment_profile.*
 import ru.terrakok.cicerone.Router
 
@@ -21,34 +24,38 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         const val TAG = "ProfileFragment"
     }
 
-    private lateinit var profileUseCase: ProfileUseCase
-    private lateinit var loadImageUseCase: LoadImageUseCase
+    private lateinit var viewModel: ProfileViewModel
     private lateinit var filmsRouter: SelfRestoringRouter
     private lateinit var mainRouter: Router
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        profileUseCase = DI.appComponent.profileUseCase()
-        loadImageUseCase = DI.appComponent.loadImageUseCase()
         mainRouter = DI.appComponent.router()
         filmsRouter = DI.filmsTabComponent.router()
 
+        setupViewModel()
         setupView()
         loadImage()
     }
 
+    private fun setupViewModel() {
+        viewModel = getViewModel(viewModelFactory {
+            DI.appComponent.profileViewModel()
+        })
+    }
+
     private fun setupView() {
         try {
-            val profile = profileUseCase.getProfileData()
+            val profile = viewModel.getProfileData()
             name.text = profile.name
             login.text = profile.login
         } catch (e: StorageException) {
-            profileUseCase.logout()
+            viewModel.onExit()
             mainRouter.newRootScreen(AuthScreen)
         }
 
         btn_logout.setOnClickListener {
-            profileUseCase.logout()
+            viewModel.onExit()
             filmsRouter.reset()
             mainRouter.newRootScreen(AuthScreen)
         }
@@ -69,10 +76,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     )
                     .show()
             }
-            loadImageUseCase.initAvatarLoader(imageLoader)
-            imageLoader.loadImage()
+            viewModel.onLoadAvatar(imageLoader)
         } catch (e: StorageException) {
-            profileUseCase.logout()
+            viewModel.onExit()
             mainRouter.newRootScreen(AuthScreen)
         }
     }
