@@ -28,6 +28,10 @@ class AuthUseCaseImpl @Inject constructor(
             .subscribeOn(Schedulers.io())
     }
 
+    override fun hasUserData(): Boolean {
+        return userDataStorage.hasUserData()
+    }
+
     private fun loadProfileData(token: String): Single<Unit> {
         return repository.loadProfile(token)
             .map { profile ->

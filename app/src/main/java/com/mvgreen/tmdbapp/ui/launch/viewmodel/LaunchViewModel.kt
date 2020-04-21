@@ -1,17 +1,45 @@
 package com.mvgreen.tmdbapp.ui.launch.viewmodel
 
+import android.util.Log
+import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.LoadImageUseCase
+import com.mvgreen.tmdbapp.internal.di.DI
+import com.mvgreen.tmdbapp.ui.base.event.LoadConfigCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadConfigErrorEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
-import io.reactivex.Completable
+import com.mvgreen.tmdbapp.ui.cicerone.AuthScreen
+import com.mvgreen.tmdbapp.ui.cicerone.MainScreen
+import com.mvgreen.tmdbapp.utils.onNext
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class LaunchViewModel @Inject constructor(
-  private val loadImageUseCase: LoadImageUseCase
+    private val authUseCase: AuthUseCase,
+    private val loadImageUseCase: LoadImageUseCase
 ) : BaseViewModel() {
 
-    fun onLoadConfig(): Completable {
-        return loadImageUseCase
+    companion object {
+        const val TAG = "LaunchViewModel"
+    }
+
+    fun onLoadConfig() {
+        loadImageUseCase
             .downloadConfiguration()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    events.onNext(LoadConfigCompletedEvent)
+                },
+                { e ->
+                    Log.e(TAG, e.message, e)
+                    events.onNext(LoadConfigErrorEvent)
+                }
+            )
+            .disposeOnViewModelDestroy()
+    }
+
+    fun hasUserData(): Boolean {
+        return authUseCase.hasUserData()
     }
 
 }
