@@ -4,6 +4,6 @@ abstract class Event
 
 class LoginFailedEvent(val e: Throwable): Event()
 
-object LoadErrorEvent : Event()
+object LoadingErrorEvent : Event()
 
-object LoadCompletedEvent : Event()
+object LoadingCompletedEvent : Event()

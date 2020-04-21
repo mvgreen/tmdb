@@ -7,13 +7,11 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.paging.PagedList
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.entity.SearchState
-import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
@@ -23,12 +21,10 @@ import com.mvgreen.tmdbapp.ui.delegator.ErrorState
 import com.mvgreen.tmdbapp.ui.delegator.HideAllState
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
+import com.mvgreen.tmdbapp.utils.observe
 import com.mvgreen.tmdbapp.utils.viewModelFactory
 import com.redmadrobot.lib.sd.LoadingStateDelegate
 import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import ru.terrakok.cicerone.Router
 import java.util.concurrent.TimeUnit
@@ -42,7 +38,6 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
 
-    private val loadImageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
     private val filmsRouter: Router = DI.filmsTabComponent.router()
 
     private val marginDecoration = object : RecyclerView.ItemDecoration() {
@@ -65,7 +60,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.list.isNullOrEmpty()) {
+        if (viewModel.livePagedList.value == null) {
             input_search.requestFocus()
 
             val imm =
@@ -87,20 +82,26 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                 query
             }
             .filter { query -> query.isNotEmpty() }
-            .switchMap { query ->
-                performSearch(query.toString())
-            }
-            .observeSearch()
+            .subscribe(
+                { query ->
+                    performSearch(query.toString())
+                },
+                { e ->
+                    Log.e(TAG, e.message, e)
+                }
+            )
+            .disposeOnDestroy()
     }
 
     private fun setupViewModel() {
         viewModel = getViewModel(viewModelFactory {
             DI.appComponent.searchViewModel()
         })
+        observe(viewModel.livePagedList, ::onListUpdate)
     }
 
     private fun setupView() {
-        val adapter = PagedMoviesAdapter(loadImageUseCase, filmsRouter)
+        val adapter = PagedMoviesAdapter(filmsRouter)
         val layoutManager = LinearLayoutManager(requireContext())
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
@@ -113,7 +114,6 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
         input_search.setOnEditorActionListener { _, _, _ ->
             performSearch(input_search.text.toString())
-                .observeSearch()
 
             // клавиатура может не успеть исчезнуть после закрытия активити
             activity?.let { activity ->
@@ -136,29 +136,12 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     private fun restoreSearch() {
         input_search.setText(viewModel.query)
-        (recycler_results.adapter as PagedMoviesAdapter).submitList(viewModel.list)
     }
 
-    private fun performSearch(query: String): Observable<PagedList<MovieData>> {
+    private fun performSearch(query: String) {
         onLoadingStarted()
         viewModel.query = query
-        return viewModel.onSearch(query, ::onSearchStateChanged)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun Observable<PagedList<MovieData>>.observeSearch() {
-        subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { list ->
-                    viewModel.list = list
-                    (recycler_results.adapter as PagedListAdapter<MovieData, *>).submitList(list)
-                },
-                { e ->
-                    Log.e(TAG, e.message, e)
-                }
-            )
-            .disposeOnDestroy()
+        viewModel.onSearch(query, ::onSearchStateChanged)
     }
 
     private fun onSearchStateChanged(searchState: SearchState, query: String) {
@@ -170,6 +153,10 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             SearchState.ERROR -> onNetworkError()
             SearchState.EMPTY_RESPONSE -> onContentEmpty()
         }
+    }
+
+    private fun onListUpdate(newList: PagedList<MovieData>) {
+        (recycler_results.adapter as PagedMoviesAdapter).submitList(newList)
     }
 
     private fun onLoadingStarted() {

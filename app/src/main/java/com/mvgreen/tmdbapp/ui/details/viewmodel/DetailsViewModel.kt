@@ -5,8 +5,8 @@ import com.mvgreen.domain.bean.ImageLoader
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.usecase.DetailsUseCase
 import com.mvgreen.domain.usecase.LoadImageUseCase
-import com.mvgreen.tmdbapp.ui.base.event.LoadCompletedEvent
-import com.mvgreen.tmdbapp.ui.base.event.LoadErrorEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingErrorEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.utils.onNext
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,7 +25,7 @@ class DetailsViewModel @Inject constructor(
 
     fun onLoadMovieData(id: Int) {
         if (::movieData.isInitialized) {
-            events.onNext(LoadCompletedEvent)
+            events.onNext(LoadingCompletedEvent)
             return
         }
 
@@ -35,11 +35,11 @@ class DetailsViewModel @Inject constructor(
             .subscribe(
                 { result ->
                     movieData = result
-                    events.onNext(LoadCompletedEvent)
+                    events.onNext(LoadingCompletedEvent)
                 },
                 { e ->
                     Log.e(TAG, e.message, e)
-                    events.onNext(LoadErrorEvent)
+                    events.onNext(LoadingErrorEvent)
                 }
 
             )

@@ -7,8 +7,8 @@ import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.event.Event
-import com.mvgreen.tmdbapp.ui.base.event.LoadCompletedEvent
-import com.mvgreen.tmdbapp.ui.base.event.LoadErrorEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingErrorEvent
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.details.viewmodel.DetailsViewModel
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
@@ -97,12 +97,12 @@ class DetailsFragment(private var movieId: Int) : BaseFragment(R.layout.fragment
 
     private fun onEvent(event: Event) {
         when (event) {
-            is LoadCompletedEvent -> {
+            is LoadingCompletedEvent -> {
                 bindData(viewModel.movieData)
                 loadingStateDelegate.showContent()
             }
 
-            is LoadErrorEvent -> {
+            is LoadingErrorEvent -> {
                 loadingStateDelegate.showStub()
             }
 

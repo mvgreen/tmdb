@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.usecase.LoadImageUseCase
 import com.mvgreen.tmdbapp.R
+import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.cicerone.DetailsScreen
 import com.mvgreen.tmdbapp.utils.ImageLoaderImpl
 import kotlinx.android.synthetic.main.item_recycler_linear.view.*
 import ru.terrakok.cicerone.Router
 
 class PagedMoviesAdapter(
-    private val imageUseCase: LoadImageUseCase,
     private val router: Router
 ) : PagedListAdapter<MovieData, RecyclerView.ViewHolder>(diffCallback) {
 
@@ -33,6 +33,8 @@ class PagedMoviesAdapter(
             }
         }
     }
+
+    private val imageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

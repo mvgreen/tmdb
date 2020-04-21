@@ -3,8 +3,8 @@ package com.mvgreen.tmdbapp.ui.launch.viewmodel
 import android.util.Log
 import com.mvgreen.domain.usecase.AuthUseCase
 import com.mvgreen.domain.usecase.LoadImageUseCase
-import com.mvgreen.tmdbapp.ui.base.event.LoadCompletedEvent
-import com.mvgreen.tmdbapp.ui.base.event.LoadErrorEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingCompletedEvent
+import com.mvgreen.tmdbapp.ui.base.event.LoadingErrorEvent
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.utils.onNext
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,11 +25,11 @@ class LaunchViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    events.onNext(LoadCompletedEvent)
+                    events.onNext(LoadingCompletedEvent)
                 },
                 { e ->
                     Log.e(TAG, e.message, e)
-                    events.onNext(LoadErrorEvent)
+                    events.onNext(LoadingErrorEvent)
                 }
             )
             .disposeOnViewModelDestroy()
