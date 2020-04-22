@@ -47,10 +47,12 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearch(
-        query: String
+        query: String,
+        onEmptyCallback: () -> Unit,
+        onErrorCallback: (e: Throwable) -> Unit
     ) {
         searchUseCase
-            .search(query, compositeDisposable)
+            .search(query, compositeDisposable, onEmptyCallback, onErrorCallback)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { newList ->

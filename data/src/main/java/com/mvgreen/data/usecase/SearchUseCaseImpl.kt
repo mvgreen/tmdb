@@ -1,6 +1,5 @@
 package com.mvgreen.data.usecase
 
-import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.data.datasource.SearchDataSourceFactory
@@ -41,13 +40,17 @@ class SearchUseCaseImpl @Inject constructor(
 
     override fun search(
         query: String,
-        compositeDisposable: CompositeDisposable
+        compositeDisposable: CompositeDisposable,
+        onEmptyCallback: () -> Unit,
+        onErrorCallback: (e: Throwable) -> Unit
     ): Observable<PagedList<MovieData>> {
         val factory = SearchDataSourceFactory(
             query,
             searchRepository,
-            compositeDisposable
-        ) { e -> Log.e(TAG, e.message, e) }
+            compositeDisposable,
+            onEmptyCallback,
+            onErrorCallback
+        )
         val config = PagedList.Config
             .Builder()
             .setPrefetchDistance(PREFETCH_DISTANCE)

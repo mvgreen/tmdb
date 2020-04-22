@@ -12,6 +12,7 @@ class SearchDataSource(
     private val query: String,
     private val searchRepository: SearchRepository,
     private var compositeDisposable: CompositeDisposable,
+    private val onEmptyCallback: () -> Unit,
     private val onErrorCallback: (e: Throwable) -> Unit
 ) : PageKeyedDataSource<Int, MovieData>() {
 
@@ -27,6 +28,9 @@ class SearchDataSource(
             .subscribe(
                 { result ->
                     pagesTotal = result.pagesTotal
+                    if (pagesTotal == 0) {
+                        onEmptyCallback.invoke()
+                    }
                     callOnResult(result) { page, nextKey ->
                         callback.onResult(page, null, nextKey)
                     }

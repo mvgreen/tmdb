@@ -17,7 +17,9 @@ interface SearchUseCase {
 
     fun search(
         query: String,
-        compositeDisposable: CompositeDisposable
+        compositeDisposable: CompositeDisposable,
+        onEmptyCallback: () -> Unit,
+        onErrorCallback: (e: Throwable) -> Unit
     ): Observable<PagedList<MovieData>>
 
     fun saveSearchState(pagedList: PagedList<MovieData>?, listPosition: Int, query: String)

@@ -27,6 +27,7 @@ import com.redmadrobot.lib.sd.LoadingStateDelegate
 import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
 import kotlinx.android.synthetic.main.fragment_search.*
 import ru.terrakok.cicerone.Router
+import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment(R.layout.fragment_search) {
@@ -38,7 +39,6 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
 
-    //    private lateinit var listMode: ListModeImpl
     private lateinit var currentItemDecoration: RecyclerView.ItemDecoration
 
     private val filmsRouter: Router = DI.filmsTabComponent.router()
@@ -188,7 +188,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private fun performSearch(query: String) {
         onLoadingStarted()
         viewModel.query = query
-        viewModel.onSearch(query)
+        viewModel.onSearch(query, ::onContentEmpty, ::onNetworkError)
     }
 
     private fun onSearchStateChanged(searchState: SearchState) {
@@ -197,8 +197,9 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         }
         when (searchState) {
             SearchState.CONTENT_READY -> onLoaded()
-            SearchState.ERROR -> onNetworkError()
             SearchState.EMPTY_RESPONSE -> onContentEmpty()
+            // Ошибка сети обрабатывается отдельным колбэком
+            else -> throw IllegalArgumentException()
         }
     }
 
@@ -220,7 +221,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         }
     }
 
-    private fun onNetworkError() {
+    private fun onNetworkError(e: Throwable) {
+        Log.e(TAG, e.message, e)
         requireActivity().runOnUiThread {
             stateDelegate.showStub(ErrorState)
             viewModel.currentState = LoadingState.STUB
