@@ -11,4 +11,6 @@ interface ListMode {
 
     val listPosition: Int
 
+    fun nextModeId(): Int
+
 }

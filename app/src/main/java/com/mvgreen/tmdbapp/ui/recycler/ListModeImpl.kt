@@ -18,15 +18,23 @@ class ListModeImpl : ListMode {
     override val listPosition: Int
         get() {
             // Присваиваем для сохранения возможности каста к нужному типу
-            return when (val manager = layoutManager) {
+            val position = when (val manager = layoutManager) {
                 is LinearLayoutManager -> manager.findFirstVisibleItemPosition()
                 is GridLayoutManager -> manager.findFirstVisibleItemPosition()
                 else -> throw IllegalStateException()
             }
+            return position
         }
 
-
     lateinit var layoutManager: RecyclerView.LayoutManager
+
+    override fun nextModeId(): Int {
+        return when(modeId) {
+            LIST_MODE_LINEAR -> LIST_MODE_GRID
+            LIST_MODE_GRID -> LIST_MODE_LINEAR
+            else -> throw IllegalStateException()
+        }
+    }
 
     fun getMarginDecoration(resources: Resources): RecyclerView.ItemDecoration {
         return when(modeId) {

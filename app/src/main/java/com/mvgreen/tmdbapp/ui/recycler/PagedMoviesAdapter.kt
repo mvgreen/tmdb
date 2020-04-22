@@ -25,7 +25,7 @@ import ru.terrakok.cicerone.Router
 
 class PagedMoviesAdapter(
     private val router: Router,
-    private val listMode: ListMode,
+    private var listMode: ListMode,
     onSearchResultCallback: (searchState: SearchState) -> Unit
 ) : RecyclerView.Adapter<Holder>() {
 
@@ -76,10 +76,18 @@ class PagedMoviesAdapter(
         notifyDataSetChanged()
     }
 
+    fun changeListMode(newListMode: ListMode) {
+        listMode = newListMode
+        this.notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return listMode.modeId
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemId = when (listMode.modeId) {
+        val itemId = when (viewType) {
             LIST_MODE_LINEAR -> R.layout.item_recycler_linear
             LIST_MODE_GRID -> R.layout.item_recycler_grid
             else -> throw IllegalArgumentException()

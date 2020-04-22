@@ -42,6 +42,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
     private lateinit var listMode: ListModeImpl
+    private lateinit var currentItemDecoration: RecyclerView.ItemDecoration
 
     private val filmsRouter: Router = DI.filmsTabComponent.router()
 
@@ -109,10 +110,15 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
-        recycler_results.addItemDecoration(listMode.getMarginDecoration(resources))
+        currentItemDecoration = listMode.getMarginDecoration(resources)
+        recycler_results.addItemDecoration(currentItemDecoration)
         button_cancel.setOnClickListener {
             input_search.setText("")
         }
+        button_change_mode.setOnClickListener {
+            changeListMode()
+        }
+
         zero_screen.targetStates = listOf(EmptyResponseState, ErrorState)
         empty_screen.targetStates = listOf(HideAllState)
 
@@ -149,6 +155,32 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             else -> throw IllegalArgumentException()
         }
         return listMode.layoutManager
+    }
+
+    private fun changeListMode() {
+        val newModeId = listMode.nextModeId()
+
+        val newListMode = ListModeImpl()
+        newListMode.modeId = newModeId
+        newListMode.layoutManager = restoreListMode(newListMode)
+
+        val newItemDecoration = newListMode.getMarginDecoration(resources)
+
+        val previousPosition = listMode.listPosition
+
+        recycler_results.layoutManager = newListMode.layoutManager
+
+        recycler_results.removeItemDecoration(currentItemDecoration)
+        recycler_results.addItemDecoration(newItemDecoration)
+
+        (recycler_results.adapter as PagedMoviesAdapter).changeListMode(newListMode)
+
+        newListMode.layoutManager.scrollToPosition(previousPosition)
+        recycler_results.invalidate()
+
+        listMode = newListMode
+        currentItemDecoration = newItemDecoration
+        viewModel.setListMode(listMode.modeId)
     }
 
     private fun performSearch(query: String) {
