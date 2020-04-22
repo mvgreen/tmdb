@@ -1,4 +1,4 @@
-package com.mvgreen.tmdbapp.ui.adapter
+package com.mvgreen.tmdbapp.ui.recycler
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
+import com.mvgreen.domain.bean.ListMode
+import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_GRID
+import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_LINEAR
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.domain.usecase.LoadImageUseCase
@@ -22,6 +25,7 @@ import ru.terrakok.cicerone.Router
 
 class PagedMoviesAdapter(
     private val router: Router,
+    private val listMode: ListMode,
     onSearchResultCallback: (searchState: SearchState) -> Unit
 ) : RecyclerView.Adapter<Holder>() {
 
@@ -75,7 +79,12 @@ class PagedMoviesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        return Holder(inflater.inflate(R.layout.item_recycler_linear, parent, false))
+        val itemId = when (listMode.modeId) {
+            LIST_MODE_LINEAR -> R.layout.item_recycler_linear
+            LIST_MODE_GRID -> R.layout.item_recycler_grid
+            else -> throw IllegalArgumentException()
+        }
+        return Holder(inflater.inflate(itemId, parent, false))
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.data.datasource.SearchDataSourceFactory
+import com.mvgreen.domain.bean.ListMode
 import com.mvgreen.domain.entity.MovieData
+import com.mvgreen.domain.repository.AppPreferencesStorage
 import com.mvgreen.domain.repository.GenreStorage
 import com.mvgreen.domain.repository.SearchRepository
 import com.mvgreen.domain.repository.SearchStorage
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class SearchUseCaseImpl @Inject constructor(
     private val searchRepository: SearchRepository,
     private val genreStorage: GenreStorage,
-    private val searchStorage: SearchStorage
+    private val searchStorage: SearchStorage,
+    private val appPreferencesStorage: AppPreferencesStorage
 ) : SearchUseCase {
 
     companion object {
@@ -68,6 +71,15 @@ class SearchUseCaseImpl @Inject constructor(
             searchStorage.savedListPosition,
             searchStorage.savedQuery
         )
+    }
+
+    override fun setListMode(listMode: Int) {
+        appPreferencesStorage.setListMode(listMode)
+    }
+
+    override fun initListMode(listMode: ListMode) {
+        val modeId = appPreferencesStorage.getListMode()
+        listMode.modeId = modeId
     }
 
 }

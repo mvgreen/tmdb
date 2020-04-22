@@ -1,24 +1,26 @@
 package com.mvgreen.tmdbapp.ui.search.fragment
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.textChanges
+import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_GRID
+import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_LINEAR
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.entity.SearchState
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
-import com.mvgreen.tmdbapp.ui.adapter.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.delegator.EmptyResponseState
 import com.mvgreen.tmdbapp.ui.delegator.ErrorState
 import com.mvgreen.tmdbapp.ui.delegator.HideAllState
+import com.mvgreen.tmdbapp.ui.recycler.ListModeImpl
+import com.mvgreen.tmdbapp.ui.recycler.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
 import com.mvgreen.tmdbapp.utils.observe
@@ -33,23 +35,15 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     companion object {
         const val TAG = "SearchFragment"
+
+        const val SPAN_COUNT = 2
     }
 
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
+    private lateinit var listMode: ListModeImpl
 
     private val filmsRouter: Router = DI.filmsTabComponent.router()
-
-    private val marginDecoration = object : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            outRect.bottom = resources.getDimension(R.dimen.recycler_margin).toInt()
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -94,9 +88,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     override fun onStop() {
-        viewModel.savedListPosition =
-            (recycler_results.layoutManager as LinearLayoutManager)
-                .findFirstCompletelyVisibleItemPosition()
+        viewModel.savedListPosition = listMode.listPosition
         super.onStop()
     }
 
@@ -108,13 +100,16 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun setupView() {
-        val adapter = PagedMoviesAdapter(filmsRouter, ::onSearchStateChanged)
-        val layoutManager = LinearLayoutManager(requireContext())
+        listMode = ListModeImpl()
+        viewModel.initListMode(listMode)
+        val layoutManager = restoreListMode(listMode)
         layoutManager.scrollToPosition(viewModel.savedListPosition)
+
+        val adapter = PagedMoviesAdapter(filmsRouter, listMode, ::onSearchStateChanged)
 
         recycler_results.adapter = adapter
         recycler_results.layoutManager = layoutManager
-        recycler_results.addItemDecoration(marginDecoration)
+        recycler_results.addItemDecoration(listMode.getMarginDecoration(resources))
         button_cancel.setOnClickListener {
             input_search.setText("")
         }
@@ -145,6 +140,15 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     private fun restoreSearch() {
         input_search.setText(viewModel.query)
+    }
+
+    private fun restoreListMode(listMode: ListModeImpl): RecyclerView.LayoutManager {
+        listMode.layoutManager = when (listMode.modeId) {
+            LIST_MODE_LINEAR -> LinearLayoutManager(requireContext())
+            LIST_MODE_GRID -> GridLayoutManager(requireContext(), SPAN_COUNT)
+            else -> throw IllegalArgumentException()
+        }
+        return listMode.layoutManager
     }
 
     private fun performSearch(query: String) {

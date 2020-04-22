@@ -3,6 +3,7 @@ package com.mvgreen.domain.usecase
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.mvgreen.domain.bean.ImageLoader
+import com.mvgreen.domain.bean.ListMode
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.entity.SearchState
 import io.reactivex.Completable
@@ -22,5 +23,9 @@ interface SearchUseCase {
     fun saveSearchState(pagedList: PagedList<MovieData>?, listPosition: Int, query: String)
 
     fun restoreListState(): Triple<PagedList<MovieData>?, Int, String>
+
+    fun setListMode(listMode: Int)
+
+    fun initListMode(listMode: ListMode)
 
 }

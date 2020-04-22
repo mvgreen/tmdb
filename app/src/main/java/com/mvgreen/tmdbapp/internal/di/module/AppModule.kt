@@ -164,9 +164,10 @@ internal class AppModule {
     fun searchUseCase(
         searchRepository: SearchRepository,
         genreStorage: GenreStorage,
-        searchStorage: SearchStorage
+        searchStorage: SearchStorage,
+        appPreferencesStorage: AppPreferencesStorage
     ): SearchUseCase =
-        SearchUseCaseImpl(searchRepository, genreStorage, searchStorage)
+        SearchUseCaseImpl(searchRepository, genreStorage, searchStorage, appPreferencesStorage)
 
     @Provides
     @ApplicationScope

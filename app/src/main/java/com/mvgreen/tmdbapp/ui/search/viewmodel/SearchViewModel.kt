@@ -3,6 +3,7 @@ package com.mvgreen.tmdbapp.ui.search.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
+import com.mvgreen.domain.bean.ListMode
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
@@ -56,6 +57,14 @@ class SearchViewModel @Inject constructor(
                 }
             )
             .disposeOnViewModelDestroy()
+    }
+
+    fun initListMode(listMode: ListMode) {
+        searchUseCase.initListMode(listMode)
+    }
+
+    fun setListMode(listMode: Int) {
+        searchUseCase.setListMode(listMode)
     }
 
 }
