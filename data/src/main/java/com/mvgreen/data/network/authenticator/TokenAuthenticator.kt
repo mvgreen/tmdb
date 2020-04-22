@@ -2,7 +2,7 @@ package com.mvgreen.data.network.authenticator
 
 import com.mvgreen.data.exception.CredentialsException
 import com.mvgreen.data.network.auth.RefreshRepository
-import com.mvgreen.data.network.auth.api.TMDbApi.Companion.SESSION_ID
+import com.mvgreen.data.network.factory.NetworkConstants.SESSION_ID
 import com.mvgreen.domain.repository.UserDataStorage
 import okhttp3.Authenticator
 import okhttp3.Request

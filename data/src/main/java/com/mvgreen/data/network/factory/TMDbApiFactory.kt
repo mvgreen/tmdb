@@ -11,7 +11,7 @@ class TMDbApiFactory @Inject constructor(
     authenticator: Authenticator,
     vararg converters: Converter.Factory
 ) : ApiFactory(
-    ServerUrls.TMDb(),
+    NetworkConstants.TMDb(),
     OkHttpClient
         .Builder()
         .addInterceptor(httpErrorInterceptor)

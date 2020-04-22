@@ -9,13 +9,20 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mvgreen.domain.bean.ImageLoader
-import com.mvgreen.tmdbapp.R
 
-class ImageLoaderImpl(private val view: ImageView, val loadCallback: () -> Unit) :
+class ImageLoaderImpl(
+    private val view: ImageView,
+    private val placeholder: Int,
+    private val cropCircle: Boolean,
+    val loadingErrorCallback: () -> Unit
+) :
     ImageLoader {
 
-    override lateinit var url: String
-    override lateinit var sizeParam: String
+    override var url: String = ""
+
+    override var path: String? = null
+
+    override var sizeParam: String? = null
 
     private val onFailListener = object : RequestListener<Drawable> {
         override fun onLoadFailed(
@@ -24,7 +31,7 @@ class ImageLoaderImpl(private val view: ImageView, val loadCallback: () -> Unit)
             target: Target<Drawable>?,
             isFirstResource: Boolean
         ): Boolean {
-            loadCallback.invoke()
+            loadingErrorCallback.invoke()
             return false
         }
 
@@ -41,11 +48,21 @@ class ImageLoaderImpl(private val view: ImageView, val loadCallback: () -> Unit)
     }
 
     override fun loadImage() {
+        val fullPath = StringBuilder()
+            .append(url)
+            .append(path ?: "")
+            .append(sizeParam?.let { it + view.width } ?: "")
+            .toString()
+
         Glide
             .with(view)
-            .load(url + sizeParam + view.width)
-            .placeholder(R.drawable.ic_profile_stub)
-            .apply(RequestOptions.circleCropTransform())
+            .load(fullPath)
+            .placeholder(placeholder)
+            .apply {
+                if (cropCircle) {
+                    apply(RequestOptions.circleCropTransform())
+                }
+            }
             .listener(onFailListener)
             .into(view)
     }

@@ -6,4 +6,6 @@ interface AuthUseCase {
 
     fun login(email: String, password: String): Completable
 
+    fun hasUserData(): Boolean
+
 }

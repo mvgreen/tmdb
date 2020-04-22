@@ -1,12 +1,12 @@
 package com.mvgreen.tmdbapp.ui.rootscreen.fragment
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mvgreen.tmdbapp.R
 import com.mvgreen.tmdbapp.internal.di.DI
 import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
-import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
 import com.mvgreen.tmdbapp.ui.cicerone.FavoritesBranchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.FilmsBranchScreen
 import com.mvgreen.tmdbapp.ui.cicerone.ProfileBranchScreen
@@ -16,7 +16,6 @@ import com.mvgreen.tmdbapp.utils.viewModelFactory
 import kotlinx.android.synthetic.main.fragment_root.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
 import javax.inject.Inject
 
@@ -60,16 +59,36 @@ class RootFragment @Inject constructor() : BaseFragment(R.layout.fragment_root) 
 
             true
         }
+        if (viewModel.currentBranch == null) {
+            viewModel.currentBranch = FilmsBranchScreen
+            childRouter.newRootScreen(viewModel.currentBranch!!)
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        changeSystemColors(R.color.bg_black, R.color.widget_blue)
         childNavigatorHolder.setNavigator(childNavigator)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 
     override fun onPause() {
         childNavigatorHolder.removeNavigator()
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         super.onPause()
+    }
+
+    override fun onBackPressed(): Boolean {
+        val fragment = childFragmentManager.fragments.lastOrNull()
+
+        if (fragment != null && fragment is BaseFragment) {
+            if (!fragment.onBackPressed()) {
+                return false
+            }
+        } else {
+            return false
+        }
+        return true
     }
 
     private fun setupViewModel() {

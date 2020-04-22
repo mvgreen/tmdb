@@ -1,6 +1,7 @@
 package com.mvgreen.tmdbapp.ui.base.activity
 
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -53,9 +54,15 @@ abstract class AppActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val fragment = supportFragmentManager.fragments.lastOrNull()
+        var fragment : BaseFragment? = null
+        for (fr in supportFragmentManager.fragments.reversed()) {
+            if (fr is BaseFragment) {
+                fragment = fr
+                break
+            }
+        }
 
-        if (fragment != null && fragment is BaseFragment) {
+        if (fragment != null) {
             if (!fragment.onBackPressed())
                 super.onBackPressed()
         } else {
@@ -73,6 +80,32 @@ abstract class AppActivity : AppCompatActivity() {
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = color
+    }
+
+    fun updateNavigationBar(colorId: Int) {
+        val color: Int
+        try {
+            color = ContextCompat.getColor(this, colorId)
+        } catch (e: Resources.NotFoundException) {
+            Log.e(TAG, e.message ?: e::class.toString())
+            return
+        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.navigationBarColor = color
+    }
+
+    fun updateDividerColor(colorId: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val color: Int
+            try {
+                color = ContextCompat.getColor(this, colorId)
+            } catch (e: Resources.NotFoundException) {
+                Log.e(TAG, e.message ?: e::class.toString())
+                return
+            }
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.navigationBarDividerColor = color
+        }
     }
 
 }

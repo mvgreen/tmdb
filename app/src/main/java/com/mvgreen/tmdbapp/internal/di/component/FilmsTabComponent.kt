@@ -3,6 +3,8 @@ package com.mvgreen.tmdbapp.internal.di.component
 import android.content.Context
 import com.mvgreen.tmdbapp.internal.di.module.FilmsModule
 import com.mvgreen.tmdbapp.internal.di.scope.FilmTabScope
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
+import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.BranchViewModel
 import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
@@ -11,13 +13,15 @@ import ru.terrakok.cicerone.Router
 
 @Component(modules = [FilmsModule::class])
 @FilmTabScope
-internal interface FilmsTabComponent {
+internal interface FilmsTabComponent : CiceroneOwner {
 
-    fun cicerone(): Cicerone<Router>
+    fun cicerone(): Cicerone<SelfRestoringRouter>
 
-    fun router(): Router
+    override fun router(): SelfRestoringRouter
 
-    fun navigatorHolder(): NavigatorHolder
+    override fun navigatorHolder(): NavigatorHolder
+
+    override fun branchViewModel(): BranchViewModel
 
     @Component.Builder
     interface Builder {

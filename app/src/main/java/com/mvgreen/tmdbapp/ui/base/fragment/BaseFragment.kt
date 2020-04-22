@@ -9,7 +9,6 @@ import com.mvgreen.tmdbapp.ui.base.activity.AppActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-
 abstract class BaseFragment : Fragment {
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
@@ -33,8 +32,15 @@ abstract class BaseFragment : Fragment {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    protected fun changeStatusColor(@ColorRes color: Int) {
-        (requireActivity() as AppActivity).updateStatusBar(color)
+    protected fun changeSystemColors(
+        @ColorRes statusBarColor: Int? = null,
+        @ColorRes navigationBarColor: Int? = null,
+        @ColorRes navigationBarDividerColor: Int? = null
+    ) {
+        val activity = requireActivity() as AppActivity
+        if (statusBarColor != null) activity.updateStatusBar(statusBarColor)
+        if (navigationBarColor != null) activity.updateNavigationBar(navigationBarColor)
+        if (navigationBarDividerColor != null) activity.updateDividerColor(navigationBarDividerColor)
     }
 
     protected fun bindToFragmentLifecycle(listener: ViewTreeObserver.OnGlobalLayoutListener) {
@@ -42,7 +48,7 @@ abstract class BaseFragment : Fragment {
         view?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
     }
 
-    protected fun Disposable.disposeOnViewModelDestroy(): Disposable {
+    protected fun Disposable.disposeOnDestroy(): Disposable {
         compositeDisposable.add(this)
         return this
     }

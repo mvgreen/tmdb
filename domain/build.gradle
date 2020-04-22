@@ -43,6 +43,11 @@ dependencies {
     api 'com.squareup.moshi:moshi:1.9.2'
     api 'com.squareup.retrofit2:converter-moshi:2.8.1'
 
+    api "androidx.paging:paging-runtime:2.1.2"
+    api "androidx.paging:paging-runtime-ktx:2.1.2"
+    api "androidx.paging:paging-rxjava2:2.1.2"
+
+
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

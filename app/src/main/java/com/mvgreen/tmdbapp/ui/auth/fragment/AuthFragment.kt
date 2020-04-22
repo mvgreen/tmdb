@@ -86,7 +86,15 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
 
     override fun onResume() {
         super.onResume()
+        changeSystemColors(R.color.bg_black, R.color.bg_black)
         bindToFragmentLifecycle(onKeyboardEventListener)
+
+        input_login.requestFocus()
+        input_login.performClick()
+
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(input_login, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun setupView() {
@@ -112,7 +120,7 @@ class AuthFragment : BaseFragment(R.layout.fragment_auth) {
                 { btn_login.isEnabled = true },
                 { e -> Log.e(TAG, e.message, e) }
             )
-            .disposeOnViewModelDestroy()
+            .disposeOnDestroy()
     }
 
     private fun setupDelegator() {

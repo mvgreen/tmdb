@@ -4,18 +4,24 @@ import android.content.Context
 import com.mvgreen.data.network.auth.AuthRepositoryImpl
 import com.mvgreen.data.network.auth.RefreshRepository
 import com.mvgreen.data.network.auth.api.ApiHolder
-import com.mvgreen.data.network.auth.api.TMDbApi
+import com.mvgreen.data.network.auth.api.AuthApi
 import com.mvgreen.data.network.authenticator.TokenAuthenticator
 import com.mvgreen.data.network.factory.TMDbApiFactory
+import com.mvgreen.data.network.factory.TMDbGuestApiFactory
+import com.mvgreen.data.network.image.ImageRepositoryImpl
+import com.mvgreen.data.network.image.api.ImageConfigurationApi
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
+import com.mvgreen.data.network.search.SearchRepositoryImpl
+import com.mvgreen.data.network.search.api.SearchApi
+import com.mvgreen.data.storage.GenreStorageImpl
+import com.mvgreen.data.storage.ImageConfigStorageImpl
+import com.mvgreen.data.storage.SearchStorageImpl
 import com.mvgreen.data.storage.UserDataStorageImpl
-import com.mvgreen.data.usecase.AuthUseCaseImpl
-import com.mvgreen.data.usecase.ProfileUseCaseImpl
-import com.mvgreen.domain.repository.AuthRepository
-import com.mvgreen.domain.repository.UserDataStorage
-import com.mvgreen.domain.usecase.AuthUseCase
-import com.mvgreen.domain.usecase.ProfileUseCase
+import com.mvgreen.data.usecase.*
+import com.mvgreen.domain.repository.*
+import com.mvgreen.domain.usecase.*
 import com.mvgreen.tmdbapp.internal.di.scope.ApplicationScope
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -23,7 +29,6 @@ import okhttp3.Authenticator
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 @Module
 internal class AppModule {
@@ -32,15 +37,17 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun cicerone(): Cicerone<Router> = Cicerone.create()
+    fun cicerone(): Cicerone<SelfRestoringRouter> = Cicerone.create(SelfRestoringRouter())
 
     @Provides
     @ApplicationScope
-    fun navigatorHolder(cicerone: Cicerone<Router>): NavigatorHolder = cicerone.navigatorHolder
+    fun navigatorHolder(cicerone: Cicerone<SelfRestoringRouter>): NavigatorHolder =
+        cicerone.navigatorHolder
 
     @Provides
     @ApplicationScope
-    fun router(cicerone: Cicerone<Router>): Router = cicerone.router
+    fun router(cicerone: Cicerone<SelfRestoringRouter>): SelfRestoringRouter =
+        cicerone.router
 
     /** API */
 
@@ -62,22 +69,44 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun refreshRepository(apiHolder: ApiHolder) : RefreshRepository = RefreshRepository(apiHolder)
+    fun refreshRepository(apiHolder: ApiHolder): RefreshRepository = RefreshRepository(apiHolder)
 
     @Provides
     @ApplicationScope
-    fun provideApi(
+    fun provideAuthApi(
         moshiInstance: Moshi,
         authenticator: Authenticator,
         apiHolder: ApiHolder
-    ): TMDbApi {
+    ): AuthApi {
         apiHolder.api = TMDbApiFactory(
             HttpErrorInterceptor(),
             authenticator,
             MoshiConverterFactory.create(moshiInstance)
-        ).create(TMDbApi::class.java)
+        ).create(AuthApi::class.java)
 
         return apiHolder.api
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideSearchApi(
+        moshiInstance: Moshi
+    ): SearchApi {
+        return TMDbGuestApiFactory(
+            HttpErrorInterceptor(),
+            MoshiConverterFactory.create(moshiInstance)
+        ).create(SearchApi::class.java)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideImageApi(
+        moshiInstance: Moshi
+    ): ImageConfigurationApi {
+        return TMDbGuestApiFactory(
+            HttpErrorInterceptor(),
+            MoshiConverterFactory.create(moshiInstance)
+        ).create(ImageConfigurationApi::class.java)
     }
 
     /** Репозитории */
@@ -88,18 +117,69 @@ internal class AppModule {
 
     @Provides
     @ApplicationScope
-    fun authRepository(api: TMDbApi): AuthRepository = AuthRepositoryImpl(api)
-
-    /** UseCase-ы */
+    fun authRepository(api: AuthApi): AuthRepository = AuthRepositoryImpl(api)
 
     @Provides
     @ApplicationScope
-    fun authUseCase(authRepository: AuthRepository, userDataStorage: UserDataStorage): AuthUseCase =
+    fun genreStorage(): GenreStorage = GenreStorageImpl()
+
+    @Provides
+    @ApplicationScope
+    fun searchRepository(api: SearchApi, genreStorage: GenreStorage): SearchRepository =
+        SearchRepositoryImpl(api, genreStorage)
+
+    @Provides
+    @ApplicationScope
+    fun searchStorage(): SearchStorage = SearchStorageImpl()
+
+    @Provides
+    @ApplicationScope
+    fun imageRepository(imageConfigurationApi: ImageConfigurationApi): ImageRepository =
+        ImageRepositoryImpl(imageConfigurationApi)
+
+    @Provides
+    @ApplicationScope
+    fun imageConfigStorage(context: Context): ImageConfigStorage = ImageConfigStorageImpl(context)
+
+
+    /** UseCase */
+
+    @Provides
+    @ApplicationScope
+    fun authUseCase(
+        authRepository: AuthRepository,
+        userDataStorage: UserDataStorage
+    ): AuthUseCase =
         AuthUseCaseImpl(authRepository, userDataStorage)
 
     @Provides
     @ApplicationScope
     fun profileUseCase(userDataStorage: UserDataStorage): ProfileUseCase =
         ProfileUseCaseImpl(userDataStorage)
+
+    @Provides
+    @ApplicationScope
+    fun searchUseCase(
+        searchRepository: SearchRepository,
+        genreStorage: GenreStorage,
+        searchStorage: SearchStorage
+    ): SearchUseCase =
+        SearchUseCaseImpl(searchRepository, genreStorage, searchStorage)
+
+    @Provides
+    @ApplicationScope
+    fun loadImageUseCase(
+        imageRepository: ImageRepository,
+        imageConfigStorage: ImageConfigStorage,
+        userDataStorage: UserDataStorage
+    ): LoadImageUseCase =
+        LoadImageUseCaseImpl(imageRepository, imageConfigStorage, userDataStorage)
+
+    @Provides
+    @ApplicationScope
+    fun detailsUseCase(
+        searchRepository: SearchRepository
+    ): DetailsUseCase =
+        DetailsUseCaseImpl(searchRepository)
 
 }

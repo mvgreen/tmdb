@@ -1,12 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/bg_black</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/dark_blue</item>
         <item name="android:windowBackground">@color/bg_black</item>
         <item name="background">@color/bg_black</item>
+        <item name="android:navigationBarColor">@color/bg_black</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="ActionBarStyle">
+        <item name="titleTextColor">@color/light</item>
+        <item name="titleTextAppearance">@style/H1</item>
     </style>
 
     <!-- Элементы интерфейса -->
@@ -33,6 +43,7 @@
     <style name="text_input_style">
         <item name="android:textAppearance">@style/content1</item>
         <item name="android:textColor">@color/light</item>
+        <item name="android:textCursorDrawable">@null</item>
         <item name="android:textSelectHandle">@drawable/cursor</item>
         <item name="android:textSelectHandleLeft">@drawable/cursor_left</item>
         <item name="android:textSelectHandleRight">@drawable/cursor_right</item>
@@ -54,10 +65,19 @@
         <item name="android:textColor">@color/button_text_color_selector_purple</item>
     </style>
 
+    <style name="dark_input_box">
+        <item name="android:background">@drawable/cornered_widget_transp</item>
+        <item name="tint">@color/widget_blue_transp</item>
+    </style>
     <!-- Стили текста -->
 
     <style name="h1_light">
         <item name="android:textAppearance">@style/H1</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="h3_light">
+        <item name="android:textAppearance">@style/H3</item>
         <item name="android:textColor">@color/light</item>
     </style>
 
@@ -73,6 +93,32 @@
 
     <style name="content1_gray">
         <item name="android:textAppearance">@style/content1</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+
+    <style name="caption2_light">
+        <item name="android:textAppearance">@style/caption2</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="caption2_gray">
+        <item name="android:textAppearance">@style/caption2</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="sfpro_light_big">
+        <item name="android:textAppearance">@style/sfpro</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="sfpro_light_small">
+        <item name="android:textAppearance">@style/sfpro_small</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="sfpro_gray_small">
+        <item name="android:textAppearance">@style/sfpro_small</item>
         <item name="android:textColor">@color/gray</item>
     </style>
 
@@ -120,6 +166,16 @@
     <style name="link_text">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="sfpro">
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="sfpro_small">
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

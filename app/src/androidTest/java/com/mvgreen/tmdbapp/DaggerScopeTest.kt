@@ -28,8 +28,8 @@ class DaggerScopeTest {
         val favoritesCicerone1 = DI.favoritesTabComponent.cicerone()
         val favoritesCicerone2 = DI.favoritesTabComponent.cicerone()
 
-        val filmsCicerone1 = DI.filmTabComponent.cicerone()
-        val filmsCicerone2 = DI.filmTabComponent.cicerone()
+        val filmsCicerone1 = DI.filmsTabComponent.cicerone()
+        val filmsCicerone2 = DI.filmsTabComponent.cicerone()
 
         val profileCicerone1 = DI.profileTabComponent.cicerone()
         val profileCicerone2 = DI.profileTabComponent.cicerone()
@@ -59,8 +59,8 @@ class DaggerScopeTest {
         val moshi1 = DI.appComponent.moshi()
         val moshi2 = DI.appComponent.moshi()
 
-        val api1 = DI.appComponent.api()
-        val api2 = DI.appComponent.api()
+        val api1 = DI.appComponent.authApi()
+        val api2 = DI.appComponent.authApi()
 
         // then
         assertTrue(moshi1 === moshi2)

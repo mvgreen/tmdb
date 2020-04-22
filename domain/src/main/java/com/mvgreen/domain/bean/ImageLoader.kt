@@ -4,7 +4,9 @@ interface ImageLoader {
 
     var url: String
 
-    var sizeParam: String
+    var path: String?
+
+    var sizeParam: String?
 
     fun loadImage()
 

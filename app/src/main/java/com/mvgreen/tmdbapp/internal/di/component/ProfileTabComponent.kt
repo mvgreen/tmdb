@@ -3,21 +3,24 @@ package com.mvgreen.tmdbapp.internal.di.component
 import android.content.Context
 import com.mvgreen.tmdbapp.internal.di.module.ProfileModule
 import com.mvgreen.tmdbapp.internal.di.scope.ProfileTabScope
+import com.mvgreen.tmdbapp.ui.cicerone.SelfRestoringRouter
+import com.mvgreen.tmdbapp.ui.rootscreen.viewmodel.BranchViewModel
 import dagger.BindsInstance
 import dagger.Component
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 
 @Component(modules = [ProfileModule::class])
 @ProfileTabScope
-internal interface ProfileTabComponent {
+internal interface ProfileTabComponent : CiceroneOwner {
 
-    fun cicerone(): Cicerone<Router>
+    fun cicerone(): Cicerone<SelfRestoringRouter>
 
-    fun router(): Router
+    override fun router(): SelfRestoringRouter
 
-    fun navigatorHolder(): NavigatorHolder
+    override fun navigatorHolder(): NavigatorHolder
+
+    override fun branchViewModel(): BranchViewModel
 
     @Component.Builder
     interface Builder {
