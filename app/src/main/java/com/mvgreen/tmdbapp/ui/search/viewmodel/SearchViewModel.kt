@@ -7,6 +7,7 @@ import com.mvgreen.domain.bean.ListMode
 import com.mvgreen.domain.entity.MovieData
 import com.mvgreen.domain.usecase.SearchUseCase
 import com.mvgreen.tmdbapp.ui.base.viewmodel.BaseViewModel
+import com.mvgreen.tmdbapp.ui.recycler.ListModeImpl
 import com.mvgreen.tmdbapp.utils.onNext
 import com.redmadrobot.lib.sd.LoadingStateDelegate.LoadingState
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,6 +29,9 @@ class SearchViewModel @Inject constructor(
     var savedListPosition: Int = 0
 
     var currentState: LoadingState? = LoadingState.CONTENT
+
+    // Используем реализацию вместо интерфейса для доступности метода создания менеджера
+    private var listMode: ListModeImpl? = null
 
     init {
         val (savedList, savedPosition, savedQuery) = searchUseCase.restoreListState()
@@ -59,12 +63,24 @@ class SearchViewModel @Inject constructor(
             .disposeOnViewModelDestroy()
     }
 
-    fun initListMode(listMode: ListMode) {
-        searchUseCase.initListMode(listMode)
+    fun getListMode(): ListModeImpl {
+        val currentListMode = listMode ?: searchUseCase.initListMode(ListModeImpl())
+        listMode = currentListMode as ListModeImpl
+        return currentListMode
     }
 
-    fun setListMode(listMode: Int) {
-        searchUseCase.setListMode(listMode)
+    fun changeListMode(): ListModeImpl {
+        val currentList = getListMode()
+        val nextId = currentList.nextModeId()
+        searchUseCase.setListMode(nextId)
+        // Производим повторную инициализацию
+        listMode = null
+        return getListMode()
+    }
+
+    fun onStop() {
+        savedListPosition = listMode?.listPosition ?: 0
+        listMode?.resetLayoutManager()
     }
 
 }

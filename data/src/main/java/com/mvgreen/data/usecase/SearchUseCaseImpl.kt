@@ -77,9 +77,10 @@ class SearchUseCaseImpl @Inject constructor(
         appPreferencesStorage.setListMode(listMode)
     }
 
-    override fun initListMode(listMode: ListMode) {
+    override fun initListMode(listMode: ListMode): ListMode {
         val modeId = appPreferencesStorage.getListMode()
         listMode.modeId = modeId
+        return listMode
     }
 
 }

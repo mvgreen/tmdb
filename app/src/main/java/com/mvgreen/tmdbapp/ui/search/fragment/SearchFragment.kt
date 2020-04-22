@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.paging.PagedList
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.textChanges
+import com.mvgreen.domain.bean.ListMode
 import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_GRID
 import com.mvgreen.domain.bean.ListMode.Companion.LIST_MODE_LINEAR
 import com.mvgreen.domain.entity.MovieData
@@ -19,7 +18,6 @@ import com.mvgreen.tmdbapp.ui.base.fragment.BaseFragment
 import com.mvgreen.tmdbapp.ui.delegator.EmptyResponseState
 import com.mvgreen.tmdbapp.ui.delegator.ErrorState
 import com.mvgreen.tmdbapp.ui.delegator.HideAllState
-import com.mvgreen.tmdbapp.ui.recycler.ListModeImpl
 import com.mvgreen.tmdbapp.ui.recycler.PagedMoviesAdapter
 import com.mvgreen.tmdbapp.ui.search.viewmodel.SearchViewModel
 import com.mvgreen.tmdbapp.utils.getViewModel
@@ -35,13 +33,12 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
     companion object {
         const val TAG = "SearchFragment"
-
-        const val SPAN_COUNT = 2
     }
 
     private lateinit var stateDelegate: LoadingStateDelegate
     private lateinit var viewModel: SearchViewModel
-    private lateinit var listMode: ListModeImpl
+
+    //    private lateinit var listMode: ListModeImpl
     private lateinit var currentItemDecoration: RecyclerView.ItemDecoration
 
     private val filmsRouter: Router = DI.filmsTabComponent.router()
@@ -89,7 +86,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     override fun onStop() {
-        viewModel.savedListPosition = listMode.listPosition
+        viewModel.onStop()
         super.onStop()
     }
 
@@ -101,17 +98,13 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun setupView() {
-        listMode = ListModeImpl()
-        viewModel.initListMode(listMode)
-        val layoutManager = restoreListMode(listMode)
-        layoutManager.scrollToPosition(viewModel.savedListPosition)
+        val listMode = viewModel.getListMode()
+        val layoutManager = listMode.initLayoutManager(requireContext())
+        val adapter = PagedMoviesAdapter(filmsRouter, ::onSearchStateChanged)
+        val itemDecoration = listMode.getMarginDecoration(resources)
 
-        val adapter = PagedMoviesAdapter(filmsRouter, listMode, ::onSearchStateChanged)
+        setupRecycler(listMode, layoutManager, adapter, itemDecoration, viewModel.savedListPosition)
 
-        recycler_results.adapter = adapter
-        recycler_results.layoutManager = layoutManager
-        currentItemDecoration = listMode.getMarginDecoration(resources)
-        recycler_results.addItemDecoration(currentItemDecoration)
         button_cancel.setOnClickListener {
             input_search.setText("")
         }
@@ -148,39 +141,43 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         input_search.setText(viewModel.query)
     }
 
-    private fun restoreListMode(listMode: ListModeImpl): RecyclerView.LayoutManager {
-        listMode.layoutManager = when (listMode.modeId) {
-            LIST_MODE_LINEAR -> LinearLayoutManager(requireContext())
-            LIST_MODE_GRID -> GridLayoutManager(requireContext(), SPAN_COUNT)
-            else -> throw IllegalArgumentException()
+    private fun setupRecycler(
+        listMode: ListMode,
+        layoutManager: RecyclerView.LayoutManager,
+        adapter: PagedMoviesAdapter,
+        marginDecoration: RecyclerView.ItemDecoration,
+        scrollPosition: Int
+    ) {
+        layoutManager.scrollToPosition(scrollPosition)
+        adapter.changeListMode(listMode)
+
+        recycler_results.adapter = adapter
+        recycler_results.layoutManager = layoutManager
+        recycler_results.addItemDecoration(marginDecoration)
+
+        currentItemDecoration = marginDecoration
+
+        val newIcon = when (listMode.modeId) {
+            LIST_MODE_LINEAR -> R.drawable.ic_boxes
+            LIST_MODE_GRID -> R.drawable.ic_lines
+            else -> throw IllegalStateException()
         }
-        return listMode.layoutManager
+
+        button_change_mode.setImageDrawable(resources.getDrawable(newIcon, null))
+
     }
 
     private fun changeListMode() {
-        val newModeId = listMode.nextModeId()
+        val scrollPosition = viewModel.getListMode().listPosition
+        val listMode = viewModel.changeListMode()
 
-        val newListMode = ListModeImpl()
-        newListMode.modeId = newModeId
-        newListMode.layoutManager = restoreListMode(newListMode)
-
-        val newItemDecoration = newListMode.getMarginDecoration(resources)
-
-        val previousPosition = listMode.listPosition
-
-        recycler_results.layoutManager = newListMode.layoutManager
+        val layoutManager = listMode.initLayoutManager(requireContext())
+        val adapter = recycler_results.adapter as PagedMoviesAdapter
+        val itemDecoration = listMode.getMarginDecoration(resources)
 
         recycler_results.removeItemDecoration(currentItemDecoration)
-        recycler_results.addItemDecoration(newItemDecoration)
 
-        (recycler_results.adapter as PagedMoviesAdapter).changeListMode(newListMode)
-
-        newListMode.layoutManager.scrollToPosition(previousPosition)
-        recycler_results.invalidate()
-
-        listMode = newListMode
-        currentItemDecoration = newItemDecoration
-        viewModel.setListMode(listMode.modeId)
+        setupRecycler(listMode, layoutManager, adapter, itemDecoration, scrollPosition)
     }
 
     private fun performSearch(query: String) {

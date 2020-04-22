@@ -1,5 +1,6 @@
 package com.mvgreen.tmdbapp.ui.recycler
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.view.View
@@ -13,12 +14,18 @@ import com.mvgreen.tmdbapp.R
 
 class ListModeImpl : ListMode {
 
+    companion object {
+        const val SPAN_COUNT = 2
+    }
+
     override var modeId: Int = LIST_MODE_LINEAR
 
     override val listPosition: Int
         get() {
             // Присваиваем для сохранения возможности каста к нужному типу
             val position = when (val manager = layoutManager) {
+                // Есть плавающий баг, когда обращение к позиции происходит после сброса менеджера
+                null -> 0
                 is LinearLayoutManager -> manager.findFirstVisibleItemPosition()
                 is GridLayoutManager -> manager.findFirstVisibleItemPosition()
                 else -> throw IllegalStateException()
@@ -26,18 +33,35 @@ class ListModeImpl : ListMode {
             return position
         }
 
-    lateinit var layoutManager: RecyclerView.LayoutManager
+    private var layoutManager: RecyclerView.LayoutManager? = null
 
     override fun nextModeId(): Int {
-        return when(modeId) {
+        return when (modeId) {
             LIST_MODE_LINEAR -> LIST_MODE_GRID
             LIST_MODE_GRID -> LIST_MODE_LINEAR
             else -> throw IllegalStateException()
         }
     }
 
+    fun initLayoutManager(context: Context): RecyclerView.LayoutManager {
+        if (layoutManager != null) {
+            return layoutManager!!
+        }
+
+        layoutManager = when (modeId) {
+            LIST_MODE_LINEAR -> LinearLayoutManager(context)
+            LIST_MODE_GRID -> GridLayoutManager(context, SPAN_COUNT)
+            else -> throw IllegalStateException()
+        }
+        return layoutManager!!
+    }
+
+    fun resetLayoutManager() {
+        layoutManager = null
+    }
+
     fun getMarginDecoration(resources: Resources): RecyclerView.ItemDecoration {
-        return when(modeId) {
+        return when (modeId) {
             LIST_MODE_LINEAR -> linearMarginDecoration(resources)
             LIST_MODE_GRID -> gridMarginDecoration(resources)
             else -> throw IllegalStateException()

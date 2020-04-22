@@ -25,13 +25,14 @@ import ru.terrakok.cicerone.Router
 
 class PagedMoviesAdapter(
     private val router: Router,
-    private var listMode: ListMode,
     onSearchResultCallback: (searchState: SearchState) -> Unit
 ) : RecyclerView.Adapter<Holder>() {
 
     companion object {
         const val TAG = "PagedMoviesAdapter"
     }
+
+    private lateinit var listMode: ListMode
 
     private val imageUseCase: LoadImageUseCase = DI.appComponent.loadImageUseCase()
 

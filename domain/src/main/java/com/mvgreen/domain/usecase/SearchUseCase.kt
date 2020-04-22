@@ -26,6 +26,6 @@ interface SearchUseCase {
 
     fun setListMode(listMode: Int)
 
-    fun initListMode(listMode: ListMode)
+    fun initListMode(listMode: ListMode): ListMode
 
 }
