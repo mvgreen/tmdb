@@ -85,6 +85,11 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             .disposeOnDestroy()
     }
 
+    override fun onBackPressed(): Boolean {
+        viewModel.resetState()
+        return true
+    }
+
     override fun onStop() {
         viewModel.onStop()
         super.onStop()

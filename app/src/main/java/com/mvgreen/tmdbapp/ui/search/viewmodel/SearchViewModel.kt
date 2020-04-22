@@ -83,4 +83,12 @@ class SearchViewModel @Inject constructor(
         listMode?.resetLayoutManager()
     }
 
+    fun resetState() {
+        query = ""
+        livePagedList.value = null
+        savedListPosition = 0
+        currentState = LoadingState.CONTENT
+        listMode = null
+    }
+
 }

@@ -78,6 +78,15 @@ class BranchFragment constructor(private var branchId: Int) :
     }
 
     override fun onBackPressed(): Boolean {
+        var fragment : BaseFragment? = null
+        for (fr in childFragmentManager.fragments.reversed()) {
+            if (fr is BaseFragment) {
+                fragment = fr
+                break
+            }
+        }
+
+        fragment?.onBackPressed()
         viewModel.branchRouter.exit()
         return true
     }

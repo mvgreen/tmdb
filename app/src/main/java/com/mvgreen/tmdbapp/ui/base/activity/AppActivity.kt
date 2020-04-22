@@ -63,8 +63,9 @@ abstract class AppActivity : AppCompatActivity() {
         }
 
         if (fragment != null) {
-            if (!fragment.onBackPressed())
+            if (!fragment.onBackPressed()) {
                 super.onBackPressed()
+            }
         } else {
             super.onBackPressed()
         }
