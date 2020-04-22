@@ -13,10 +13,7 @@ import com.mvgreen.data.network.image.api.ImageConfigurationApi
 import com.mvgreen.data.network.interceptor.HttpErrorInterceptor
 import com.mvgreen.data.network.search.SearchRepositoryImpl
 import com.mvgreen.data.network.search.api.SearchApi
-import com.mvgreen.data.storage.GenreStorageImpl
-import com.mvgreen.data.storage.ImageConfigStorageImpl
-import com.mvgreen.data.storage.SearchStorageImpl
-import com.mvgreen.data.storage.UserDataStorageImpl
+import com.mvgreen.data.storage.*
 import com.mvgreen.data.usecase.*
 import com.mvgreen.domain.repository.*
 import com.mvgreen.domain.usecase.*
@@ -140,6 +137,11 @@ internal class AppModule {
     @Provides
     @ApplicationScope
     fun imageConfigStorage(context: Context): ImageConfigStorage = ImageConfigStorageImpl(context)
+
+    @Provides
+    @ApplicationScope
+    fun appPreferencesStorage(context: Context): AppPreferencesStorage =
+        AppPreferencesStorageImpl(context)
 
 
     /** UseCase */
