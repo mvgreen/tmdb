@@ -5,10 +5,12 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mvgreen.domain.bean.ImageLoader
+import com.mvgreen.tmdbapp.R
 
 class ImageLoaderImpl(
     private val view: ImageView,
@@ -61,6 +63,17 @@ class ImageLoaderImpl(
             .apply {
                 if (cropCircle) {
                     apply(RequestOptions.circleCropTransform())
+                } else {
+                    val resources = view.context?.resources
+                    if (resources != null) {
+                        apply(
+                            RequestOptions().transform(
+                                RoundedCorners(
+                                    resources.getDimension(R.dimen.corner_radius).toInt()
+                                )
+                            )
+                        )
+                    }
                 }
             }
             .listener(onFailListener)
